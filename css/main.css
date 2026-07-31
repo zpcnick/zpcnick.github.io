@@ -175,7 +175,8 @@ body {
   height: 100%;
 }
 body {
-  background: var(--body-bg-color);
+  background: var(--body-bg-color) url('/images/bg-pattern.jpg') no-repeat center center fixed;
+  background-size: cover;
   color: var(--text-color);
   font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 1em;
