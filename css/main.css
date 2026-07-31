@@ -2304,6 +2304,16 @@ embed {
   border-radius: 0 0 12px 12px;
   box-shadow: 0 4px 12px rgba(44, 122, 123, 0.15);
 }
+/* 品牌区文字强制白色，确保在渐变背景上可见 */
+.site-brand-container .brand,
+.site-brand-container .site-title,
+.site-brand-container .site-subtitle {
+  color: #fff !important;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.site-brand-container .brand:hover {
+  color: #fff !important;
+}
 
 /* 菜单项圆角与悬停 */
 .menu-item a,
@@ -2445,10 +2455,26 @@ embed {
   box-shadow: 0 2px 8px rgba(44, 122, 123, 0.3);
 }
 .sidebar-toggle:hover .toggle-line {
-  background: #fff;
+  background: #fff !important;
 }
 .sidebar-toggle .toggle-line {
-  background: #fff;
+  background: #fff !important;
+  width: 100%;
+  height: 2px;
+  display: block;
+  border-radius: 1px;
+}
+.sidebar-toggle .toggle {
+  width: 22px;
+  height: 16px;
+  display: block;
+  position: relative;
+}
+/* 移动端恢复隐藏 sidebar-toggle，避免误显示 */
+@media (max-width: 991px) {
+  .sidebar-toggle {
+    display: none !important;
+  }
 }
 
 /* 移动端防溢出：图片、视频、表格、代码块自适应 */
