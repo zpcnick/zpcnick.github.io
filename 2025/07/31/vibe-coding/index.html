@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zpcnick.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="用 Vibe Coding 改造博客：从配色到交互的全流程记录什么是 Vibe CodingVibe Coding（氛围编程）是一种借助 AI 助手，通过自然语言对话来驱动开发的模式。你只需要描述想要的效果，AI 助手帮你完成代码编写、调试和部署。今天我用这种方式对博客进行了一次全面改造，本文记录了整个过程。">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="用 Vibe Coding 改造博客">
+  <meta property="og:url" content="https://zpcnick.github.io/2025/07/31/vibe-coding/">
+  <meta property="og:site_name" content="ZPC&#39;s homepage">
+  <meta property="og:description" content="用 Vibe Coding 改造博客：从配色到交互的全流程记录什么是 Vibe CodingVibe Coding（氛围编程）是一种借助 AI 助手，通过自然语言对话来驱动开发的模式。你只需要描述想要的效果，AI 助手帮你完成代码编写、调试和部署。今天我用这种方式对博客进行了一次全面改造，本文记录了整个过程。">
+  <meta property="og:locale">
+  <meta property="article:published_time" content="2025-07-30T16:00:00.000Z">
+  <meta property="article:modified_time" content="2025-07-31T00:00:00.000Z">
+  <meta property="article:author" content="zpc">
+  <meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zpcnick.github.io/2025/07/31/vibe-coding/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'ch'
+  };
+</script>
+
+  <title>用 Vibe Coding 改造博客 | ZPC's homepage</title>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">ZPC's homepage</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+
+</div>
+    </header>
+
+
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+
+          <div class="content post posts-expand">
+
+
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="ch">
+    <link itemprop="mainEntityOfPage" href="https://zpcnick.github.io/2025/07/31/vibe-coding/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zpc">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/WPOrganization">
+      <meta itemprop="name" content="ZPC's homepage">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用 Vibe Coding 改造博客
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-07-31 00:00:00" itemprop="dateCreated datePublished" datetime="2025-07-31T00:00:00+08:00">2025-07-31</time>
+            </span>
+
+        </div>
+      </header>
+
+
+
+    <div class="post-body" itemprop="articleBody">
+
+
+
+        <h1 id="vibe-coding-blog"><a href="#vibe-coding-blog" class="headerlink" title="用 Vibe Coding 改造博客"></a>用 Vibe Coding 改造博客：从配色到交互的全流程记录</h1>
+
+        <h2 id="what-is-vibe-coding"><a href="#what-is-vibe-coding" class="headerlink" title="什么是 Vibe Coding"></a>什么是 Vibe Coding</h2>
+        <p><strong>Vibe Coding（氛围编程）</strong>是一种借助 AI 助手，通过自然语言对话来驱动开发的模式。你只需要描述想要的效果，AI 助手帮你完成代码编写、调试和部署。</p>
+        <p>今天我用这种方式对博客进行了一次全面改造，本文记录了整个过程。</p>
+
+
+        <h2 id="step1-style"><a href="#step1-style" class="headerlink" title="第一步：更换清新蓝绿配色"></a>第一步：更换清新蓝绿配色</h2>
+        <p>原来的博客是默认的黑白灰配色，看起来比较单调。我向 AI 助手说了一句：</p>
+        <blockquote>
+          <p>"更换一个更好看的风格"</p>
+        </blockquote>
+        <p>AI 助手帮我修改了 <code>css/main.css</code>，做了以下调整：</p>
+        <ul>
+          <li><strong>配色变量</strong>：页面背景从纯白改为浅薄荷绿 <code>#f0f7f4</code>，品牌色从深灰改为蓝绿 <code>#2c7a7b</code></li>
+          <li><strong>卡片化设计</strong>：文章块增加 12px 圆角和柔和阴影，悬停时上浮</li>
+          <li><strong>品牌区渐变</strong>：蓝绿渐变背景 <code>linear-gradient(135deg, #2c7a7b, #38a89d)</code></li>
+          <li><strong>细节美化</strong>：圆形头像、圆角代码块、蓝绿滚动条、选中文字高亮</li>
+        </ul>
+
+
+        <h2 id="step2-responsive"><a href="#step2-responsive" class="headerlink" title="第二步：响应式适配"></a>第二步：响应式适配</h2>
+        <p>问了一句"手机和电脑访问怎么样"，AI 助手用浏览器自动化工具测试了两种设备：</p>
+        <ul>
+          <li><strong>桌面端</strong>：布局正常，无溢出，侧边栏可展开</li>
+          <li><strong>移动端</strong>：发现有横向溢出和触摸目标过小的问题</li>
+        </ul>
+        <p>修复措施：</p>
+        <ul>
+          <li>侧边栏按钮从 24×24px 增大到 44×44px（符合触摸目标标准）</li>
+          <li>图片、视频、表格设置 <code>max-width: 100%</code> 防止溢出</li>
+          <li>添加 <code>word-wrap: break-word</code> 防止长 URL 撑破布局</li>
+        </ul>
+
+
+        <h2 id="step3-fix-text"><a href="#step3-fix-text" class="headerlink" title="第三步：修复顶部文字不可见"></a>第三步：修复顶部文字不可见</h2>
+        <p>上线后发现顶部品牌区文字看不见——因为文字颜色和渐变背景都是蓝绿色。AI 助手定位到问题并修复：</p>
+        <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.site-brand-container</span> <span class="selector-class">.brand</span>,</span><br><span class="line"><span class="selector-class">.site-brand-container</span> <span class="selector-class">.site-title</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#fff</span> <span class="keyword">!important</span>;</span><br><span class="line">  <span class="attribute">text-shadow</span>: <span class="number">0</span> <span class="number">1px</span> <span class="number">4px</span> <span class="built_in">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>同时修复了左下角 sidebar-toggle 按钮误显示的问题——之前的样式意外覆盖了移动端的 <code>display: none</code>。</p>
+
+
+        <h2 id="step4-title-only"><a href="#step4-title-only" class="headerlink" title="第四步：首页只显示标题"></a>第四步：首页只显示标题</h2>
+        <p>想要首页更简洁，只显示文章标题，点击才进入详情。实现方式：</p>
+        <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.content</span><span class="selector-class">.index</span> <span class="selector-class">.post-block</span> <span class="selector-class">.post-body</span>,</span><br><span class="line"><span class="selector-class">.content</span><span class="selector-class">.index</span> <span class="selector-class">.post-block</span> <span class="selector-class">.post-footer</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: <span class="keyword">none</span> <span class="keyword">!important</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>加上悬停上浮效果和蓝绿色高亮，首页变得清爽又好看。</p>
+
+
+        <h2 id="step5-pages"><a href="#step5-pages" class="headerlink" title="第五步：新建 About 和 Schedule 页面"></a>第五步：新建 About 和 Schedule 页面</h2>
+        <p>导航栏的 About 和 Schedule 链接原本打不开。AI 助手参考现有的 Archives 页面模板，创建了两个新页面：</p>
+        <ul>
+          <li><strong>About</strong>：个人介绍 + 联系方式</li>
+          <li><strong>Schedule</strong>：近期计划（Q3/Q4）+ 更新记录</li>
+        </ul>
+        <p>两个页面都沿用了蓝绿配色和卡片式布局。</p>
+
+
+        <h2 id="summary"><a href="#summary" class="headerlink" title="总结与反思"></a>总结与反思</h2>
+
+        <h3 id="vibe-coding-advantages"><a href="#vibe-coding-advantages" class="headerlink" title="Vibe Coding 的优势"></a>Vibe Coding 的优势</h3>
+        <ul>
+          <li><strong>效率高</strong>：从配色设计到响应式适配，整个过程通过对话完成</li>
+          <li><strong>零门槛</strong>：不需要记住 CSS 属性名，描述效果即可</li>
+          <li><strong>自动验证</strong>：AI 助手可以用浏览器自动化工具截图检查效果</li>
+          <li><strong>迭代快</strong>：发现问题→描述问题→修复，一气呵成</li>
+        </ul>
+
+        <h3 id="vibe-coding-tips"><a href="#vibe-coding-tips" class="headerlink" title="Vibe Coding 的技巧"></a>Vibe Coding 的技巧</h3>
+        <ul>
+          <li><strong>描述要具体</strong>：说"更好看"不如说"蓝绿配色、圆角、卡片阴影"</li>
+          <li><strong>分步走</strong>：一次只做一个改动，验证后再进行下一步</li>
+          <li><strong>及时反馈</strong>：发现问题立刻告知，AI 能快速定位修复</li>
+          <li><strong>保留控制权</strong>：推送代码、合并分支等操作由自己确认</li>
+        </ul>
+
+        <h3 id="tech-details"><a href="#tech-details" class="headerlink" title="技术细节"></a>技术细节</h3>
+        <p>本次改造的所有修改都集中在 <code>css/main.css</code> 中，没有改动 Hexo 主题的核心文件。主要技术点：</p>
+        <ul>
+          <li>CSS 变量统一管理配色</li>
+          <li><code>@media</code> 媒体查询实现响应式</li>
+          <li><code>transition</code> 和 <code>transform</code> 实现交互动画</li>
+          <li><code>!important</code> 覆盖主题默认样式</li>
+          <li>GitHub Pages 部署只需 push 到 master 分支</li>
+        </ul>
+
+        <hr>
+        <p>这篇文章本身就是用 Vibe Coding 创建的——从构思到成文，全部通过对话完成。</p>
+
+    </div>
+
+
+
+
+      <footer class="post-footer">
+
+
+
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/02/15/deepseek/" rel="prev" title="Hexo 网站快速上手指南">
+      <i class="fa fa-chevron-left"></i> Hexo 网站快速上手指南
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+
+  </article>
+
+
+
+          </div>
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+
+
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vibe-coding-blog"><span class="nav-number">1.</span> <span class="nav-text">用 Vibe Coding 改造博客</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#what-is-vibe-coding"><span class="nav-number">1.1.</span> <span class="nav-text">什么是 Vibe Coding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#step1-style"><span class="nav-number">1.2.</span> <span class="nav-text">第一步：更换清新蓝绿配色</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#step2-responsive"><span class="nav-number">1.3.</span> <span class="nav-text">第二步：响应式适配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#step3-fix-text"><span class="nav-number">1.4.</span> <span class="nav-text">第三步：修复顶部文字不可见</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#step4-title-only"><span class="nav-number">1.5.</span> <span class="nav-text">第四步：首页只显示标题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#step5-pages"><span class="nav-number">1.6.</span> <span class="nav-text">第五步：新建 About 和 Schedule 页面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#summary"><span class="nav-number">1.7.</span> <span class="nav-text">总结与反思</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zpc</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+
+
+
+<div class="copyright">
+
+  &copy;
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zpc</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
