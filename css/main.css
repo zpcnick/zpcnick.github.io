@@ -2429,3 +2429,61 @@ embed {
 ::-webkit-scrollbar-thumb:hover {
   background: #2c7a7b;
 }
+
+/* ===== 移动端优化 ===== */
+
+/* 增大侧边栏切换按钮触摸目标至 44×44 */
+.sidebar-toggle {
+  height: 44px;
+  width: 44px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #2c7a7b;
+  box-shadow: 0 2px 8px rgba(44, 122, 123, 0.3);
+}
+.sidebar-toggle:hover .toggle-line {
+  background: #fff;
+}
+.sidebar-toggle .toggle-line {
+  background: #fff;
+}
+
+/* 移动端防溢出：图片、视频、表格、代码块自适应 */
+@media (max-width: 767px) {
+  .post-body img,
+  .post-body video,
+  .post-body iframe {
+    max-width: 100%;
+    height: auto;
+  }
+  .post-body table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+  .post-body pre {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    word-wrap: normal;
+  }
+  .post-body,
+  .post-body p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  /* 文章卡片内边距收紧 */
+  .post-block {
+    padding: 20px 16px;
+    margin-bottom: 24px;
+    border-radius: 10px;
+  }
+  /* 品牌区圆角适配 */
+  .site-brand-container {
+    border-radius: 0 0 10px 10px;
+  }
+}
