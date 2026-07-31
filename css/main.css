@@ -2513,3 +2513,42 @@ embed {
     border-radius: 0 0 10px 10px;
   }
 }
+
+/* ===== 首页只显示标题，隐藏正文 ===== */
+
+.content.index .post-block {
+  padding: 24px 30px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.content.index .post-block:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(44, 122, 123, 0.18);
+}
+.content.index .post-block .post-body,
+.content.index .post-block .post-footer {
+  display: none !important;
+}
+.content.index .post-block .post-header {
+  margin-bottom: 0;
+}
+.content.index .post-block .post-title {
+  font-size: 1.5em;
+  margin-bottom: 8px;
+}
+.content.index .post-block .post-meta {
+  font-size: 0.85em;
+  color: #999;
+}
+.content.index .post-block .post-title-link {
+  text-decoration: none;
+  color: var(--text-color);
+  transition: color 0.2s ease;
+}
+.content.index .post-block:hover .post-title-link {
+  color: #2c7a7b;
+}
+/* 首页文章间分隔线 */
+.content.index .post-block + .post-block {
+  margin-top: 20px;
+}
