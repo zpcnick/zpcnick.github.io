@@ -108,12 +108,12 @@ $$V^\mathrm{code}_\mathrm{in} = \mathrm{Re}[k_\mathrm{in} \cdot \mathrm{amp}] \c
 
 ## 三、TDExternalFields 输入格式
 
-非均匀电场使用 `inhomo_electric` 作为 type 关键字。前 7 列与均匀电场相同(共用电场基础解析),第 8 列起为模型字符串与参数。
+非均匀电场使用 `inhomogeneous_electric_field` 作为 type 关键字，可直接指定type=5。前 7 列与均匀电场相同(共用电场基础解析),第 8 列起为模型字符串与参数。
 
 ### 通用前缀(7 列)
 
 ```
-inhomogenous_electric_field | nx | ny | nz | omega | envelope_function_name | phase
+inhomogeneous_electric_field | nx | ny | nz | omega | envelope_function_name | phase
 ```
 
 ### 模型 1:Taylor
@@ -202,7 +202,7 @@ make install
 %
 
 %TDExternalFields
-  inhomo_electric | 0 | 0 | 1 | 3.0*eV | "env" | 0 | "dipole" | 0 | 0 | 0 | 28.35 | -2.6 | 0.2
+  5 | 0 | 0 | 1 | 3.0*eV | "env" | "0" | "dipole" | 0 | 0 | 0 | 5*nm | -2.6 | 0.2
 %
 
 Output = external_td_potential
@@ -210,7 +210,7 @@ OutputInterval = 20
 OutputFormat = plane_x
 ```
 
-说明:球心位于原点,半径 $a = 28.35\,a_0 \approx 1.5$ nm,沿 z 方向极化,光子能量 3.0 eV(接近 Ag LSPR)。
+说明:球心位于原点,半径 $a = 5$ nm,沿 z 方向极化,光子能量 3.0 eV(接近 Ag LSPR)。
 
 ---
 
