@@ -75,16 +75,16 @@ $$V(\mathbf{r},t) = f(t) \sum_{i} \frac{\mathrm{pol}_i}{\alpha_i} \left[ \exp(\a
 
 **电势表达式**(代码中 `laser_potential` 返回 $V^\mathrm{code} = -\Phi$,调用端加负号):
 
-球外($r \geq a$):
+球外($r \geq a$): 
 $$V^\mathrm{code}_\mathrm{out} = \mathrm{Re}[\mathrm{amp}] \cdot (\mathbf{pol} \cdot \Delta\mathbf{r}) - \mathrm{Re}[\beta \cdot \mathrm{amp}] \cdot a^3 \cdot \frac{\mathbf{pol} \cdot \Delta\mathbf{r}}{r^3}$$
 
-球内($r < a$):
-$$V^\mathrm{code}_\mathrm{in} = \mathrm{Re}[k_\mathrm{in} \cdot \mathrm{amp}] \cdot (\mathbf{pol} \cdot \Delta\mathbf{r})$$
+球内($r < a$): 
+$$V^\mathrm{code}_\mathrm{in} = \mathrm{Re}[k_in \cdot \mathrm{amp}] \cdot (\mathbf{pol} \cdot \Delta \mathbf{r})$$
 
-其中 $\Delta\mathbf{r} = \mathbf{r} - \mathbf{r}_0$,$r = |\Delta\mathbf{r}|$,$\mathrm{amp} = f(t) e^{i(\omega t + \phi)}$ 为复包络。
+其中 $\Delta\mathbf{r} = \mathbf{r} - \mathbf{r}_0$， $r = |\Delta\mathbf{r}|$， $\mathrm{amp} = f(t) e^{i(\omega t + \phi)}$ 为复包络。
 
 **关键实现要点**:
-1. 散射项为**负号**(源自 $V^\mathrm{code} = -\Phi_\mathrm{sca}$,$\Phi_\mathrm{sca} = +\beta a^3 E \cos\theta / r^2$)。
+1. 散射项为**负号**(源自 $V^\mathrm{code} = -\Phi_\mathrm{sca}$, $\Phi_\mathrm{sca} = +\beta a^3 E \cos\theta / r^2$)。
 2. $\beta \cdot \mathrm{amp}$ 必须**复数整体相乘后取实部**,不能拆为 $\mathrm{Re}(\beta)\mathrm{Re}(\mathrm{amp})$,否则丢失相位信息。
 3. **Maxwell 边界条件验证**(球面 $r = a$ 处):
    - 球外系数 $1 - \mathrm{Re}(\beta) = \mathrm{Re}\left[\dfrac{3}{\varepsilon+2}\right] = \mathrm{Re}(k_\mathrm{in})$ = 球内系数
