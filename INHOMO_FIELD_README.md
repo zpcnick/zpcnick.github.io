@@ -79,7 +79,7 @@ $$V(\mathbf{r},t) = f(t) \sum_{i} \frac{\mathrm{pol}_i}{\alpha_i} \left[ \exp(\a
 $$V^\mathrm{code}_\mathrm{out} = \mathrm{Re}[\mathrm{amp}] \cdot (\mathbf{pol} \cdot \Delta\mathbf{r}) - \mathrm{Re}[\beta \cdot \mathrm{amp}] \cdot a^3 \cdot \frac{\mathbf{pol} \cdot \Delta\mathbf{r}}{r^3}$$
 
 球内($r < a$): 
-$$V^\mathrm{code}_\mathrm{in} = \mathrm{Re}[k_in \cdot \mathrm{amp}] \cdot (\mathbf{pol} \cdot \Delta \mathbf{r})$$
+$$V^\mathrm{code}_\mathrm{in} = \mathrm{Re}[k (in) \cdot \mathrm{amp}] \cdot (\mathbf{pol} \cdot \Delta \mathbf{r})$$
 
 其中 $\Delta\mathbf{r} = \mathbf{r} - \mathbf{r}_0$， $r = |\Delta\mathbf{r}|$， $\mathrm{amp} = f(t) e^{i(\omega t + \phi)}$ 为复包络。
 
@@ -99,7 +99,7 @@ $$V^\mathrm{code}_\mathrm{in} = \mathrm{Re}[k_in \cdot \mathrm{amp}] \cdot (\mat
 
 **典型金属参数参考**(可见光区,LSPR 附近):
 
-| 金属 | 光子能量 | $\varepsilon_\mathrm{re}$ | $\varepsilon_\mathrm{im}$ | $|\beta|$ | 表面增强 $|1-\beta|^2/|k_\mathrm{in}|^2$ |
+| 金属 | 光子能量 | $\varepsilon_\mathrm{re}$ | $\varepsilon_\mathrm{im}$ | $\beta$ | 表面增强 |
 |---|---|---|---|---|---|
 | Ag | 3.0 eV | -2.6 | 0.2 | ≈5.7 | ≈12.4 |
 | Au | 2.3 eV | -2.5 | 1.5 | ≈3.2 | ≈4 |
@@ -178,17 +178,18 @@ make install
 
 ## 六、物理正确性验证要点
 
-1. **Taylor 模型**:系数严格按积分关系,$G$ 项为 $\frac{1}{2}$、$H$ 项为 $\frac{1}{6} = \frac{1}{2} \cdot \frac{1}{3}$,源自 $\int E\,dr$ 的泰勒展开积分。
+1. **Taylor 模型**:系数严格按积分关系, $G$ 项为 $\frac{1}{2}$, $H$ 项为 $\frac{1}{6} = \frac{1}{2} \cdot \frac{1}{3}$,
+源自 $\int E\,dr$ 的泰勒展开积分。
 
-2. **Exponential 模型**:$\alpha \to 0$ 时显式退化为均匀场,$(\exp(\alpha \Delta r) - 1)/\alpha \to \Delta r$。
+3. **Exponential 模型**: $\alpha \to 0$ 时显式退化为均匀场, $(\exp(\alpha \Delta r) - 1)/\alpha \to \Delta r$。
 
-3. **Dipole 模型**(最关键):
-   - 球面 $r = a$ 处势能严格连续:$1 - \mathrm{Re}(\beta) = \mathrm{Re}(k_\mathrm{in})$
-   - 共振极限 $\varepsilon \to -2$ 时 $\beta \to \infty$、$k_\mathrm{in} \to 0$,符合金属屏蔽效应
+4. **Dipole 模型**(最关键):
+   - 球面 $r = a$ 处势能严格连续: $1 - \mathrm{Re}(\beta) = \mathrm{Re}(k_\mathrm{in})$
+   - 共振极限 $\varepsilon \to -2$ 时 $\beta \to \infty$、 $k_\mathrm{in} \to 0$,符合金属屏蔽效应
    - 要求 $\varepsilon_\mathrm{im} \geq 0$,否则 $\beta$ 虚部符号反转导致场指数发散
    - 适用范围:球半径 $a \lesssim 30$ nm(准静态 / 偶极近似有效)
 
-4. **单位一致性**:所有长度参数使用原子单位 $a_0$;介电函数无量纲;极化向量为电场幅度(原子单位)。
+5. **单位一致性**:所有长度参数使用原子单位 $a_0$;介电函数无量纲;极化向量为电场幅度(原子单位)。
 
 ---
 
