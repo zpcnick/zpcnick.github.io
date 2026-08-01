@@ -38,7 +38,7 @@ $$V(\mathbf{r},t) = f(t) \sum_{i} \mathrm{pol}_i \left[ \Delta r_i + \tfrac{1}{2
 
 其中 $\Delta r_i = r_i - r_{0,i}$ 为相对展开中心 `r0` 的位移。
 
-**退化条件**:$G_i = H_i = 0$ 时退化为均匀电场。
+**退化条件**: $$G_i = H_i = 0$$ 时退化为均匀电场。
 
 **输入参数**(共 9 个,均使用原子单位 a₀):
 - `r0_x, r0_y, r0_z`:展开中心坐标
@@ -52,10 +52,10 @@ $$V(\mathbf{r},t) = f(t) \sum_{i} \mathrm{pol}_i \left[ \Delta r_i + \tfrac{1}{2
 **电场形式**:
 $$E_i(\mathbf{r},t) = \mathrm{pol}_i \cdot \exp(\alpha_i \cdot \Delta r_i) \cdot f(t)$$
 
-**对应标量势**(解析积分,$\alpha_i \neq 0$):
+**对应标量势**(解析积分, $\alpha_i \neq 0$):
 $$V(\mathbf{r},t) = f(t) \sum_{i} \frac{\mathrm{pol}_i}{\alpha_i} \left[ \exp(\alpha_i \Delta r_i) - 1 \right]$$
 
-**退化条件**:$\alpha_i \to 0$ 时,$(\exp(\alpha_i \Delta r_i) - 1)/\alpha_i \to \Delta r_i$,退化为均匀电场。代码中显式判断 `|alpha| < epsilon` 走退化分支。
+**退化条件**: $\alpha_i \to 0$ 时, $(\exp(\alpha_i \Delta r_i) - 1)/\alpha_i \to \Delta r_i$,退化为均匀电场。代码中显式判断 `|alpha| < epsilon` 走退化分支。
 
 **输入参数**(共 6 个,原子单位):
 - `r0_x, r0_y, r0_z`:衰减中心
@@ -68,10 +68,10 @@ $$V(\mathbf{r},t) = f(t) \sum_{i} \frac{\mathrm{pol}_i}{\alpha_i} \left[ \exp(\a
 基于 Mie 理论 n=1 偶极近似,准静态极限,严格满足 Maxwell 边界条件。
 
 **物理量定义**:
-- 介电函数 $\varepsilon = \varepsilon_\mathrm{re} + i \varepsilon_\mathrm{im}$(复数,$\varepsilon_\mathrm{im} \geq 0$)
-- 散射增强因子:$\beta = \dfrac{\varepsilon - 1}{\varepsilon + 2}$(复数,含相位延迟)
-- 球内场系数:$k_\mathrm{in} = \dfrac{3}{\varepsilon + 2}$(Mie 偶极内场系数)
-- 共振条件:$\mathrm{Re}(\varepsilon) = -2$(LSPR),此时 $\beta \to \infty$、$k_\mathrm{in} \to 0$(理想金属屏蔽)
+- 介电函数 $\varepsilon = \varepsilon_\mathrm{re} + i \varepsilon_\mathrm{im}$(复数, $\varepsilon_\mathrm{im} \geq 0$)
+- 散射增强因子: $\beta = \dfrac{\varepsilon - 1}{\varepsilon + 2}$ (复数,含相位延迟)
+- 球内场系数: $k_\mathrm{in} = \dfrac{3}{\varepsilon + 2}$ (Mie 偶极内场系数)
+- 共振条件: $\mathrm{Re}(\varepsilon) = -2$(LSPR),此时 $\beta \to \infty$、 $k_\mathrm{in} \to 0$(理想金属屏蔽)
 
 **电势表达式**(代码中 `laser_potential` 返回 $V^\mathrm{code} = -\Phi$,调用端加负号):
 
