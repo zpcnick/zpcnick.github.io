@@ -113,14 +113,14 @@ $$V^\mathrm{code}_\mathrm{in} = \mathrm{Re}[k_\mathrm{in} \cdot \mathrm{amp}] \c
 ### 通用前缀(7 列)
 
 ```
-inhomo_electric | nx | ny | nz | omega | envelope_function_name | phase
+inhomogenous_electric_field | nx | ny | nz | omega | envelope_function_name | phase
 ```
 
 ### 模型 1:Taylor
 
 ```
 %TDExternalFields
-  inhomo_electric | 0 | 0 | 1 | 1.0*eV | "env" | 0 | "taylor" | r0x | r0y | r0z | Gx | Gy | Gz | Hx | Hy | Hz
+  5 | 0 | 0 | 1 | 1.0*eV | "env" | "0" | "taylor" | r0x | r0y | r0z | Gx | Gy | Gz | Hx | Hy | Hz
 %
 ```
 
@@ -128,7 +128,7 @@ inhomo_electric | nx | ny | nz | omega | envelope_function_name | phase
 
 ```
 %TDExternalFields
-  inhomo_electric | 0 | 0 | 1 | 1.0*eV | "env" | 0 | "exponential" | r0x | r0y | r0z | ax | ay | az
+  5 | 0 | 0 | 1 | 1.0*eV | "env" | "0" | "exponential" | r0x | r0y | r0z | ax | ay | az
 %
 ```
 
@@ -136,7 +136,7 @@ inhomo_electric | nx | ny | nz | omega | envelope_function_name | phase
 
 ```
 %TDExternalFields
-  inhomo_electric | 0 | 0 | 1 | 3.0*eV | "env" | 0 | "dipole" | r0x | r0y | r0z | a | eps_re | eps_im
+  5 | 0 | 0 | 1 | 3.0*eV | "env" | "0" | "dipole" | r0x | r0y | r0z | a | eps_re | eps_im
 %
 ```
 
