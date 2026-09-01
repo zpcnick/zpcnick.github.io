@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+  <meta name="theme-color" content="#222">
+  <meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zpcnick.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="用纯 Canvas 写的一个贪吃蛇小游戏，无任何依赖，直接在网页上就能玩。支持键盘（方向键 / WASD）和触屏方向键，得分自动保存到本地。">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="贪吃蛇小游戏">
+  <meta property="og:url" content="https://zpcnick.github.io/2026/09/01/snake-game/">
+  <meta property="og:site_name" content="ZPC&#39;s homepage">
+  <meta property="og:description" content="用纯 Canvas 写的一个贪吃蛇小游戏，无任何依赖，直接在网页上就能玩。支持键盘（方向键 / WASD）和触屏方向键，得分自动保存到本地。">
+  <meta property="og:locale">
+  <meta property="article:published_time" content="2026-08-31T16:00:00.000Z">
+  <meta property="article:modified_time" content="2026-09-01T00:00:00.000Z">
+  <meta property="article:author" content="zpc">
+  <meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zpcnick.github.io/2026/09/01/snake-game/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'ch'
+  };
+</script>
+
+  <title>贪吃蛇小游戏 | ZPC's homepage</title>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">ZPC's homepage</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+        </ul>
+</nav>
+
+
+
+</div>
+    </header>
+
+
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+
+          <div class="content post posts-expand">
+
+
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="ch">
+    <link itemprop="mainEntityOfPage" href="https://zpcnick.github.io/2026/09/01/snake-game/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zpc">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/WPOrganization">
+      <meta itemprop="name" content="ZPC's homepage">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          贪吃蛇小游戏
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-09-01 00:00:00" itemprop="dateCreated datePublished" datetime="2026-09-01T00:00:00+08:00">2026-09-01</time>
+            </span>
+
+        </div>
+      </header>
+
+
+
+    <div class="post-body" itemprop="articleBody">
+
+        <p>今天用纯 <code>Canvas</code> 写了一个贪吃蛇小游戏，无任何外部依赖，直接在网页上就能玩。支持键盘（方向键 / WASD）和触屏方向键，得分会自动保存到浏览器本地，刷新也不丢。下面就是可以玩的版本。</p>
+
+        <h2 id="play"><a href="#play" class="headerlink" title="在线试玩"></a>在线试玩</h2>
+
+        <div class="snake-game">
+          <div class="snake-info">
+            <span>得分 <strong id="snake-score">0</strong></span>
+            <span>最高 <strong id="snake-high">0</strong></span>
+          </div>
+
+          <div class="snake-stage">
+            <canvas id="snake-canvas"></canvas>
+            <div class="snake-overlay" id="snake-overlay">
+              <div class="snake-overlay-inner">
+                <h3 id="snake-overlay-title">贪吃蛇</h3>
+                <p id="snake-overlay-text">点击下方按钮或方向键开始</p>
+                <button id="snake-start-btn" type="button">开始游戏</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="snake-pad">
+            <button type="button" class="pad-up" data-dir="up" aria-label="上"><i class="fa fa-chevron-up"></i></button>
+            <button type="button" class="pad-left" data-dir="left" aria-label="左"><i class="fa fa-chevron-left"></i></button>
+            <button type="button" class="pad-center" data-dir="pause" aria-label="暂停">暂停</button>
+            <button type="button" class="pad-right" data-dir="right" aria-label="右"><i class="fa fa-chevron-right"></i></button>
+            <button type="button" class="pad-down" data-dir="down" aria-label="下"><i class="fa fa-chevron-down"></i></button>
+          </div>
+
+          <p class="snake-tip">键盘：方向键 / WASD &nbsp;·&nbsp; 空格暂停 &nbsp;·&nbsp; 吃一个 +10 分</p>
+        </div>
+
+        <style>
+        /* 贪吃蛇游戏样式（局部作用域，避免污染主题） */
+        .snake-game{
+          max-width:440px;
+          margin:24px auto;
+          padding:20px;
+          background:#fff;
+          border:1px solid #d7e8e3;
+          border-radius:14px;
+          box-shadow:0 6px 24px rgba(44,122,123,0.12);
+        }
+        .snake-info{
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          padding:0 4px 12px;
+          font-size:14px;
+          color:#2c7a7b;
+        }
+        .snake-info strong{
+          color:#1a4d4e;
+          font-size:20px;
+          margin-left:6px;
+        }
+        .snake-stage{
+          position:relative;
+          width:100%;
+          aspect-ratio:1 / 1;
+        }
+        #snake-canvas{
+          display:block;
+          width:100%;
+          height:100%;
+          border-radius:10px;
+          border:2px solid #2c7a7b;
+          background:#f6fbf9;
+          touch-action:none;
+        }
+        .snake-overlay{
+          position:absolute;
+          inset:0;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          background:rgba(234,244,241,0.92);
+          border-radius:10px;
+        }
+        .snake-overlay.is-hidden{ display:none; }
+        .snake-overlay-inner{ text-align:center; padding:0 16px; }
+        .snake-overlay-inner h3{
+          margin:0 0 8px;
+          color:#2c7a7b;
+          font-size:22px;
+        }
+        .snake-overlay-inner p{
+          margin:0 0 16px;
+          color:#4a6b6c;
+          font-size:14px;
+        }
+        #snake-start-btn{
+          background:linear-gradient(135deg,#2c7a7b,#38a89d);
+          color:#fff;
+          border:none;
+          padding:10px 28px;
+          border-radius:24px;
+          font-size:15px;
+          cursor:pointer;
+          box-shadow:0 4px 12px rgba(44,122,123,0.35);
+          transition:transform .15s, box-shadow .15s;
+        }
+        #snake-start-btn:hover{
+          transform:translateY(-2px);
+          box-shadow:0 6px 16px rgba(44,122,123,0.45);
+        }
+        #snake-start-btn:active{ transform:translateY(0); }
+        .snake-pad{
+          display:grid;
+          grid-template-columns:repeat(3,1fr);
+          grid-template-rows:repeat(3,1fr);
+          gap:8px;
+          margin:16px auto 8px;
+          max-width:210px;
+          aspect-ratio:3 / 3;
+        }
+        .snake-pad button{
+          background:#eaf4f1;
+          border:1px solid #cfe0db;
+          border-radius:10px;
+          color:#2c7a7b;
+          font-size:16px;
+          cursor:pointer;
+          transition:background .12s, transform .12s, color .12s;
+          padding:0;
+        }
+        .snake-pad button:hover{ background:#d7ebe5; }
+        .snake-pad button:active{
+          transform:scale(0.94);
+          background:#2c7a7b;
+          color:#fff;
+        }
+        .snake-pad .pad-up{ grid-column:2; grid-row:1; }
+        .snake-pad .pad-left{ grid-column:1; grid-row:2; }
+        .snake-pad .pad-center{ grid-column:2; grid-row:2; font-size:13px; }
+        .snake-pad .pad-right{ grid-column:3; grid-row:2; }
+        .snake-pad .pad-down{ grid-column:2; grid-row:3; }
+        .snake-tip{
+          text-align:center;
+          font-size:12px;
+          color:#7a9a9b;
+          margin:0;
+        }
+        </style>
+
+        <script>
+        (function(){
+          var canvas = document.getElementById('snake-canvas');
+          if(!canvas) return;
+          var ctx = canvas.getContext('2d');
+
+          // 逻辑画布 400x400，按 DPR 放大以保证高分屏清晰
+          var LOGIC = 400, GRID = 20, CELL = LOGIC / GRID; // 每格 20px
+          var DPR = window.devicePixelRatio || 1;
+          canvas.width  = LOGIC * DPR;
+          canvas.height = LOGIC * DPR;
+          ctx.scale(DPR, DPR);
+
+          var $score  = document.getElementById('snake-score');
+          var $high   = document.getElementById('snake-high');
+          var $overlay= document.getElementById('snake-overlay');
+          var $title  = document.getElementById('snake-overlay-title');
+          var $text   = document.getElementById('snake-overlay-text');
+          var $btn    = document.getElementById('snake-start-btn');
+
+          // state: 'idle' | 'running' | 'paused' | 'over'
+          var snake, dir, queuedDir, food, score, tickMs, loop, state;
+          var high = parseInt(localStorage.getItem('snakeHigh') || '0', 10);
+          $high.textContent = high;
+
+          function reset(){
+            snake = [{x:9,y:10},{x:8,y:10},{x:7,y:10}];
+            dir = {x:1, y:0};
+            queuedDir = {x:1, y:0};
+            score = 0;
+            tickMs = 140;
+            placeFood();
+            $score.textContent = score;
+            draw();
+          }
+
+          function placeFood(){
+            var free = [];
+            for(var y=0; y<GRID; y++){
+              for(var x=0; x<GRID; x++){
+                if(!snake.some(function(s){ return s.x===x && s.y===y; })){
+                  free.push({x:x, y:y});
+                }
+              }
+            }
+            if(free.length === 0){ food = null; return; }
+            food = free[Math.floor(Math.random() * free.length)];
+          }
+
+          function roundRect(x, y, w, h, r){
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y,     x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x,     y + h, r);
+            ctx.arcTo(x,     y + h, x,     y,     r);
+            ctx.arcTo(x,     y,     x + w, y,     r);
+            ctx.closePath();
+          }
+
+          function draw(){
+            // 棋盘背景
+            for(var y=0; y<GRID; y++){
+              for(var x=0; x<GRID; x++){
+                ctx.fillStyle = ((x + y) & 1) ? '#f6fbf9' : '#eaf4f1';
+                ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
+              }
+            }
+            // 食物
+            if(food){
+              ctx.fillStyle = '#e8703a';
+              ctx.beginPath();
+              ctx.arc(food.x * CELL + CELL/2, food.y * CELL + CELL/2, CELL/2 - 3, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.fillStyle = 'rgba(255,255,255,0.55)';
+              ctx.beginPath();
+              ctx.arc(food.x * CELL + CELL/2 - 3, food.y * CELL + CELL/2 - 3, 2.2, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            // 蛇身（蓝绿渐变）
+            snake.forEach(function(s, i){
+              var t = snake.length <= 1 ? 0 : i / (snake.length - 1);
+              var r = Math.round(0x2c + (0x38 - 0x2c) * t);
+              var g = Math.round(0x7a + (0xa8 - 0x7a) * t);
+              var b = Math.round(0x7b + (0x9d - 0x7b) * t);
+              ctx.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
+              roundRect(s.x * CELL + 1, s.y * CELL + 1, CELL - 2, CELL - 2, 5);
+              ctx.fill();
+              // 头部画两只眼睛，朝向前进方向
+              if(i === 0){
+                var cx = s.x * CELL + CELL/2;
+                var cy = s.y * CELL + CELL/2;
+                var ex = dir.x, ey = dir.y;
+                var perpX = -ey, perpY = ex;
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(cx + ex*4 + perpX*3, cy + ey*4 + perpY*3, 2.5, 0, Math.PI*2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(cx + ex*4 - perpX*3, cy + ey*4 - perpY*3, 2.5, 0, Math.PI*2);
+                ctx.fill();
+                ctx.fillStyle = '#1a4d4e';
+                ctx.beginPath();
+                ctx.arc(cx + ex*5 + perpX*3, cy + ey*5 + perpY*3, 1.3, 0, Math.PI*2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(cx + ex*5 - perpX*3, cy + ey*5 - perpY*3, 1.3, 0, Math.PI*2);
+                ctx.fill();
+              }
+            });
+          }
+
+          function step(){
+            dir = queuedDir;
+            var head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+            // 撞墙
+            if(head.x < 0 || head.y < 0 || head.x >= GRID || head.y >= GRID){
+              return gameOver();
+            }
+            // 撞自身（尾巴会移走，所以排除最后一节）
+            var willGrow = food && head.x === food.x && head.y === food.y;
+            var body = willGrow ? snake : snake.slice(0, -1);
+            if(body.some(function(s){ return s.x === head.x && s.y === head.y; })){
+              return gameOver();
+            }
+            snake.unshift(head);
+            if(willGrow){
+              score += 10;
+              $score.textContent = score;
+              tickMs = Math.max(60, tickMs - 4); // 越吃越快
+              placeFood();
+              restartLoop();
+            } else {
+              snake.pop();
+            }
+            draw();
+          }
+
+          function restartLoop(){
+            if(loop) clearInterval(loop);
+            loop = setInterval(step, tickMs);
+          }
+
+          function start(){
+            reset();
+            state = 'running';
+            $overlay.classList.add('is-hidden');
+            restartLoop();
+          }
+
+          function pause(){
+            if(state !== 'running') return;
+            state = 'paused';
+            if(loop){ clearInterval(loop); loop = null; }
+            $title.textContent = '已暂停';
+            $text.textContent = '当前得分 ' + score;
+            $btn.textContent = '继续游戏';
+            $overlay.classList.remove('is-hidden');
+          }
+
+          function resume(){
+            if(state !== 'paused') return;
+            state = 'running';
+            $overlay.classList.add('is-hidden');
+            restartLoop();
+          }
+
+          function gameOver(){
+            state = 'over';
+            if(loop){ clearInterval(loop); loop = null; }
+            var isNew = score > high;
+            if(isNew){
+              high = score;
+              localStorage.setItem('snakeHigh', String(high));
+              $high.textContent = high;
+            }
+            $title.textContent = '游戏结束';
+            $text.textContent = '本局得分 ' + score + (isNew && score > 0 ? ' · 新纪录！' : '');
+            $btn.textContent = '再来一局';
+            $overlay.classList.remove('is-hidden');
+          }
+
+          function turn(nx, ny){
+            if(state !== 'running') return;
+            // 禁止 180 度反向
+            if(nx === -dir.x && ny === -dir.y) return;
+            queuedDir = { x: nx, y: ny };
+          }
+
+          // 方向输入（按钮 / 触屏）：idle/over 时自动开始
+          function dirInput(nx, ny){
+            if(state === 'idle' || state === 'over'){
+              start();
+              turn(nx, ny);
+            } else if(state === 'running'){
+              turn(nx, ny);
+            } else if(state === 'paused'){
+              resume();
+              turn(nx, ny);
+            }
+          }
+
+          // 仅当游戏画布在视口内时才拦截键盘，避免影响整页滚动
+          function inView(){
+            var r = canvas.getBoundingClientRect();
+            return r.bottom > 0 && r.top < window.innerHeight;
+          }
+
+          document.addEventListener('keydown', function(e){
+            if(!inView()) return;
+            var k = e.key, nx = null, ny = null;
+            if(k === 'ArrowUp'    || k === 'w' || k === 'W'){ nx = 0;  ny = -1; }
+            else if(k === 'ArrowDown'  || k === 's' || k === 'S'){ nx = 0;  ny = 1;  }
+            else if(k === 'ArrowLeft'  || k === 'a' || k === 'A'){ nx = -1; ny = 0;  }
+            else if(k === 'ArrowRight' || k === 'd' || k === 'D'){ nx = 1;  ny = 0;  }
+            if(nx !== null){
+              e.preventDefault();
+              dirInput(nx, ny);
+              return;
+            }
+            if(k === ' '){
+              e.preventDefault();
+              if(state === 'running') pause();
+              else if(state === 'paused') resume();
+              else if(state === 'idle' || state === 'over') start();
+            }
+          });
+
+          $btn.addEventListener('click', function(){
+            if(state === 'paused') resume();
+            else start();
+          });
+
+          var padBtns = document.querySelectorAll('.snake-pad button');
+          for(var i = 0; i < padBtns.length; i++){
+            (function(btn){
+              btn.addEventListener('click', function(e){
+                e.preventDefault();
+                var d = btn.getAttribute('data-dir');
+                if(d === 'up')         dirInput(0, -1);
+                else if(d === 'down')  dirInput(0, 1);
+                else if(d === 'left')  dirInput(-1, 0);
+                else if(d === 'right') dirInput(1, 0);
+                else if(d === 'pause'){
+                  if(state === 'running') pause();
+                  else if(state === 'paused') resume();
+                }
+              });
+            })(padBtns[i]);
+          }
+
+          // 初始渲染
+          reset();
+          state = 'idle';
+          $title.textContent = '贪吃蛇';
+          $text.textContent = '点击按钮或方向键开始';
+          $btn.textContent = '开始游戏';
+        })();
+        </script>
+
+        <h2 id="features"><a href="#features" class="headerlink" title="实现要点"></a>实现要点</h2>
+        <ul>
+          <li><strong>纯 Canvas 绘制</strong>：20×20 网格，每格 20px，蛇身用蓝绿渐变，蛇头带朝向眼睛。</li>
+          <li><strong>双重控制</strong>：键盘方向键 / WASD，外加屏幕方向键，方便手机操作。</li>
+          <li><strong>状态机</strong>：<code>idle / running / paused / over</code> 四态切换，叠加层统一处理开始、暂停、结束。</li>
+          <li><strong>防误操作</strong>：禁止 180° 反向掉头；键盘只在画布进入视口时拦截，不破坏整页滚动。</li>
+          <li><strong>动态难度</strong>：每吃一颗食物加速 4ms，下限 60ms，越往后越紧张。</li>
+          <li><strong>本地存档</strong>：最高分用 <code>localStorage</code> 保存，刷新页面也不丢。</li>
+          <li><strong>高分屏适配</strong>：按 <code>devicePixelRatio</code> 放大 backing store，Retina 屏依然清晰。</li>
+        </ul>
+
+        <h2 id="core"><a href="#core" class="headerlink" title="核心逻辑"></a>核心逻辑</h2>
+        <p>游戏主循环就是 <code>setInterval(step, tickMs)</code>，每一帧做三件事：算新头、判碰撞、画图。关键代码如下：</p>
+        <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">step</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">dir</span> = queuedDir;</span><br><span class="line">  <span class="keyword">var</span> head = &#123; x: snake[0].x + dir.x, y: snake[0].y + dir.y &#125;;</span><br><span class="line">  <span class="keyword">if</span> (head.x &lt; 0 || head.y &lt; 0 || head.x &gt;= GRID || head.y &gt;= GRID)</span><br><span class="line">    <span class="keyword">return</span> gameOver();              <span class="comment">// 撞墙</span></span><br><span class="line">  <span class="keyword">var</span> willGrow = food &amp;&amp; head.x === food.x &amp;&amp; head.y === food.y;</span><br><span class="line">  <span class="keyword">var</span> body = willGrow ? snake : snake.slice(0, -1);</span><br><span class="line">  <span class="keyword">if</span> (body.some(<span class="function"><span class="params">s</span> =&gt;</span> s.x === head.x &amp;&amp; s.y === head.y))</span><br><span class="line">    <span class="keyword">return</span> gameOver();              <span class="comment">// 撞自身</span></span><br><span class="line">  snake.unshift(head);</span><br><span class="line">  <span class="keyword">if</span> (willGrow) &#123;              <span class="comment">// 吃到食物：加分 + 加速 + 重新放置食物</span></span><br><span class="line">    score += 10; tickMs = Math.max(60, tickMs - 4); placeFood();</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    snake.pop();                <span class="comment">// 没吃到：去掉尾巴，长度不变</span></span><br><span class="line">  &#125;</span><br><span class="line">  draw();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        <hr>
+        <p>整个游戏单文件、零依赖，可以很方便地嵌进任何静态博客。试着刷新一下页面，最高分还在。</p>
+
+    </div>
+
+
+
+
+      <footer class="post-footer">
+
+
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/07/31/vibe-coding/" rel="prev" title="用 Vibe Coding 改造博客">
+      <i class="fa fa-chevron-left"></i> 用 Vibe Coding 改造博客
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+
+  </article>
+
+
+
+          </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+
+
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#play"><span class="nav-number">1.</span> <span class="nav-text">在线试玩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#features"><span class="nav-number">2.</span> <span class="nav-text">实现要点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#core"><span class="nav-number">3.</span> <span class="nav-text">核心逻辑</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zpc</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+
+
+
+<div class="copyright">
+
+  &copy;
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zpc</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+</body>
+</html>
