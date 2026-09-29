@@ -144,11 +144,12 @@
 
     <div class="post-body" itemprop="articleBody">
 
-        <p>整理了一个交互式化学元素周期表，覆盖全部 <strong>118 种元素</strong>。每个格子按九大分类配色，镧系 / 锕系单独成两行放在主表下方。桌面端<em>悬停</em>即时预览，移动端<em>点击</em>锁定，右侧详情面板会显示原子序数、符号、中英文名、相对原子质量、所属周期 / 族以及电子排布。下方就是完整周期表。</p>
+        <p>整理了一个交互式化学元素周期表，覆盖全部 <strong>118 种元素</strong>。每个格子按九大分类配色，镧系 / 锕系单独成两行放在主表下方，顶部带有主族 / 副族罗马编号（IA…VIIIA、IIIB…IIB、0 族）。桌面端鼠标<em>悬停</em>弹出跟随卡片，显示原子序数、符号、中英文名、相对原子质量、所属周期 / 族与电子排布；移动端点击元素弹出卡片，表格支持横向滑动。下方就是完整周期表。</p>
 
         <h2 id="table"><a href="#table" class="headerlink" title="周期表"></a>周期表</h2>
 
         <div class="ptable-wrap">
+          <div class="pd-pop" id="pd-pop"></div>
           <div class="ptable-legend" id="ptable-legend">
             <span class="pt-leg" data-cat="alkali-metal"><span class="pt-dot cat-alkali-metal"></span>碱金属</span>
             <span class="pt-leg" data-cat="alkaline-earth"><span class="pt-dot cat-alkaline-earth"></span>碱土金属</span>
@@ -163,76 +164,87 @@
 
           <div class="ptable-layout">
             <div class="ptable-main-col">
+              <div class="ptable-scroll"><div class="gh-row" id="gh-main"></div>
               <div class="ptable-main" id="ptable-main"></div>
               <div class="ptable-fblock" id="ptable-fblock">
                 <div class="fb-label">镧系<br>La–Lu</div>
                 <div class="fb-label">锕系<br>Ac–Lr</div>
-              </div>
+              </div></div>
             </div>
             <aside class="ptable-detail" id="ptable-detail"></aside>
           </div>
 
-          <p class="ptable-tip">桌面：鼠标悬停预览 · 点击锁定 &nbsp;·&nbsp; 手机：点击查看 &nbsp;·&nbsp; 质量带括号者为最稳定同位素的质量数</p>
+          <p class="ptable-tip">桌面：鼠标悬停显示卡片 &nbsp;·&nbsp; 点击锁定 &nbsp;·&nbsp; 手机：点击查看，可左右滑动 &nbsp;·&nbsp; 质量带括号者为最稳定同位素的质量数</p>
         </div>
 
         <style>
-        .ptable-wrap{ --cell:56px; --gap:4px; margin:24px 0; }
-        .ptable-legend{ display:flex; flex-wrap:wrap; gap:8px 16px; margin-bottom:18px; font-size:12px; color:#4a6b6c; }
+        .ptable-wrap{ --cell:46px; --gap:3px; margin:24px 0; position:relative; }
+        .ptable-legend{ display:flex; flex-wrap:wrap; gap:6px 14px; margin-bottom:14px; font-size:11.5px; color:#4a6b6c; }
         .pt-leg{ display:inline-flex; align-items:center; gap:6px; cursor:default; user-select:none; }
         .pt-leg:hover{ color:#2c7a7b; }
-        .pt-dot{ width:14px; height:14px; border-radius:4px; display:inline-block; border:1px solid rgba(0,0,0,0.08); }
+        .pt-dot{ width:12px; height:12px; border-radius:3px; display:inline-block; border:1px solid rgba(0,0,0,0.08); }
 
         .ptable-layout{ display:flex; gap:22px; align-items:flex-start; }
-        .ptable-main-col{ flex:1 1 auto; min-width:0; overflow-x:auto; padding-bottom:8px; }
-        .ptable-detail{ flex:0 0 286px; position:sticky; top:84px; }
+        .ptable-main-col{ flex:1 1 auto; min-width:0; }
+        .ptable-detail{ flex:0 0 0; width:0; pointer-events:none; }
         @media (max-width:960px){
           .ptable-layout{ flex-direction:column; }
-          .ptable-detail{ position:static; width:100%; flex:0 0 auto; order:-1; margin-bottom:4px; }
+          .ptable-detail{ display:none; }
+          .pd-pop{ position:fixed !important; left:50% !important; margin-left:-105px; bottom:18px !important; top:auto !important; }
         }
+
+        .ptable-scroll{ overflow-x:auto; padding:6px 2px 10px; -webkit-overflow-scrolling:touch; }
+        .ptable-scroll::-webkit-scrollbar{ height:7px; }
+        .ptable-scroll::-webkit-scrollbar-thumb{ background:#bfd6d1; border-radius:4px; }
+        .ptable-scroll::-webkit-scrollbar-track{ background:#eef5f3; }
 
         .ptable-main, .ptable-fblock{ display:grid; grid-template-columns:repeat(18, var(--cell)); gap:var(--gap); }
         .ptable-fblock{ margin-top:12px; }
-        .ptable-fblock .fb-label{ grid-column:1 / span 2; display:flex; align-items:center; justify-content:center; font-size:11px; line-height:1.35; color:#4a6b6c; text-align:center; padding:4px; border-radius:8px; background:#eef5f3; }
+        .ptable-fblock .fb-label{ grid-column:1 / span 2; display:flex; align-items:center; justify-content:center; font-size:10px; line-height:1.3; color:#4a6b6c; text-align:center; padding:3px; border-radius:6px; background:#eef5f3; }
+        .gh-row{ display:grid; grid-template-columns:repeat(18, var(--cell)); gap:var(--gap); margin-bottom:3px; }
+        .gh-row .gh{ height:15px; display:flex; align-items:center; justify-content:center; font-size:9px; color:#5d7576; }
 
-        .el{ width:var(--cell); height:var(--cell); display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px solid rgba(0,0,0,0.08); border-radius:8px; background:#fff; cursor:pointer; padding:2px; font-family:inherit; line-height:1.1; text-align:center; transition:transform .12s, box-shadow .12s, filter .12s; position:relative; }
-        .el .el-num{ position:absolute; top:3px; left:5px; font-size:10px; color:#5d7576; }
-        .el .el-sym{ font-size:18px; font-weight:700; color:#1a3a3b; }
-        .el .el-mass{ font-size:8.5px; color:#7a9a9b; margin-top:1px; }
+        .el{ width:var(--cell); height:var(--cell); display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px solid rgba(0,0,0,0.08); border-radius:6px; background:#fff; cursor:pointer; padding:1px; font-family:inherit; line-height:1.05; text-align:center; transition:transform .12s, box-shadow .12s, filter .12s; position:relative; }
+        .el .el-num{ position:absolute; top:2px; left:4px; font-size:8px; color:#5d7576; }
+        .el .el-sym{ font-size:14px; font-weight:700; color:#1a3a3b; }
+        .el .el-mass{ font-size:6.5px; color:#7a9a9b; margin-top:0; }
         .el:hover, .el.is-hl{ transform:translateY(-2px) scale(1.06); box-shadow:0 4px 10px rgba(0,0,0,0.14); z-index:2; }
         .el.is-pinned{ box-shadow:0 0 0 2px #2c7a7b, 0 4px 12px rgba(44,122,123,0.4); z-index:3; }
 
         .cat-alkali-metal{ background:#ffd6d6; }             .cat-alkali-metal .el-sym{ color:#b3261e; }
         .cat-alkaline-earth{ background:#ffe2c2; }           .cat-alkaline-earth .el-sym{ color:#b06520; }
         .cat-transition-metal{ background:#fff2b0; }          .cat-transition-metal .el-sym{ color:#8a6d00; }
-        .cat-post-transition{ background:#d4ecf7; }           .cat-post-transition .el-sym{ color:#1f6f9e; }
+        .cat-post-transition{ background:#fff3bf; }          .cat-post-transition .el-sym{ color:#8a6d00; }
         .cat-metalloid{ background:#dcecb8; }                .cat-metalloid .el-sym{ color:#4a6b1f; }
         .cat-nonmetal{ background:#c9e4ff; }                 .cat-nonmetal .el-sym{ color:#1c5fa8; }
         .cat-noble-gas{ background:#e3d5f5; }                .cat-noble-gas .el-sym{ color:#5b3a8e; }
         .cat-lanthanide{ background:#ffd6e9; }                .cat-lanthanide .el-sym{ color:#a0407a; }
         .cat-actinide{ background:#f3d5f0; }                 .cat-actinide .el-sym{ color:#7a3a78; }
 
-        .ptable-detail-empty{ text-align:center; color:#7a9a9b; padding:34px 12px; }
-        .ptable-detail-empty .fa{ font-size:34px; color:#2c7a7b; opacity:.5; }
-        .ptable-detail-empty p{ margin:12px 0 4px; color:#2c7a7b; font-size:15px; }
-        .ptable-detail-empty span{ font-size:12px; }
-
-        .pd-card{ border:1px solid #e0e8e6; border-radius:14px; overflow:hidden; background:#fff; box-shadow:0 6px 18px rgba(44,122,123,0.10); }
-        .pd-accent{ height:6px; }
-        .pd-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px 6px; }
-        .pd-num{ font-size:14px; color:#6b8283; }
-        .pd-sym{ font-size:34px; font-weight:700; color:#1a3a3b; line-height:1; }
-        .pd-mass{ font-size:13px; color:#2c7a7b; }
-        .pd-names{ padding:0 16px 12px; }
-        .pd-cn{ font-size:18px; font-weight:600; color:#1a3a3b; }
-        .pd-en{ display:block; font-size:12px; color:#7a9a9b; margin-top:2px; }
-        .pd-info{ margin:0; padding:10px 16px 16px; border-top:1px dashed #e0e8e6; }
-        .pd-info dt{ font-size:11px; color:#7a9a9b; margin-top:10px; }
+        /* hover 卡片（fixed 定位，相对视口） */
+        .pd-pop{
+          position:fixed; z-index:50; pointer-events:none;
+          width:210px; border:1px solid #e0e8e6; border-radius:12px; overflow:hidden;
+          background:#fff; box-shadow:0 8px 22px rgba(0,0,0,0.18);
+          opacity:0; transform:translateY(4px); transition:opacity .12s, transform .12s;
+        }
+        .pd-pop.is-show{ opacity:1; transform:translateY(0); }
+        .pd-accent{ height:5px; }
+        .pd-head{ display:flex; align-items:center; justify-content:space-between; padding:10px 12px 4px; }
+        .pd-num{ font-size:12px; color:#6b8283; }
+        .pd-sym{ font-size:26px; font-weight:700; color:#1a3a3b; line-height:1; }
+        .pd-mass{ font-size:11px; color:#2c7a7b; }
+        .pd-names{ padding:0 12px 8px; }
+        .pd-cn{ font-size:15px; font-weight:600; color:#1a3a3b; }
+        .pd-en{ display:block; font-size:10.5px; color:#7a9a9b; margin-top:1px; }
+        .pd-info{ margin:0; padding:8px 12px 12px; border-top:1px dashed #e0e8e6; }
+        .pd-info dt{ font-size:9.5px; color:#7a9a9b; margin-top:7px; }
         .pd-info dt:first-child{ margin-top:0; }
-        .pd-info dd{ margin:2px 0 0; font-size:13px; color:#1a3a3b; }
-        .pd-cfg{ font-family:ui-monospace, Menlo, Consolas, monospace; font-size:12px; word-break:break-word; }
-        .pd-dot{ display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; vertical-align:middle; border:1px solid rgba(0,0,0,0.06); }
+        .pd-info dd{ margin:1px 0 0; font-size:11.5px; color:#1a3a3b; }
+        .pd-cfg{ font-family:ui-monospace, Menlo, Consolas, monospace; font-size:10px; word-break:break-word; }
+        .pd-dot{ display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:5px; vertical-align:middle; border:1px solid rgba(0,0,0,0.06); }
 
-        .ptable-tip{ text-align:center; font-size:12px; color:#7a9a9b; margin:14px 0 0; }
+        .ptable-tip{ text-align:center; font-size:11px; color:#7a9a9b; margin:12px 0 0; }
         </style>
 
         <script>
@@ -241,14 +253,28 @@
           if(!wrap) return;
           var mainGrid = document.getElementById('ptable-main');
           var fbGrid   = document.getElementById('ptable-fblock');
-          var $detail  = document.getElementById('ptable-detail');
-          if(!mainGrid || !fbGrid || !$detail) return;
+          var ghMain   = document.getElementById('gh-main');
+          var $pop     = document.getElementById('pd-pop');
+          if(!mainGrid || !fbGrid || !ghMain || !$pop) return;
 
           var CATS = {
             'alkali-metal':'碱金属','alkaline-earth':'碱土金属','transition-metal':'过渡金属',
             'post-transition':'后过渡金属','metalloid':'类金属','nonmetal':'非金属',
             'noble-gas':'稀有气体','lanthanide':'镧系元素','actinide':'锕系元素'
           };
+
+          // 族罗马数字（1-2、13-17 主族=IA/IIA/IIIA...VIIA；18=0 族；3-12 副族=IIIB..IIB）
+          var ROMAN = ['','I','II','III','IV','V','VI','VII','VIII'];
+          function groupLabel(g){
+            if(g === 18) return '0';
+            if(g >= 1 && g <= 2)        return ROMAN[g] + 'A';         // IA, IIA
+            if(g >= 3 && g <= 7)        return ROMAN[g] + 'B';        // IIIB, IVB, VB, VIB, VIIB
+            if(g >= 8 && g <= 10)       return 'VIII';                 // 副族 8-10 合写为 VIII
+            if(g === 11)                return ROMAN[1] + 'B';        // IB
+            if(g === 12)                return ROMAN[2] + 'B';        // IIB
+            if(g >= 13 && g <= 17)      return ROMAN[g - 10] + 'A';   // IIIA..VIIA
+            return String(g);
+          }
 
           // [原子序数, 符号, 中文, 英文, 相对原子质量, 分类, 周期, 族(0=f区), 电子排布]
           var RAW = [
@@ -394,6 +420,18 @@
             return b;
           }
 
+          // 顶部族标号行（主表 1-18）
+          function makeGh(text, col){
+            var d = document.createElement('div');
+            d.className = 'gh';
+            d.textContent = text;
+            d.style.gridColumn = String(col);
+            return d;
+          }
+          for(var gc = 1; gc <= 18; gc++){
+            ghMain.appendChild(makeGh(groupLabel(gc), gc));
+          }
+
           // 主表
           DATA.forEach(function(e){
             if(e.cat === 'lanthanide' || e.cat === 'actinide') return;
@@ -423,16 +461,10 @@
             }
           }
 
-          function showDetail(e){
-            if(!e){
-              $detail.innerHTML = '<div class="ptable-detail-empty"><i class="fa fa-flask"></i><p>悬停或点击任意元素</p><span>查看原子序数、质量、电子排布等详情</span></div>';
-              return;
-            }
+          function detailHTML(e){
             var label = CATS[e.cat];
-            var groupTxt = e.g ? ('第 ' + e.g + ' 族') : ('f 区（' + (e.cat==='lanthanide'?'镧系':'锕系') + '）');
-            $detail.innerHTML =
-              '<div class="pd-card">'
-              + '<div class="pd-accent cat-'+e.cat+'"></div>'
+            var groupTxt = e.g ? (groupLabel(e.g) + ' 族') : ('f 区（' + (e.cat==='lanthanide'?'镧系':'锕系') + '）');
+            return '<div class="pd-accent cat-'+e.cat+'"></div>'
               + '<div class="pd-head">'
                 + '<span class="pd-num">'+e.n+'</span>'
                 + '<span class="pd-sym">'+e.sym+'</span>'
@@ -447,19 +479,56 @@
                 + '<dt>周期</dt><dd>第 '+e.p+' 周期</dd>'
                 + '<dt>族</dt><dd>'+groupTxt+'</dd>'
                 + '<dt>电子排布</dt><dd class="pd-cfg">'+e.cfg+'</dd>'
-              + '</dl>'
-              + '</div>';
+              + '</dl>';
           }
-          showDetail(null);
+
+          function showPop(e, anchor){
+            if(!e){ $pop.classList.remove('is-show'); return; }
+            $pop.innerHTML = detailHTML(e);
+            $pop.classList.add('is-show');
+            if(anchor){ positionPop(anchor); }
+          }
+          function positionPop(anchor){
+            var ar = anchor.getBoundingClientRect();  // 视口坐标
+            var pw = $pop.offsetWidth, ph = $pop.offsetHeight;
+            var vw = window.innerWidth, vh = window.innerHeight;
+            // 窄屏：固定贴底居中
+            if(vw <= 960){
+              $pop.style.left  = Math.max(4, (vw - pw)/2) + 'px';
+              $pop.style.top   = '';
+              $pop.style.bottom = '18px';
+              return;
+            }
+            $pop.style.bottom = '';
+            // 水平：居中于格子，限制在视口内
+            var x = ar.left + ar.width/2 - pw/2;
+            if(x < 8) x = 8;
+            if(x + pw > vw - 8) x = vw - pw - 8;
+            // 垂直：默认放格子下方 8px；超出视口底则翻上方；都不够则贴视口底
+            var yBelow = ar.bottom + 8;
+            var yAbove  = ar.top - ph - 8;
+            var y;
+            if(yBelow + ph <= vh - 8){        // 下方放得下
+              y = yBelow;
+            } else if(yAbove >= 8){           // 翻到上方
+              y = yAbove;
+            } else {                         // 上下都不够，贴视口底
+              y = Math.max(8, vh - ph - 8);
+            }
+            $pop.style.left = x + 'px';
+            $pop.style.top  = y + 'px';
+          }
 
           function bindHover(grid){
             grid.addEventListener('mouseover', function(ev){
               var t = ev.target.closest('.el'); if(!t) return;
-              if(!pinned){ var e = byNum[t.dataset.n]; if(e) showDetail(e); }
+              if(pinned) return;            // 锁定时不切换
+              var e = byNum[t.dataset.n]; if(e) showPop(e, t);
             });
             grid.addEventListener('mouseout', function(ev){
               var t = ev.target.closest('.el'); if(!t) return;
-              if(!pinned) showDetail(null);
+              if(pinned) return;
+              showPop(null);
             });
           }
           bindHover(mainGrid);
@@ -468,8 +537,8 @@
           document.addEventListener('click', function(ev){
             var t = ev.target.closest('.el[data-n]'); if(!t) return;
             var n = t.dataset.n;
-            if(pinned === n){ setPinned(null); showDetail(null); }
-            else { setPinned(n); var e = byNum[n]; if(e) showDetail(e); }
+            if(pinned === n){ setPinned(null); showPop(null); }
+            else { setPinned(n); var e = byNum[n]; if(e) showPop(e, t); }
           });
 
           // 图例悬停高亮同分类
@@ -492,10 +561,11 @@
         <h2 id="features"><a href="#features" class="headerlink" title="实现要点"></a>实现要点</h2>
         <ul>
           <li><strong>118 种元素全覆盖</strong>：主表按 18 族对齐排布，镧系（La–Lu）与锕系（Ac–Lr）单独成两行置于主表下方，列号与主表第 3–17 列严格对齐。</li>
-          <li><strong>九大分类配色</strong>：碱金属、碱土金属、过渡金属、后过渡金属、类金属、非金属、稀有气体、镧系、锕系各有专属色块，顶部图例可对照，悬停图例还能高亮整类元素。</li>
-          <li><strong>双交互模式</strong>：桌面端鼠标悬停即时预览，移动端无 hover 事件则改为点击锁定，锁定后该格子用蓝绿描边高亮，再次点击解锁。</li>
-          <li><strong>详情面板</strong>：原子序数、符号、中英文名、相对原子质量、分类、周期、族、电子排布（采用惰性气体实芯简写，如 <code>[Ar] 3d⁶ 4s²</code>）一应俱全。</li>
-          <li><strong>响应式</strong>：宽屏左右双栏、详情吸顶；窄屏自动堆叠为单列、详情置顶、表格横向滚动，小屏依然能完整浏览。</li>
+          <li><strong>主族 / 副族罗马编号</strong>：顶部族标号行按 IUPAC 习惯标注 —— 1、2、13–17 族为主族（IA、IIA、IIIA…VIIA），3–12 族为副族（IIIB…VIIB、VIII、IB、IIB），18 族为稀有气体 0 族。</li>
+          <li><strong>九大分类配色</strong>：碱金属、碱土金属、过渡金属、后过渡金属、类金属、非金属、稀有气体、镧系、锕系各有专属色块，顶部图例可对照，悬停图例还能高亮整类元素。后过渡金属用浅黄与过渡金属同色系但更淡，非金属蓝色不混淆。</li>
+          <li><strong>悬停跟随卡片</strong>：桌面端默认不显示详情，鼠标悬停元素时在格子附近弹出跟随卡片（自动避让边界、下方溢出时翻到上方）；点击可锁定该卡片，再次点击解锁。</li>
+          <li><strong>移动端适配</strong>：无 hover 时改为点击弹卡片，卡片浮于底部居中；表格容器横向滚动并带滚动条，18 列完整可滑。</li>
+          <li><strong>详情内容</strong>：原子序数、符号、中英文名、相对原子质量、分类、周期、族（罗马 + AB）、电子排布（惰气实芯简写，如 <code>[Ar] 3d⁶ 4s²</code>）一应俱全。</li>
           <li><strong>零依赖</strong>：纯原生 HTML / CSS / JavaScript，无任何外部库，可直接嵌入任意静态博客。</li>
         </ul>
 
@@ -521,7 +591,7 @@ DATA.forEach(function(e){
 });</code></pre>
 
         <hr>
-        <p>悬停预览、点击锁定用的是同一个 <code>showDetail</code> 函数：未锁定时 hover 临时切换详情，锁定后 hover 不再覆盖，直到再次点击解锁。整页单文件、零依赖，可以很方便地嵌进任何静态博客。</p>
+        <p>悬停弹出、点击锁定用的是同一个 <code>showPop</code> 函数：未锁定时 hover 临时显示卡片并跟随锚点定位，锁定后 hover 不再覆盖，直到再次点击解锁。整页单文件、零依赖，可以很方便地嵌进任何静态博客。</p>
 
     </div>
 
