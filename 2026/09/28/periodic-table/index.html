@@ -166,7 +166,6 @@
             <div class="ptable-main-col">
               <div class="ptable-scroll"><div class="gh-row" id="gh-main"></div>
               <div class="ptable-main" id="ptable-main"></div>
-              <div class="gh-row" id="gh-fblock"></div>
               <div class="ptable-fblock" id="ptable-fblock">
                 <div class="fb-label">镧系<br>La–Lu</div>
                 <div class="fb-label">锕系<br>Ac–Lr</div>
@@ -179,36 +178,36 @@
         </div>
 
         <style>
-        .ptable-wrap{ --cell:60px; --gap:4px; margin:24px 0; }
-        .ptable-legend{ display:flex; flex-wrap:wrap; gap:8px 16px; margin-bottom:18px; font-size:12px; color:#4a6b6c; }
+        .ptable-wrap{ --cell:46px; --gap:3px; margin:24px 0; position:relative; }
+        .ptable-legend{ display:flex; flex-wrap:wrap; gap:6px 14px; margin-bottom:14px; font-size:11.5px; color:#4a6b6c; }
         .pt-leg{ display:inline-flex; align-items:center; gap:6px; cursor:default; user-select:none; }
         .pt-leg:hover{ color:#2c7a7b; }
-        .pt-dot{ width:14px; height:14px; border-radius:4px; display:inline-block; border:1px solid rgba(0,0,0,0.08); }
+        .pt-dot{ width:12px; height:12px; border-radius:3px; display:inline-block; border:1px solid rgba(0,0,0,0.08); }
 
-        .ptable-layout{ display:flex; gap:22px; align-items:flex-start; position:relative; }
+        .ptable-layout{ display:flex; gap:22px; align-items:flex-start; }
         .ptable-main-col{ flex:1 1 auto; min-width:0; }
         .ptable-detail{ flex:0 0 0; width:0; pointer-events:none; }
         @media (max-width:960px){
           .ptable-layout{ flex-direction:column; }
-          .ptable-detail{ position:fixed; left:50%; bottom:18px; transform:translateX(-50%); width:auto; max-width:92vw; }
+          .ptable-detail{ display:none; }
+          .pd-pop{ position:fixed !important; left:50% !important; margin-left:-105px; bottom:18px !important; top:auto !important; }
         }
 
-        .ptable-scroll{ overflow-x:auto; padding:8px 4px 12px; -webkit-overflow-scrolling:touch; }
-        .ptable-scroll::-webkit-scrollbar{ height:8px; }
+        .ptable-scroll{ overflow-x:auto; padding:6px 2px 10px; -webkit-overflow-scrolling:touch; }
+        .ptable-scroll::-webkit-scrollbar{ height:7px; }
         .ptable-scroll::-webkit-scrollbar-thumb{ background:#bfd6d1; border-radius:4px; }
         .ptable-scroll::-webkit-scrollbar-track{ background:#eef5f3; }
 
         .ptable-main, .ptable-fblock{ display:grid; grid-template-columns:repeat(18, var(--cell)); gap:var(--gap); }
-        .ptable-fblock{ margin-top:14px; }
-        .ptable-fblock .fb-label{ grid-column:1 / span 2; display:flex; align-items:center; justify-content:center; font-size:11px; line-height:1.35; color:#4a6b6c; text-align:center; padding:4px; border-radius:8px; background:#eef5f3; }
-        .gh-row{ display:grid; grid-template-columns:repeat(18, var(--cell)); gap:var(--gap); margin-bottom:4px; }
-        .gh-row .gh{ height:18px; display:flex; align-items:center; justify-content:center; font-size:10.5px; color:#5d7576; }
-        #gh-fblock{ margin-top:14px; }
+        .ptable-fblock{ margin-top:12px; }
+        .ptable-fblock .fb-label{ grid-column:1 / span 2; display:flex; align-items:center; justify-content:center; font-size:10px; line-height:1.3; color:#4a6b6c; text-align:center; padding:3px; border-radius:6px; background:#eef5f3; }
+        .gh-row{ display:grid; grid-template-columns:repeat(18, var(--cell)); gap:var(--gap); margin-bottom:3px; }
+        .gh-row .gh{ height:15px; display:flex; align-items:center; justify-content:center; font-size:9px; color:#5d7576; }
 
-        .el{ width:var(--cell); height:var(--cell); display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px solid rgba(0,0,0,0.08); border-radius:8px; background:#fff; cursor:pointer; padding:2px; font-family:inherit; line-height:1.1; text-align:center; transition:transform .12s, box-shadow .12s, filter .12s; position:relative; }
-        .el .el-num{ position:absolute; top:3px; left:5px; font-size:10px; color:#5d7576; }
-        .el .el-sym{ font-size:18px; font-weight:700; color:#1a3a3b; }
-        .el .el-mass{ font-size:8.5px; color:#7a9a9b; margin-top:1px; }
+        .el{ width:var(--cell); height:var(--cell); display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px solid rgba(0,0,0,0.08); border-radius:6px; background:#fff; cursor:pointer; padding:1px; font-family:inherit; line-height:1.05; text-align:center; transition:transform .12s, box-shadow .12s, filter .12s; position:relative; }
+        .el .el-num{ position:absolute; top:2px; left:4px; font-size:8px; color:#5d7576; }
+        .el .el-sym{ font-size:14px; font-weight:700; color:#1a3a3b; }
+        .el .el-mass{ font-size:6.5px; color:#7a9a9b; margin-top:0; }
         .el:hover, .el.is-hl{ transform:translateY(-2px) scale(1.06); box-shadow:0 4px 10px rgba(0,0,0,0.14); z-index:2; }
         .el.is-pinned{ box-shadow:0 0 0 2px #2c7a7b, 0 4px 12px rgba(44,122,123,0.4); z-index:3; }
 
@@ -222,30 +221,30 @@
         .cat-lanthanide{ background:#ffd6e9; }                .cat-lanthanide .el-sym{ color:#a0407a; }
         .cat-actinide{ background:#f3d5f0; }                 .cat-actinide .el-sym{ color:#7a3a78; }
 
-        /* hover 卡片（绝对定位跟随） */
+        /* hover 卡片（fixed 定位，相对视口） */
         .pd-pop{
-          position:absolute; z-index:50; pointer-events:none;
-          width:260px; border:1px solid #e0e8e6; border-radius:14px; overflow:hidden;
-          background:#fff; box-shadow:0 10px 30px rgba(0,0,0,0.18);
+          position:fixed; z-index:50; pointer-events:none;
+          width:210px; border:1px solid #e0e8e6; border-radius:12px; overflow:hidden;
+          background:#fff; box-shadow:0 8px 22px rgba(0,0,0,0.18);
           opacity:0; transform:translateY(4px); transition:opacity .12s, transform .12s;
         }
         .pd-pop.is-show{ opacity:1; transform:translateY(0); }
-        .pd-accent{ height:6px; }
-        .pd-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px 6px; }
-        .pd-num{ font-size:14px; color:#6b8283; }
-        .pd-sym{ font-size:34px; font-weight:700; color:#1a3a3b; line-height:1; }
-        .pd-mass{ font-size:13px; color:#2c7a7b; }
-        .pd-names{ padding:0 16px 12px; }
-        .pd-cn{ font-size:18px; font-weight:600; color:#1a3a3b; }
-        .pd-en{ display:block; font-size:12px; color:#7a9a9b; margin-top:2px; }
-        .pd-info{ margin:0; padding:10px 16px 16px; border-top:1px dashed #e0e8e6; }
-        .pd-info dt{ font-size:11px; color:#7a9a9b; margin-top:10px; }
+        .pd-accent{ height:5px; }
+        .pd-head{ display:flex; align-items:center; justify-content:space-between; padding:10px 12px 4px; }
+        .pd-num{ font-size:12px; color:#6b8283; }
+        .pd-sym{ font-size:26px; font-weight:700; color:#1a3a3b; line-height:1; }
+        .pd-mass{ font-size:11px; color:#2c7a7b; }
+        .pd-names{ padding:0 12px 8px; }
+        .pd-cn{ font-size:15px; font-weight:600; color:#1a3a3b; }
+        .pd-en{ display:block; font-size:10.5px; color:#7a9a9b; margin-top:1px; }
+        .pd-info{ margin:0; padding:8px 12px 12px; border-top:1px dashed #e0e8e6; }
+        .pd-info dt{ font-size:9.5px; color:#7a9a9b; margin-top:7px; }
         .pd-info dt:first-child{ margin-top:0; }
-        .pd-info dd{ margin:2px 0 0; font-size:13px; color:#1a3a3b; }
-        .pd-cfg{ font-family:ui-monospace, Menlo, Consolas, monospace; font-size:12px; word-break:break-word; }
-        .pd-dot{ display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; vertical-align:middle; border:1px solid rgba(0,0,0,0.06); }
+        .pd-info dd{ margin:1px 0 0; font-size:11.5px; color:#1a3a3b; }
+        .pd-cfg{ font-family:ui-monospace, Menlo, Consolas, monospace; font-size:10px; word-break:break-word; }
+        .pd-dot{ display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:5px; vertical-align:middle; border:1px solid rgba(0,0,0,0.06); }
 
-        .ptable-tip{ text-align:center; font-size:12px; color:#7a9a9b; margin:14px 0 0; }
+        .ptable-tip{ text-align:center; font-size:11px; color:#7a9a9b; margin:12px 0 0; }
         </style>
 
         <script>
@@ -255,9 +254,8 @@
           var mainGrid = document.getElementById('ptable-main');
           var fbGrid   = document.getElementById('ptable-fblock');
           var ghMain   = document.getElementById('gh-main');
-          var ghFblock = document.getElementById('gh-fblock');
           var $pop     = document.getElementById('pd-pop');
-          if(!mainGrid || !fbGrid || !ghMain || !ghFblock || !$pop) return;
+          if(!mainGrid || !fbGrid || !ghMain || !$pop) return;
 
           var CATS = {
             'alkali-metal':'碱金属','alkaline-earth':'碱土金属','transition-metal':'过渡金属',
@@ -433,10 +431,6 @@
           for(var gc = 1; gc <= 18; gc++){
             ghMain.appendChild(makeGh(groupLabel(gc), gc));
           }
-          // f 区标号行（列 3-17 为 IIIB..IIB 镧系/锕系共占，统一标 f 区）
-          for(var fc = 3; fc <= 17; fc++){
-            ghFblock.appendChild(makeGh(groupLabel(fc), fc));
-          }
 
           // 主表
           DATA.forEach(function(e){
@@ -495,17 +489,32 @@
             if(anchor){ positionPop(anchor); }
           }
           function positionPop(anchor){
-            var ar = anchor.getBoundingClientRect();
-            var wr = wrap.getBoundingClientRect();
+            var ar = anchor.getBoundingClientRect();  // 视口坐标
             var pw = $pop.offsetWidth, ph = $pop.offsetHeight;
-            var x = ar.left - wr.left + ar.width/2 - pw/2;
-            var y = ar.bottom - wr.top + 8;
-            // 边界处理
-            if(x < 4) x = 4;
-            if(x + pw > wr.width - 4) x = wr.width - pw - 4;
-            // 若下方溢出则放上方
-            if(y + ph > wr.height){ y = ar.top - wr.top - ph - 8; }
-            if(y < 4) y = 4;
+            var vw = window.innerWidth, vh = window.innerHeight;
+            // 窄屏：固定贴底居中
+            if(vw <= 960){
+              $pop.style.left  = Math.max(4, (vw - pw)/2) + 'px';
+              $pop.style.top   = '';
+              $pop.style.bottom = '18px';
+              return;
+            }
+            $pop.style.bottom = '';
+            // 水平：居中于格子，限制在视口内
+            var x = ar.left + ar.width/2 - pw/2;
+            if(x < 8) x = 8;
+            if(x + pw > vw - 8) x = vw - pw - 8;
+            // 垂直：默认放格子下方 8px；超出视口底则翻上方；都不够则贴视口底
+            var yBelow = ar.bottom + 8;
+            var yAbove  = ar.top - ph - 8;
+            var y;
+            if(yBelow + ph <= vh - 8){        // 下方放得下
+              y = yBelow;
+            } else if(yAbove >= 8){           // 翻到上方
+              y = yAbove;
+            } else {                         // 上下都不够，贴视口底
+              y = Math.max(8, vh - ph - 8);
+            }
             $pop.style.left = x + 'px';
             $pop.style.top  = y + 'px';
           }
