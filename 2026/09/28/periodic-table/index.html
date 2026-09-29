@@ -190,7 +190,18 @@
         @media (max-width:960px){
           .ptable-layout{ flex-direction:column; }
           .ptable-detail{ display:none; }
-          .pd-pop{ position:fixed !important; left:50% !important; margin-left:-105px; bottom:18px !important; top:auto !important; }
+          .ptable-main-col{ max-width:100%; min-width:0; }
+          .ptable-scroll{ max-width:100%; min-width:0; }
+          /* 卡片固定显示在周期表上方（静态块，不再跟随/贴底） */
+          .pd-pop{
+            position:static !important;
+            left:auto !important; top:auto !important; bottom:auto !important;
+            transform:none !important;
+            width:auto !important; max-width:100%;
+            margin:0 0 12px;
+            display:none;
+          }
+          .pd-pop.is-show{ display:block; opacity:1; }
         }
 
         .ptable-scroll{ overflow-x:auto; padding:6px 2px 10px; -webkit-overflow-scrolling:touch; }
@@ -492,11 +503,11 @@
             var ar = anchor.getBoundingClientRect();  // 视口坐标
             var pw = $pop.offsetWidth, ph = $pop.offsetHeight;
             var vw = window.innerWidth, vh = window.innerHeight;
-            // 窄屏：固定贴底居中
+            // 窄屏：卡片为表格上方静态块，无需计算坐标
             if(vw <= 960){
-              $pop.style.left  = Math.max(4, (vw - pw)/2) + 'px';
-              $pop.style.top   = '';
-              $pop.style.bottom = '18px';
+              $pop.style.left = '';
+              $pop.style.top  = '';
+              $pop.style.bottom = '';
               return;
             }
             $pop.style.bottom = '';
