@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+  <meta name="theme-color" content="#222">
+  <meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zpcnick.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="粘贴 XYZ 坐标即可实时渲染三维球棍模型，纯 Canvas 手写三维投影，支持 xyz 坐标轴显示、拖拽旋转缩放与单原子位置微调。">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="在线分子查看器">
+  <meta property="og:url" content="https://zpcnick.github.io/2026/10/17/molecular-viewer/">
+  <meta property="og:site_name" content="ZPC&#39;s homepage">
+  <meta property="og:description" content="粘贴 XYZ 坐标即可实时渲染三维球棍模型，纯 Canvas 手写三维投影，支持 xyz 坐标轴显示、拖拽旋转缩放与单原子位置微调。">
+  <meta property="og:locale">
+  <meta property="article:published_time" content="2026-10-17T04:00:00.000Z">
+  <meta property="article:modified_time" content="2026-10-17T04:00:00.000Z">
+  <meta property="article:author" content="zpc">
+  <meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zpcnick.github.io/2026/10/17/molecular-viewer/">
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'ch'
+  };
+</script>
+
+  <title>在线分子查看器 | ZPC's homepage</title>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">ZPC's homepage</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+        </ul>
+</nav>
+
+
+
+</div>
+    </header>
+
+
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+
+          <div class="content post posts-expand">
+
+
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="ch">
+    <link itemprop="mainEntityOfPage" href="https://zpcnick.github.io/2026/10/17/molecular-viewer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zpc">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/WPOrganization">
+      <meta itemprop="name" content="ZPC's homepage">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          在线分子查看器
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-10-17 12:00:00" itemprop="dateCreated datePublished" datetime="2026-10-17T12:00:00+08:00">2026-10-17</time>
+            </span>
+
+        </div>
+      </header>
+
+
+
+    <div class="post-body" itemprop="articleBody">
+
+        <p>之前看到 liwt31 写的<a target="_blank" rel="noopener" href="https://liwt31.github.io/2022/01/02/online_viewer/">在线分子查看器</a>，粘贴 XYZ 坐标就能实时出图，很实用。这次用纯 <code>Canvas</code> 把它重新实现了一遍，并补上了两个一直想要的功能：<strong>xyz 坐标轴</strong>和<strong>单原子位置微调</strong>。</p>
+
+        <h2 id="play"><a href="#play" class="headerlink" title="在线试玩"></a>在线试玩</h2>
+
+        <div class="mol-viewer">
+          <div class="mol-toolbar">
+            <span class="mol-title">XYZ 分子查看器</span>
+            <div class="mol-tools">
+              <label class="mol-chk"><input type="checkbox" id="mol-axes" checked><span>坐标轴</span></label>
+              <label class="mol-chk"><input type="checkbox" id="mol-labels" checked><span>标签</span></label>
+              <button class="mol-btn" id="mol-zoom-out" type="button" aria-label="缩小">－</button>
+              <button class="mol-btn" id="mol-zoom-in" type="button" aria-label="放大">＋</button>
+              <button class="mol-btn" id="mol-reset" type="button">重置视角</button>
+            </div>
+          </div>
+
+          <div class="mol-body">
+            <div class="mol-stage">
+              <canvas id="mol-canvas"></canvas>
+              <div class="mol-hint">拖拽旋转 · 滚轮缩放 · 点击选中原子</div>
+            </div>
+
+            <aside class="mol-panel">
+              <div class="mol-block">
+                <div class="mol-label">选中原子</div>
+                <div class="mol-sel" id="mol-selected">未选中</div>
+                <div class="mol-stats" id="mol-stats">—</div>
+              </div>
+
+              <div class="mol-block">
+                <div class="mol-step">
+                  <span>位置微调</span>
+                  <span>步长
+                    <select id="mol-stepsel">
+                      <option value="0.01">0.01</option>
+                      <option value="0.05" selected>0.05</option>
+                      <option value="0.1">0.1</option>
+                      <option value="0.5">0.5</option>
+                    </select> Å
+                  </span>
+                </div>
+
+                <div class="mol-row">
+                  <span class="mol-ax mol-axx">x</span>
+                  <button class="mol-nb" type="button" data-axis="x" data-dir="-1" aria-label="x 减">−</button>
+                  <input class="mol-ci" id="mol-x" type="number" step="0.05" disabled>
+                  <button class="mol-nb" type="button" data-axis="x" data-dir="1" aria-label="x 加">＋</button>
+                </div>
+                <div class="mol-row">
+                  <span class="mol-ax mol-axy">y</span>
+                  <button class="mol-nb" type="button" data-axis="y" data-dir="-1" aria-label="y 减">−</button>
+                  <input class="mol-ci" id="mol-y" type="number" step="0.05" disabled>
+                  <button class="mol-nb" type="button" data-axis="y" data-dir="1" aria-label="y 加">＋</button>
+                </div>
+                <div class="mol-row">
+                  <span class="mol-ax mol-axz">z</span>
+                  <button class="mol-nb" type="button" data-axis="z" data-dir="-1" aria-label="z 减">−</button>
+                  <input class="mol-ci" id="mol-z" type="number" step="0.05" disabled>
+                  <button class="mol-nb" type="button" data-axis="z" data-dir="1" aria-label="z 加">＋</button>
+                </div>
+              </div>
+
+              <div class="mol-block mol-block-action">
+                <button class="mol-btn mol-btn-wide" id="mol-undo" type="button" disabled>撤销微调</button>
+              </div>
+            </aside>
+          </div>
+
+          <textarea id="mol-coords" rows="7" spellcheck="false" autocomplete="off">5
+methane (CH4) - 单位：Å
+C   0.000   0.000   0.000
+H  -0.629   0.629   0.629
+H   0.629  -0.629   0.629
+H  -0.629  -0.629  -0.629
+H   0.629   0.629  -0.629
+</textarea>
+
+          <p class="mol-tip">支持标准 XYZ 格式（首行原子数 + 次行注释），或直接逐行写「元素 x y z」；空行与 <code>#</code> 开头的行会被忽略。微调结果会自动同步回上方文本框。</p>
+        </div>
+
+        <style>
+        /* 在线分子查看器样式（局部作用域） */
+        .mol-viewer{
+          max-width:760px;
+          margin:24px auto;
+          padding:18px;
+          background:#fff;
+          border:1px solid #d7e8e3;
+          border-radius:14px;
+          box-shadow:0 6px 24px rgba(44,122,123,0.12);
+          font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+          color:#1f3b3c;
+        }
+        .mol-viewer *{ box-sizing:border-box; }
+        .mol-toolbar{
+          display:flex;
+          align-items:center;
+          flex-wrap:wrap;
+          gap:10px;
+          margin-bottom:12px;
+        }
+        .mol-title{ font-size:15px; font-weight:700; color:#2c7a7b; }
+        .mol-tools{ margin-left:auto; display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+        .mol-chk{
+          display:inline-flex;
+          align-items:center;
+          gap:4px;
+          font-size:12px;
+          color:#4a6b6c;
+          cursor:pointer;
+          user-select:none;
+        }
+        .mol-chk input{ margin:0; accent-color:#2c7a7b; cursor:pointer; }
+        .mol-btn{
+          padding:5px 10px;
+          font-size:12px;
+          color:#2c7a7b;
+          background:#eaf4f1;
+          border:1px solid #cfe0db;
+          border-radius:8px;
+          cursor:pointer;
+          transition:background .12s ease;
+          font-family:inherit;
+        }
+        .mol-btn:hover:not(:disabled){ background:#d7ebe5; }
+        .mol-btn:disabled{ opacity:.45; cursor:not-allowed; }
+        .mol-btn-wide{ width:100%; }
+
+        .mol-body{
+          display:grid;
+          grid-template-columns:minmax(0,1fr) 232px;
+          gap:14px;
+          align-items:start;
+        }
+        .mol-stage{
+          position:relative;
+          aspect-ratio:1 / 1;
+          background:#f6faf9;
+          border:1px solid #d7e8e3;
+          border-radius:12px;
+          overflow:hidden;
+        }
+        .mol-viewer #mol-canvas{
+          display:block;
+          width:100%;
+          height:100%;
+          touch-action:none;
+          cursor:crosshair;
+        }
+        .mol-hint{
+          position:absolute;
+          left:0; right:0; bottom:0;
+          padding:6px 8px 4px;
+          font-size:11px;
+          color:#7a9a9b;
+          text-align:center;
+          pointer-events:none;
+          background:linear-gradient(to top,rgba(246,250,249,0.96),rgba(246,250,249,0));
+        }
+
+        .mol-panel{ display:flex; flex-direction:column; gap:10px; }
+        .mol-block{ background:#eaf4f1; border-radius:10px; padding:10px; }
+        .mol-block-action{ padding:8px; }
+        .mol-label{ font-size:11px; color:#7a9a9b; letter-spacing:1px; margin-bottom:4px; }
+        .mol-sel{ font-size:16px; font-weight:700; color:#93adae; }
+        .mol-sel.is-on{ color:#2c7a7b; }
+        .mol-stats{ margin-top:4px; font-size:11px; line-height:1.5; color:#7a9a9b; word-break:break-all; }
+        .mol-stats.is-error{ color:#c0392b; }
+
+        .mol-step{
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          margin-bottom:8px;
+          font-size:11px;
+          color:#7a9a9b;
+        }
+        .mol-step select{
+          margin-left:2px;
+          padding:2px 3px;
+          font-size:11px;
+          color:#2c7a7b;
+          background:#fff;
+          border:1px solid #cfe0db;
+          border-radius:6px;
+          font-family:inherit;
+        }
+        .mol-row{
+          display:grid;
+          grid-template-columns:14px 26px minmax(0,1fr) 26px;
+          align-items:center;
+          gap:4px;
+          margin-bottom:6px;
+        }
+        .mol-row:last-child{ margin-bottom:0; }
+        .mol-ax{ font-size:12px; font-weight:700; text-align:center; }
+        .mol-axx{ color:#e0453e; }
+        .mol-axy{ color:#2f9e4f; }
+        .mol-axz{ color:#2f74c0; }
+        .mol-nb{
+          height:24px;
+          padding:0;
+          font-size:14px;
+          line-height:1;
+          color:#2c7a7b;
+          background:#fff;
+          border:1px solid #cfe0db;
+          border-radius:6px;
+          cursor:pointer;
+          font-family:inherit;
+          transition:background .12s ease;
+        }
+        .mol-nb:hover:not(:disabled){ background:#d7ebe5; }
+        .mol-nb:disabled{ opacity:.45; cursor:not-allowed; }
+        .mol-viewer .mol-ci{
+          width:100%;
+          min-width:0;
+          height:24px;
+          padding:0 6px;
+          font-size:12px;
+          text-align:right;
+          color:#1a4d4e;
+          background:#fff;
+          border:1px solid #cfe0db;
+          border-radius:6px;
+          font-family:inherit;
+        }
+        .mol-viewer .mol-ci:disabled{ opacity:.5; background:#f2f6f5; }
+
+        .mol-viewer #mol-coords{
+          width:100%;
+          margin-top:12px;
+          padding:10px;
+          font-size:12px;
+          line-height:1.6;
+          color:#25414a;
+          background:#f9fdfc;
+          border:1px solid #d7e8e3;
+          border-radius:10px;
+          font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+          resize:vertical;
+        }
+        .mol-viewer #mol-coords:focus{ outline:none; border-color:#8ec9bf; }
+        .mol-tip{ margin:8px 0 0; font-size:12px; line-height:1.7; color:#7a9a9b; }
+        .mol-tip code{ color:#2c7a7b; background:#eaf4f1; padding:1px 4px; border-radius:4px; }
+
+        @media (max-width:660px){
+          .mol-body{ grid-template-columns:minmax(0,1fr); }
+        }
+        </style>
+
+        <script>
+        (function(){
+          'use strict';
+          var root = document.querySelector('.mol-viewer');
+          if(!root) return;
+
+          var canvas = root.querySelector('#mol-canvas');
+          if(!canvas || !canvas.getContext) return;
+          var ctx = canvas.getContext('2d');
+          var stage = root.querySelector('.mol-stage');
+          var ta = root.querySelector('#mol-coords');
+          var selEl = root.querySelector('#mol-selected');
+          var statsEl = root.querySelector('#mol-stats');
+          var stepSel = root.querySelector('#mol-stepsel');
+          var axesChk = root.querySelector('#mol-axes');
+          var labelChk = root.querySelector('#mol-labels');
+          var resetBtn = root.querySelector('#mol-reset');
+          var undoBtn = root.querySelector('#mol-undo');
+          var zoomIn = root.querySelector('#mol-zoom-in');
+          var zoomOut = root.querySelector('#mol-zoom-out');
+          var coordIn = {
+            x: root.querySelector('#mol-x'),
+            y: root.querySelector('#mol-y'),
+            z: root.querySelector('#mol-z')
+          };
+          var AXES = ['x', 'y', 'z'];
+          var FONT = '-apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif';
+
+          /* ============ 元素数据 ============ */
+          // 共价半径（Å），Cordero et al. 2008
+          var COV = {
+            H:0.31, He:0.28, Li:1.28, Be:0.96, B:0.84, C:0.76, N:0.71, O:0.66, F:0.57, Ne:0.58,
+            Na:1.66, Mg:1.41, Al:1.21, Si:1.11, P:1.07, S:1.05, Cl:1.02, Ar:1.06,
+            K:2.03, Ca:1.76, Sc:1.70, Ti:1.60, V:1.53, Cr:1.39, Mn:1.39, Fe:1.32, Co:1.26, Ni:1.24, Cu:1.32, Zn:1.22,
+            Ga:1.22, Ge:1.20, As:1.19, Se:1.20, Br:1.20, Kr:1.16,
+            Rb:2.20, Sr:1.95, Y:1.90, Zr:1.75, Nb:1.64, Mo:1.54, Tc:1.47, Ru:1.46, Rh:1.42, Pd:1.39, Ag:1.45, Cd:1.44,
+            In:1.42, Sn:1.39, Sb:1.39, Te:1.38, I:1.39, Xe:1.40,
+            Cs:2.44, Ba:2.15, La:2.07, Ce:2.04, Pr:2.03, Nd:2.01, Pm:1.99, Sm:1.98, Eu:1.98, Gd:1.96, Tb:1.94, Dy:1.92,
+            Ho:1.92, Er:1.89, Tm:1.90, Yb:1.87, Lu:1.87, Hf:1.75, Ta:1.70, W:1.62, Re:1.51, Os:1.44, Ir:1.41, Pt:1.36,
+            Au:1.36, Hg:1.32, Tl:1.45, Pb:1.46, Bi:1.48, Po:1.40, At:1.50, Rn:1.50
+          };
+          // 原子颜色（近似 Jmol CPK）
+          var COLOR = {
+            H:'#f5f5f5', He:'#d9ffff', Li:'#cc80ff', Be:'#c2ff00', B:'#ffb5b5', C:'#8f8f8f', N:'#3050f8', O:'#ff0d0d', F:'#90e050', Ne:'#b3e3f5',
+            Na:'#ab5cf2', Mg:'#8aff00', Al:'#bfa6a6', Si:'#f0c8a0', P:'#ff8000', S:'#ffd11a', Cl:'#1ff01f', Ar:'#80d1e3',
+            K:'#8f40d4', Ca:'#3dff00', Sc:'#e6e6e6', Ti:'#bfc2c7', V:'#a6a6ab', Cr:'#8a99c7', Mn:'#9c7ac7', Fe:'#e06633', Co:'#f090a0',
+            Ni:'#50d050', Cu:'#c88033', Zn:'#7d80b0', Ga:'#c28f8f', Ge:'#668f8f', As:'#bd80e3', Se:'#ffa100', Br:'#a62929', Kr:'#5cb8d1',
+            Rb:'#702eb0', Sr:'#00c900', Y:'#94ffff', Zr:'#94e0e0', Nb:'#73c2c9', Mo:'#54b5b5', Tc:'#3b9e9e', Ru:'#248f8f', Rh:'#0a7d8c',
+            Pd:'#006985', Ag:'#c0c0c0', Cd:'#ffd98f', In:'#a67573', Sn:'#668080', Sb:'#9e63b5', Te:'#d47a00', I:'#940094', Xe:'#429eb0',
+            Cs:'#57178f', Ba:'#00c900', La:'#70d4ff', Ce:'#ffffc7', Pr:'#d9ffc7', Nd:'#c7ffc7', Pm:'#a3ffc7', Sm:'#8fffc7', Eu:'#61ffc7',
+            Gd:'#45ffc7', Tb:'#30ffc7', Dy:'#1fffc7', Ho:'#00ff9c', Er:'#00e675', Tm:'#00d452', Yb:'#00bf38', Lu:'#00ab24',
+            Hf:'#4dc2ff', Ta:'#4da6ff', W:'#2194d6', Re:'#267dab', Os:'#266696', Ir:'#175487', Pt:'#d0d0e0', Au:'#ffd123', Hg:'#b8b8d0',
+            Tl:'#a6544d', Pb:'#575961', Bi:'#9e4fb5', Po:'#ab5c00', At:'#754f45', Rn:'#428296'
+          };
+          var DEF_R = 0.9, DEF_C = '#b18ad4';
+          var BALL = 0.32;   // 原子球半径（Å）
+          var STICK = 0.10;  // 键半宽（Å）
+          var AXIS_RGB = { x:'#e0453e', y:'#2f9e4f', z:'#2f74c0' };
+
+          /* ============ 状态 ============ */
+          var atoms = [], bonds = [], rawLines = [];
+          var selected = -1, hovered = -1;
+          var yaw = -0.62, pitch = 0.5, zoom = 1;
+          var fitScale = 90, camDist = 12, axisLen = 1.2;
+          var fitCenter = { x:0, y:0, z:0 }, fitRadius = 2;
+          var undoStack = [];
+          var showAxes = true, showLabels = true;
+          var W = 320, H = 320, DPR = 1;
+
+          /* ============ 小工具函数 ============ */
+          function radiusOf(e){ return COV[e] || DEF_R; }
+          function colorOf(e){ return COLOR[e] || DEF_C; }
+          function normalizeElem(s){
+            var t = String(s || '').replace(/[^A-Za-z]/g, '');
+            if(!t) return 'X';
+            return t.charAt(0).toUpperCase() + t.slice(1).toLowerCase();
+          }
+          function fmt(v){
+            var n = Math.round(v * 10000) / 10000;
+            return String(n);
+          }
+          function round4(v){ return Math.round(v * 10000) / 10000; }
+          function clamp(v, lo, hi){ return v < lo ? lo : (v > hi ? hi : v); }
+          function dist(a, b){
+            var dx = a.x - b.x, dy = a.y - b.y, dz = a.z - b.z;
+            return Math.sqrt(dx * dx + dy * dy + dz * dz);
+          }
+          function hex2rgb(h){
+            var s = String(h).replace('#', '');
+            if(s.length === 3) s = s.charAt(0)+s.charAt(0)+s.charAt(1)+s.charAt(1)+s.charAt(2)+s.charAt(2);
+            var n = parseInt(s, 16);
+            return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+          }
+          function mix(a, b, t){
+            var A = hex2rgb(a), B = hex2rgb(b);
+            return 'rgb(' + Math.round(A[0] + (B[0] - A[0]) * t) + ','
+                          + Math.round(A[1] + (B[1] - A[1]) * t) + ','
+                          + Math.round(A[2] + (B[2] - A[2]) * t) + ')';
+          }
+
+          /* ============ 解析输入 ============ */
+          function isJunk(s){
+            var t = s.trim();
+            return !t || t.charAt(0) === '#' || t.charAt(0) === ';';
+          }
+          function parseNum(s, li){
+            var v = parseFloat(s);
+            if(isNaN(v)) throw new Error('第 ' + (li + 1) + ' 行的坐标不是数字：' + s);
+            return v;
+          }
+          function parseText(text){
+            var lines = String(text).split(/\r?\n/);
+            var i = 0;
+            while(i < lines.length && isJunk(lines[i])) i++;
+            // 标准 XYZ：首行原子数，次行注释
+            if(i < lines.length && /^\d+$/.test(lines[i].trim())){
+              i++;
+              if(i < lines.length && !isJunk(lines[i])) i++;   // 跳过注释行
+            }
+            var out = [];
+            for(; i < lines.length; i++){
+              var line = lines[i].trim();
+              if(!line || line.charAt(0) === '#' || line.charAt(0) === ';') continue;
+              var parts = line.split(/\s+/);
+              if(parts.length < 4){
+                throw new Error('第 ' + (i + 1) + ' 行无法解析（应为「元素 x y z」）：' + line);
+              }
+              out.push({
+                elem: normalizeElem(parts[0]),
+                x: parseNum(parts[1], i),
+                y: parseNum(parts[2], i),
+                z: parseNum(parts[3], i),
+                li: i
+              });
+            }
+            if(!out.length) throw new Error('未识别到任何原子');
+            return { atoms: out, lines: lines };
+          }
+
+          /* ============ 自动成键 ============ */
+          function detectBonds(list){
+            var res = [];
+            for(var i = 0; i < list.length; i++){
+              for(var j = i + 1; j < list.length; j++){
+                var a = list[i], b = list[j];
+                var d = dist(a, b);
+                if(d < 1e-4) continue;
+                var r = radiusOf(a.elem) + radiusOf(b.elem);
+                var order = 0;
+                // 仅对轻元素做键级推断，避免金属长键被误判为多重键
+                if(Math.max(radiusOf(a.elem), radiusOf(b.elem)) <= 1.25){
+                  if(d < 0.82 * r) order = 3;
+                  else if(d < 0.91 * r) order = 2;
+                }
+                if(!order && d < 1.25 * r) order = 1;
+                if(order) res.push({ i:i, j:j, order:order });
+              }
+            }
+            return res;
+          }
+
+          /* ============ 取景与投影 ============ */
+          function computeFit(){
+            if(!atoms.length){
+              fitCenter = { x:0, y:0, z:0 };
+              fitRadius = 2;
+              axisLen = 1.2;
+              return;
+            }
+            var minX = Infinity, maxX = -Infinity,
+                minY = Infinity, maxY = -Infinity,
+                minZ = Infinity, maxZ = -Infinity;
+            for(var i = 0; i < atoms.length; i++){
+              var a = atoms[i];
+              if(a.x < minX) minX = a.x; if(a.x > maxX) maxX = a.x;
+              if(a.y < minY) minY = a.y; if(a.y > maxY) maxY = a.y;
+              if(a.z < minZ) minZ = a.z; if(a.z > maxZ) maxZ = a.z;
+            }
+            var molRadius = Math.sqrt(
+              Math.pow((maxX - minX) / 2, 2) +
+              Math.pow((maxY - minY) / 2, 2) +
+              Math.pow((maxZ - minZ) / 2, 2)
+            );
+            axisLen = Math.max(molRadius * 0.9, 0.8);
+
+            var pts = [];
+            for(var k = 0; k < atoms.length; k++) pts.push(atoms[k]);
+            if(showAxes){
+              pts.push({ x:0, y:0, z:0 });
+              pts.push({ x:axisLen, y:0, z:0 });
+              pts.push({ x:0, y:axisLen, z:0 });
+              pts.push({ x:0, y:0, z:axisLen });
+            }
+            var fMinX = Infinity, fMaxX = -Infinity,
+                fMinY = Infinity, fMaxY = -Infinity,
+                fMinZ = Infinity, fMaxZ = -Infinity;
+            for(var m = 0; m < pts.length; m++){
+              var p = pts[m];
+              if(p.x < fMinX) fMinX = p.x; if(p.x > fMaxX) fMaxX = p.x;
+              if(p.y < fMinY) fMinY = p.y; if(p.y > fMaxY) fMaxY = p.y;
+              if(p.z < fMinZ) fMinZ = p.z; if(p.z > fMaxZ) fMaxZ = p.z;
+            }
+            fitCenter = { x:(fMinX + fMaxX) / 2, y:(fMinY + fMaxY) / 2, z:(fMinZ + fMaxZ) / 2 };
+            var maxR = 0;
+            for(var n = 0; n < pts.length; n++){
+              var q = pts[n];
+              var rr = Math.sqrt(
+                Math.pow(q.x - fitCenter.x, 2) +
+                Math.pow(q.y - fitCenter.y, 2) +
+                Math.pow(q.z - fitCenter.z, 2)
+              );
+              if(rr > maxR) maxR = rr;
+            }
+            fitRadius = maxR + BALL;
+          }
+
+          function updateScale(){
+            var half = Math.min(W, H) / 2;
+            var pad = half * 0.12;
+            camDist = fitRadius * 5.5;
+            var fMax = camDist / (camDist - fitRadius * 0.98);
+            fitScale = (half - pad) / (fitRadius * fMax);
+          }
+
+          function project(p, scale){
+            var px = p.x - fitCenter.x, py = p.y - fitCenter.y, pz = p.z - fitCenter.z;
+            var cy = Math.cos(yaw), sy = Math.sin(yaw);
+            var x1 = px * cy + pz * sy;
+            var z1 = -px * sy + pz * cy;
+            var cp = Math.cos(pitch), sp = Math.sin(pitch);
+            var y2 = py * cp - z1 * sp;
+            var z2 = py * sp + z1 * cp;
+            var zc = camDist - z2;
+            if(zc < 0.05 * fitRadius) zc = 0.05 * fitRadius;
+            var f = camDist / zc;
+            return {
+              x: W / 2 + x1 * f * scale,
+              y: H / 2 - y2 * f * scale,
+              z: z2,
+              f: f
+            };
+          }
+
+          /* ============ 绘制 ============ */
+          function drawArrowHead(a, b, color){
+            var dx = b.x - a.x, dy = b.y - a.y;
+            var L = Math.sqrt(dx * dx + dy * dy);
+            if(L < 8) return;
+            var ux = dx / L, uy = dy / L;
+            var s = 9, w = 4.2;
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(b.x, b.y);
+            ctx.lineTo(b.x - ux * s - uy * w, b.y - uy * s + ux * w);
+            ctx.lineTo(b.x - ux * s + uy * w, b.y - uy * s - ux * w);
+            ctx.closePath();
+            ctx.fill();
+          }
+
+          function drawAxes(scale){
+            var o = project({ x:0, y:0, z:0 }, scale);
+            ctx.setLineDash([7, 5]);
+            ctx.lineCap = 'round';
+            ctx.lineWidth = 1.6;
+            ctx.globalAlpha = 0.9;
+            for(var i = 0; i < AXES.length; i++){
+              var ax = AXES[i];
+              var end = { x:0, y:0, z:0 };
+              end[ax] = axisLen;
+              var e = project(end, scale);
+              var col = AXIS_RGB[ax];
+              var dx = e.x - o.x, dy = e.y - o.y;
+              var L = Math.sqrt(dx * dx + dy * dy);
+              if(L < 6) continue;
+              var ux = dx / L, uy = dy / L;
+              ctx.strokeStyle = col;
+              ctx.beginPath();
+              ctx.moveTo(o.x, o.y);
+              ctx.lineTo(e.x - ux * 7, e.y - uy * 7);
+              ctx.stroke();
+              drawArrowHead(o, e, col);
+            }
+            ctx.setLineDash([]);
+            ctx.globalAlpha = 1;
+            for(var k = 0; k < AXES.length; k++){
+              var a2 = AXES[k];
+              var p2 = { x:0, y:0, z:0 };
+              p2[a2] = axisLen;
+              var s2 = project(p2, scale);
+              var dx2 = s2.x - o.x, dy2 = s2.y - o.y;
+              var L2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+              if(L2 < 6) continue;
+              var lx = o.x + dx2 / L2 * (L2 + 12);
+              var ly = o.y + dy2 / L2 * (L2 + 12);
+              ctx.font = '700 13px ' + FONT;
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.lineWidth = 3;
+              ctx.strokeStyle = 'rgba(246,250,249,0.95)';
+              ctx.strokeText(a2.toUpperCase(), lx, ly);
+              ctx.fillStyle = AXIS_RGB[a2];
+              ctx.fillText(a2.toUpperCase(), lx, ly);
+            }
+          }
+
+          function ballPx(p, scale){ return BALL * p.f * scale; }
+
+          function drawBond(bd, proj, scale){
+            var pa = proj[bd.i], pb = proj[bd.j];
+            var dx = pb.x - pa.x, dy = pb.y - pa.y;
+            var L = Math.sqrt(dx * dx + dy * dy);
+            if(L < 1) return;
+            var ux = dx / L, uy = dy / L;
+            var ra = ballPx(pa, scale) * 0.92;
+            var rb = ballPx(pb, scale) * 0.92;
+            if(L <= ra + rb) return;
+            var ax = pa.x + ux * ra, ay = pa.y + uy * ra;
+            var bx = pb.x - ux * rb, by = pb.y - uy * rb;
+            var nx = -uy, ny = ux;
+            var f = (pa.f + pb.f) / 2;
+            var lw = 2 * STICK * scale * f;
+            var specs;
+            if(bd.order === 1){
+              specs = [{ off:0, w:lw }];
+            } else if(bd.order === 2){
+              specs = [{ off:-lw * 0.62, w:lw * 0.6 }, { off:lw * 0.62, w:lw * 0.6 }];
+            } else {
+              specs = [{ off:-lw * 0.95, w:lw * 0.5 }, { off:0, w:lw * 0.5 }, { off:lw * 0.95, w:lw * 0.5 }];
+            }
+            ctx.strokeStyle = '#5f7476';
+            ctx.lineCap = 'round';
+            for(var i = 0; i < specs.length; i++){
+              var off = specs[i].off;
+              ctx.lineWidth = Math.max(1, specs[i].w);
+              ctx.beginPath();
+              ctx.moveTo(ax + nx * off, ay + ny * off);
+              ctx.lineTo(bx + nx * off, by + ny * off);
+              ctx.stroke();
+            }
+          }
+
+          function drawAtom(i, p, scale){
+            var a = atoms[i];
+            var r = ballPx(p, scale);
+            if(r < 1) r = 1;
+            var base = colorOf(a.elem);
+            var g = ctx.createRadialGradient(
+              p.x - r * 0.34, p.y - r * 0.38, r * 0.06,
+              p.x, p.y, r * 1.02
+            );
+            g.addColorStop(0, mix(base, '#ffffff', 0.66));
+            g.addColorStop(0.55, mix(base, '#ffffff', 0.14));
+            g.addColorStop(1, mix(base, '#000000', 0.26));
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+            ctx.fillStyle = g;
+            ctx.fill();
+            ctx.lineWidth = Math.max(0.6, r * 0.07);
+            ctx.strokeStyle = 'rgba(24,44,48,0.30)';
+            ctx.stroke();
+          }
+
+          function drawLabels(proj, scale){
+            if(atoms.length > 150) return;
+            ctx.font = '600 11px ' + FONT;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = 'rgba(246,250,249,0.95)';
+            for(var i = 0; i < atoms.length; i++){
+              var p = proj[i];
+              if(!p) continue;
+              var r = ballPx(p, scale);
+              if(r < 4) continue;
+              var txt = atoms[i].elem + (i + 1);
+              var x = p.x, y = p.y - r - 3;
+              ctx.strokeText(txt, x, y);
+              ctx.fillStyle = '#25414a';
+              ctx.fillText(txt, x, y);
+            }
+          }
+
+          function drawRing(p, scale, isSel){
+            var r = ballPx(p, scale) + 4;
+            ctx.setLineDash(isSel ? [] : [3, 4]);
+            ctx.lineWidth = isSel ? 2.4 : 1.6;
+            ctx.strokeStyle = isSel ? '#e8663a' : '#2c7a7b';
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+
+          function render(){
+            var scale = fitScale * zoom;
+            ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+            ctx.clearRect(0, 0, W, H);
+
+            var proj = new Array(atoms.length);
+            for(var i = 0; i < atoms.length; i++) proj[i] = project(atoms[i], scale);
+
+            if(showAxes) drawAxes(scale);
+
+            var items = [];
+            for(var b = 0; b < bonds.length; b++){
+              var bd = bonds[b];
+              items.push({ z:(proj[bd.i].z + proj[bd.j].z) / 2, kind:0, key:b });
+            }
+            for(var k = 0; k < atoms.length; k++) items.push({ z:proj[k].z, kind:1, key:k });
+            items.sort(function(u, v){ return u.z - v.z; });   // 先画远的
+
+            for(var n = 0; n < items.length; n++){
+              var it = items[n];
+              if(it.kind === 0) drawBond(bonds[it.key], proj, scale);
+              else drawAtom(it.key, proj[it.key], scale);
+            }
+            if(showLabels) drawLabels(proj, scale);
+            if(selected >= 0 && proj[selected]) drawRing(proj[selected], scale, true);
+            else if(hovered >= 0 && proj[hovered]) drawRing(proj[hovered], scale, false);
+          }
+
+          /* ============ 界面同步 ============ */
+          function refreshPanel(err){
+            if(err){
+              statsEl.textContent = '⚠ ' + err;
+              statsEl.classList.add('is-error');
+            } else {
+              statsEl.textContent = atoms.length + ' 个原子 · ' + bonds.length + ' 条键';
+              statsEl.classList.remove('is-error');
+            }
+            var a = (selected >= 0) ? atoms[selected] : null;
+            if(a){
+              selEl.textContent = a.elem + (selected + 1);
+              selEl.classList.add('is-on');
+            } else {
+              selEl.textContent = '未选中';
+              selEl.classList.remove('is-on');
+            }
+            for(var i = 0; i < AXES.length; i++){
+              var ax = AXES[i];
+              coordIn[ax].disabled = !a;
+              coordIn[ax].value = a ? fmt(a[ax]) : '';
+            }
+            undoBtn.disabled = !undoStack.length;
+          }
+
+          function syncText(){
+            var changed = false;
+            for(var k = 0; k < atoms.length; k++){
+              var a = atoms[k];
+              var li = a.li;
+              if(li == null || rawLines[li] == null) continue;
+              var parts = rawLines[li].trim().split(/\s+/);
+              parts[0] = a.elem;
+              parts[1] = fmt(a.x);
+              parts[2] = fmt(a.y);
+              parts[3] = fmt(a.z);
+              var line = parts.join(' ');
+              if(line !== rawLines[li]){
+                rawLines[li] = line;
+                changed = true;
+              }
+            }
+            if(changed) ta.value = rawLines.join('\n');
+          }
+
+          /* ============ 载入与编辑 ============ */
+          function loadFromText(){
+            var err = null;
+            try{
+              var parsed = parseText(ta.value);
+              atoms = parsed.atoms;
+              rawLines = parsed.lines;
+              if(selected >= atoms.length) selected = -1;
+            }catch(ex){
+              atoms = [];
+              bonds = [];
+              selected = -1;
+              hovered = -1;
+              err = (ex && ex.message) ? ex.message : String(ex);
+            }
+            bonds = detectBonds(atoms);
+            if(!err){
+              computeFit();
+              updateScale();
+            }
+            refreshPanel(err);
+            render();
+          }
+
+          function pushUndo(){
+            if(selected < 0 || !atoms[selected]) return;
+            var a = atoms[selected];
+            undoStack.push({ i:selected, x:a.x, y:a.y, z:a.z });
+            if(undoStack.length > 200) undoStack.shift();
+          }
+
+          function afterEdit(){
+            bonds = detectBonds(atoms);
+            syncText();
+            refreshPanel(null);
+            render();
+          }
+
+          function nudge(ax, dir){
+            if(selected < 0 || !atoms[selected]) return;
+            var step = parseFloat(stepSel.value);
+            if(isNaN(step)) step = 0.05;
+            pushUndo();
+            atoms[selected][ax] = round4(atoms[selected][ax] + dir * step);
+            afterEdit();
+          }
+
+          function setCoord(ax, raw){
+            if(selected < 0 || !atoms[selected]) return;
+            var v = parseFloat(raw);
+            if(isNaN(v)){ refreshPanel(null); return; }
+            v = round4(v);
+            if(v === atoms[selected][ax]){ refreshPanel(null); return; }
+            pushUndo();
+            atoms[selected][ax] = v;
+            afterEdit();
+          }
+
+          function doUndo(){
+            var u = undoStack.pop();
+            if(!u) return;
+            if(atoms[u.i]){
+              atoms[u.i].x = u.x;
+              atoms[u.i].y = u.y;
+              atoms[u.i].z = u.z;
+              selected = u.i;
+              hovered = -1;
+              afterEdit();
+            }
+          }
+
+          /* ============ 交互 ============ */
+          function pick(e){
+            if(!atoms.length) return -1;
+            var rect = canvas.getBoundingClientRect();
+            if(!rect.width || !rect.height) return -1;
+            var mx = (e.clientX - rect.left) * (W / rect.width);
+            var my = (e.clientY - rect.top) * (H / rect.height);
+            var scale = fitScale * zoom;
+            var best = -1, bestD = Infinity;
+            for(var i = 0; i < atoms.length; i++){
+              var p = project(atoms[i], scale);
+              var r = Math.max(ballPx(p, scale), 8);
+              var d = Math.sqrt(Math.pow(mx - p.x, 2) + Math.pow(my - p.y, 2));
+              if(d <= r && d < bestD){ bestD = d; best = i; }
+            }
+            return best;
+          }
+
+          var drag = null;
+          canvas.addEventListener('pointerdown', function(e){
+            drag = { x:e.clientX, y:e.clientY, moved:false, id:e.pointerId };
+            if(canvas.setPointerCapture){
+              try{ canvas.setPointerCapture(e.pointerId); }catch(_e){}
+            }
+            e.preventDefault();
+          });
+          canvas.addEventListener('pointermove', function(e){
+            if(drag){
+              var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+              if(Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
+              if(drag.moved){
+                yaw += dx * 0.011;
+                pitch = clamp(pitch + dy * 0.011, -1.45, 1.45);
+                drag.x = e.clientX;
+                drag.y = e.clientY;
+                render();
+              }
+              return;
+            }
+            var h = pick(e);
+            if(h !== hovered){
+              hovered = h;
+              canvas.style.cursor = (h >= 0) ? 'pointer' : 'crosshair';
+              render();
+            }
+          });
+          canvas.addEventListener('pointerup', function(e){
+            var wasDrag = drag && drag.moved;
+            if(drag && !drag.moved){
+              selected = pick(e);
+              refreshPanel(null);
+            }
+            drag = null;
+            if(canvas.releasePointerCapture){
+              try{ canvas.releasePointerCapture(e.pointerId); }catch(_e){}
+            }
+            render();
+            return wasDrag;
+          });
+          canvas.addEventListener('pointercancel', function(){ drag = null; render(); });
+          canvas.addEventListener('pointerleave', function(){
+            if(hovered >= 0){ hovered = -1; render(); }
+          });
+          canvas.addEventListener('wheel', function(e){
+            e.preventDefault();
+            zoom = clamp(zoom * Math.exp(-e.deltaY * 0.0012), 0.35, 5);
+            render();
+          }, { passive:false });
+
+          /* ============ 面板控件 ============ */
+          var nudgeBtns = root.querySelectorAll('.mol-nb');
+          for(var i = 0; i < nudgeBtns.length; i++){
+            (function(btn){
+              btn.addEventListener('click', function(e){
+                e.preventDefault();
+                nudge(btn.getAttribute('data-axis'), parseInt(btn.getAttribute('data-dir'), 10));
+              });
+            })(nudgeBtns[i]);
+          }
+
+          for(var j = 0; j < AXES.length; j++){
+            (function(ax){
+              coordIn[ax].addEventListener('change', function(){
+                setCoord(ax, coordIn[ax].value);
+              });
+              coordIn[ax].addEventListener('keydown', function(e){
+                if(e.key === 'Enter'){ setCoord(ax, coordIn[ax].value); }
+              });
+            })(AXES[j]);
+          }
+
+          undoBtn.addEventListener('click', doUndo);
+
+          resetBtn.addEventListener('click', function(){
+            yaw = -0.62;
+            pitch = 0.5;
+            zoom = 1;
+            computeFit();
+            updateScale();
+            render();
+          });
+
+          zoomIn.addEventListener('click', function(){
+            zoom = clamp(zoom * 1.25, 0.35, 5);
+            render();
+          });
+          zoomOut.addEventListener('click', function(){
+            zoom = clamp(zoom / 1.25, 0.35, 5);
+            render();
+          });
+
+          axesChk.addEventListener('change', function(){
+            showAxes = axesChk.checked;
+            computeFit();
+            updateScale();
+            render();
+          });
+          labelChk.addEventListener('change', function(){
+            showLabels = labelChk.checked;
+            render();
+          });
+
+          ta.addEventListener('input', loadFromText);
+
+          /* ============ 尺寸与初始化 ============ */
+          function resize(){
+            var cw = canvas.clientWidth || (stage && stage.clientWidth) || 320;
+            var ch = canvas.clientHeight || cw;
+            DPR = window.devicePixelRatio || 1;
+            W = Math.max(80, cw);
+            H = Math.max(80, ch);
+            canvas.width = Math.round(W * DPR);
+            canvas.height = Math.round(H * DPR);
+            computeFit();
+            updateScale();
+            render();
+          }
+
+          var rafId = 0;
+          function scheduleResize(){
+            if(rafId) cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(function(){ rafId = 0; resize(); });
+          }
+          window.addEventListener('resize', scheduleResize);
+          if(window.ResizeObserver && stage){
+            new ResizeObserver(scheduleResize).observe(stage);
+          }
+
+          loadFromText();
+          resize();
+        })();
+        </script>
+
+        <h2 id="features"><a href="#features" class="headerlink" title="功能与实现要点"></a>功能与实现要点</h2>
+        <ul>
+          <li><strong>纯 Canvas 手写三维</strong>：不引入 Three.js / 3Dmol.js，自己做旋转矩阵 + 透视投影 + 画家算法（按景深排序后再画），原子球用径向渐变模拟高光。整个页面零外部依赖。</li>
+          <li><strong>自动成键</strong>：内置 96 种元素的共价半径表（Cordero 2008）。距离小于 <code>(r₁+r₂)×1.25</code> 判定成键，再按距离比 <code>0.82 / 0.91</code> 区分三键与双键；双键、三键用平行线绘制。</li>
+          <li><strong>xyz 坐标轴</strong>：以坐标原点为起点绘制 X（红）/ Y（绿）/ Z（蓝）三轴，箭头与轴标自动跟随旋转，取景时会把坐标轴端点一并纳入，可随时用开关隐藏。</li>
+          <li><strong>单原子位置微调</strong>：点击选中原子（橙色圆环高亮），再用 <code>0.01 / 0.05 / 0.1 / 0.5 Å</code> 的步长沿 x、y、z 逐轴加减，也可以直接在输入框里键入精确坐标。改动会实时重算成键，并同步写回下方文本框，支持逐次撤销。</li>
+          <li><strong>交互</strong>：拖拽旋转、滚轮（或 ＋/－ 按钮）缩放、悬停高亮、点击选中、一键重置视角。</li>
+        </ul>
+
+        <h2 id="core"><a href="#core" class="headerlink" title="核心逻辑"></a>核心逻辑</h2>
+        <p>整个查看器最关键的两段代码是<strong>成键判定</strong>与<strong>透视投影</strong>：前者决定哪些原子之间连线、连线用几条平行线；后者把三维坐标搬到二维画布上，并让近处的原子看起来更大。</p>
+        <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1) 自动成键：按共价半径和判定成键，再按距离比推断键级</span></span><br><span class="line"><span class="keyword">function</span> <span class="title">detectBonds</span>(atoms) &#123;</span><br><span class="line">  <span class="keyword">var</span> res = [];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; atoms.length; i++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> j = i + <span class="number">1</span>; j &lt; atoms.length; j++) &#123;    <span class="comment">// i &lt; j，天然排除自环</span></span><br><span class="line">      <span class="keyword">var</span> r = radiusOf(atoms[i].elem) + radiusOf(atoms[j].elem);</span><br><span class="line">      <span class="keyword">var</span> d = dist(atoms[i], atoms[j]);</span><br><span class="line">      <span class="keyword">var</span> order = d &lt; <span class="number">0.82</span> * r ? <span class="number">3</span> : d &lt; <span class="number">0.91</span> * r ? <span class="number">2</span> : d &lt; <span class="number">1.25</span> * r ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">if</span> (order) res.push(&#123; i: i, j: j, order: order &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2) 透视投影：先绕 Y 轴、再绕 X 轴旋转，最后按景深缩放</span></span><br><span class="line"><span class="keyword">function</span> <span class="title">project</span>(p, scale) &#123;</span><br><span class="line">  <span class="keyword">var</span> x1 = p.x * cosY + p.z * sinY, z1 = -p.x * sinY + p.z * cosY;</span><br><span class="line">  <span class="keyword">var</span> y2 = p.y * cosP - z1 * sinP, z2 = p.y * sinP + z1 * cosP;</span><br><span class="line">  <span class="keyword">var</span> f  = camDist / (camDist - z2);            <span class="comment">// 近大远小</span></span><br><span class="line">  <span class="keyword">return</span> &#123; x: W / <span class="number">2</span> + x1 * f * scale, y: H / <span class="number">2</span> - y2 * f * scale, z: z2, f: f &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        <hr>
+        <p>输入坐标 → 自动成键 → 三维渲染 → 选中微调，整条链都在浏览器里完成，没有任何后端。试试把默认的甲烷换成 <code>C=C</code> 乙烯、<code>O=C=O</code> 二氧化碳或苯环，看看多重键和坐标轴的表现。</p>
+
+    </div>
+
+
+
+
+      <footer class="post-footer">
+
+
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/10/17/tetris-game/" rel="prev" title="俄罗斯方块">
+      <i class="fa fa-chevron-left"></i> 俄罗斯方块
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+
+  </article>
+
+
+
+          </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+
+
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#play"><span class="nav-number">1.</span> <span class="nav-text">在线试玩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#features"><span class="nav-number">2.</span> <span class="nav-text">功能与实现要点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#core"><span class="nav-number">3.</span> <span class="nav-text">核心逻辑</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zpc</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+
+
+
+
+<div class="copyright">
+
+  &copy;
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zpc</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+</body>
+</html>
