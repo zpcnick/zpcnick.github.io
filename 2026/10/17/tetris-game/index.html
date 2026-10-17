@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+  <meta name="theme-color" content="#222">
+  <meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zpcnick.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="用纯 Canvas 写的一个俄罗斯方块小游戏，无任何依赖，直接在网页上就能玩。支持键盘和触屏操作，含暂存方块、下一个预览、幽灵投影和本地最高分。">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="俄罗斯方块">
+  <meta property="og:url" content="https://zpcnick.github.io/2026/10/17/tetris-game/">
+  <meta property="og:site_name" content="ZPC&#39;s homepage">
+  <meta property="og:description" content="用纯 Canvas 写的一个俄罗斯方块小游戏，无任何依赖，直接在网页上就能玩。支持键盘和触屏操作，含暂存方块、下一个预览、幽灵投影和本地最高分。">
+  <meta property="og:locale">
+  <meta property="article:published_time" content="2026-10-16T16:00:00.000Z">
+  <meta property="article:modified_time" content="2026-10-17T00:00:00.000Z">
+  <meta property="article:author" content="zpc">
+  <meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zpcnick.github.io/2026/10/17/tetris-game/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'ch'
+  };
+</script>
+
+  <title>俄罗斯方块 | ZPC's homepage</title>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">ZPC's homepage</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+        </ul>
+</nav>
+
+
+
+</div>
+    </header>
+
+
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+
+          <div class="content post posts-expand">
+
+
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="ch">
+    <link itemprop="mainEntityOfPage" href="https://zpcnick.github.io/2026/10/17/tetris-game/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zpc">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/WPOrganization">
+      <meta itemprop="name" content="ZPC's homepage">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          俄罗斯方块
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-10-17 00:00:00" itemprop="dateCreated datePublished" datetime="2026-10-17T00:00:00+08:00">2026-10-17</time>
+            </span>
+
+        </div>
+      </header>
+
+
+
+    <div class="post-body" itemprop="articleBody">
+
+        <p>继贪吃蛇之后，又用纯 <code>Canvas</code> 写了一个俄罗斯方块，零依赖直接开玩。包含 7 种经典方块、暂存（Hold）、下三个预览、落地投影（Ghost）、消行计分和等级加速，键盘触屏都能操作，最高分自动存本地。</p>
+
+        <h2 id="play"><a href="#play" class="headerlink" title="在线试玩"></a>在线试玩</h2>
+
+        <div class="tetris-game">
+          <div class="tetris-hud">
+            <div class="hud-block">
+              <div class="hud-label">得分</div>
+              <div class="hud-value" id="tetris-score">0</div>
+            </div>
+            <div class="hud-block">
+              <div class="hud-label">等级</div>
+              <div class="hud-value" id="tetris-level">1</div>
+            </div>
+            <div class="hud-block">
+              <div class="hud-label">消行</div>
+              <div class="hud-value" id="tetris-lines">0</div>
+            </div>
+            <div class="hud-block">
+              <div class="hud-label">最高</div>
+              <div class="hud-value" id="tetris-high">0</div>
+            </div>
+          </div>
+
+          <div class="tetris-stage">
+            <div class="tetris-side side-left">
+              <div class="mini-box">
+                <div class="mini-label">暂存 (C)</div>
+                <canvas id="tetris-hold" class="mini-canvas"></canvas>
+              </div>
+            </div>
+
+            <div class="tetris-board-wrap">
+              <canvas id="tetris-board"></canvas>
+              <div class="tetris-overlay" id="tetris-overlay">
+                <div class="tetris-overlay-inner">
+                  <h3 id="tetris-overlay-title">俄罗斯方块</h3>
+                  <p id="tetris-overlay-text">点击按钮或方向键开始</p>
+                  <button id="tetris-start-btn" type="button">开始游戏</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="tetris-side side-right">
+              <div class="mini-box">
+                <div class="mini-label">下一个</div>
+                <canvas id="tetris-next" class="mini-canvas"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="tetris-pad">
+            <button type="button" class="pad-rotate" data-act="rotate" aria-label="旋转"><i class="fa fa-rotate-right"></i></button>
+            <button type="button" class="pad-hard" data-act="hard" aria-label="硬降"><i class="fa fa-angles-down"></i></button>
+            <button type="button" class="pad-hold" data-act="hold" aria-label="暂存">Hold</button>
+            <button type="button" class="pad-left" data-act="left" aria-label="左"><i class="fa fa-chevron-left"></i></button>
+            <button type="button" class="pad-soft" data-act="soft" aria-label="软降"><i class="fa fa-chevron-down"></i></button>
+            <button type="button" class="pad-right" data-act="right" aria-label="右"><i class="fa fa-chevron-right"></i></button>
+          </div>
+
+          <p class="tetris-tip">键盘：← → 移动 · ↑ 旋转 · ↓ 软降 · 空格 硬降 · C 暂存 · P 暂停</p>
+        </div>
+
+        <style>
+        /* 俄罗斯方块样式（局部作用域） */
+        .tetris-game{
+          max-width:560px;
+          margin:24px auto;
+          padding:20px;
+          background:#fff;
+          border:1px solid #d7e8e3;
+          border-radius:14px;
+          box-shadow:0 6px 24px rgba(44,122,123,0.12);
+          font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+        }
+        .tetris-hud{
+          display:grid;
+          grid-template-columns:repeat(4,1fr);
+          gap:8px;
+          margin-bottom:14px;
+        }
+        .hud-block{
+          background:#eaf4f1;
+          border-radius:10px;
+          padding:8px 4px;
+          text-align:center;
+        }
+        .hud-label{ font-size:11px; color:#7a9a9b; letter-spacing:1px; }
+        .hud-value{ font-size:20px; font-weight:700; color:#1a4d4e; margin-top:2px; }
+
+        .tetris-stage{
+          display:flex;
+          gap:10px;
+          align-items:flex-start;
+          justify-content:center;
+        }
+        .tetris-side{
+          display:flex;
+          flex-direction:column;
+          gap:10px;
+          width:84px;
+        }
+        .mini-box{
+          background:#eaf4f1;
+          border-radius:10px;
+          padding:8px 6px 6px;
+          text-align:center;
+        }
+        .mini-label{ font-size:11px; color:#2c7a7b; margin-bottom:4px; font-weight:600; }
+        .mini-canvas{
+          display:block;
+          width:100%;
+          background:#f6fbf9;
+          border-radius:6px;
+        }
+        #tetris-hold{ height:84px; }
+        #tetris-next{ height:210px; }
+
+        .tetris-board-wrap{
+          position:relative;
+          width:240px;
+          flex:0 0 240px;
+        }
+        #tetris-board{
+          display:block;
+          width:100%;
+          border-radius:10px;
+          border:2px solid #2c7a7b;
+          background:#f6fbf9;
+          touch-action:none;
+        }
+        .tetris-overlay{
+          position:absolute;
+          inset:0;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          background:rgba(234,244,241,0.92);
+          border-radius:10px;
+        }
+        .tetris-overlay.is-hidden{ display:none; }
+        .tetris-overlay-inner{ text-align:center; padding:0 16px; }
+        .tetris-overlay-inner h3{
+          margin:0 0 8px;
+          color:#2c7a7b;
+          font-size:22px;
+        }
+        .tetris-overlay-inner p{
+          margin:0 0 16px;
+          color:#4a6b6c;
+          font-size:13px;
+        }
+        #tetris-start-btn{
+          background:linear-gradient(135deg,#2c7a7b,#38a89d);
+          color:#fff;
+          border:none;
+          padding:10px 28px;
+          border-radius:24px;
+          font-size:15px;
+          cursor:pointer;
+          box-shadow:0 4px 12px rgba(44,122,123,0.35);
+          transition:transform .15s, box-shadow .15s;
+        }
+        #tetris-start-btn:hover{
+          transform:translateY(-2px);
+          box-shadow:0 6px 16px rgba(44,122,123,0.45);
+        }
+        #tetris-start-btn:active{ transform:translateY(0); }
+
+        .tetris-pad{
+          display:grid;
+          grid-template-columns:repeat(3,1fr);
+          grid-template-rows:repeat(3,1fr);
+          gap:8px;
+          margin:14px auto 8px;
+          max-width:300px;
+          aspect-ratio:3 / 3;
+        }
+        .tetris-pad button{
+          background:#eaf4f1;
+          border:1px solid #cfe0db;
+          border-radius:10px;
+          color:#2c7a7b;
+          font-size:16px;
+          cursor:pointer;
+          transition:background .12s, transform .12s, color .12s;
+          padding:0;
+        }
+        .tetris-pad button:hover{ background:#d7ebe5; }
+        .tetris-pad button:active{
+          transform:scale(0.94);
+          background:#2c7a7b;
+          color:#fff;
+        }
+        .pad-rotate{ grid-column:2; grid-row:1; }
+        .pad-hard  { grid-column:1; grid-row:1; }
+        .pad-hold  { grid-column:3; grid-row:1; font-size:13px; font-weight:600; }
+        .pad-left  { grid-column:1; grid-row:2; }
+        .pad-soft  { grid-column:2; grid-row:2; }
+        .pad-right { grid-column:3; grid-row:2; }
+        /* 第三行留空 */
+        .tetris-tip{
+          text-align:center;
+          font-size:12px;
+          color:#7a9a9b;
+          margin:0;
+        }
+        @media (max-width:460px){
+          .tetris-side{ width:64px; }
+          #tetris-hold{ height:64px; }
+          #tetris-next{ height:160px; }
+          .tetris-board-wrap{ width:200px; flex-basis:200px; }
+        }
+        </style>
+
+        <script>
+        (function(){
+          var board = document.getElementById('tetris-board');
+          if(!board) return;
+          var ctx = board.getContext('2d');
+
+          // 逻辑尺寸：10 列 x 20 行，每格 24px
+          var COLS = 10, ROWS = 20, CELL = 24;
+          var BW = COLS * CELL, BH = ROWS * CELL;
+          var DPR = window.devicePixelRatio || 1;
+          board.width = BW * DPR;
+          board.height = BH * DPR;
+          ctx.scale(DPR, DPR);
+
+          // 小预览画布
+          var holdCanvas = document.getElementById('tetris-hold');
+          var nextCanvas = document.getElementById('tetris-next');
+          var hctx = holdCanvas.getContext('2d');
+          var nctx = nextCanvas.getContext('2d');
+          function setupMini(c){
+            c.width = c.clientWidth * DPR;
+            c.height = c.clientHeight * DPR;
+            c.getContext('2d').scale(DPR, DPR);
+          }
+
+          var $score = document.getElementById('tetris-score');
+          var $level = document.getElementById('tetris-level');
+          var $lines = document.getElementById('tetris-lines');
+          var $high  = document.getElementById('tetris-high');
+          var $overlay = document.getElementById('tetris-overlay');
+          var $title  = document.getElementById('tetris-overlay-title');
+          var $text   = document.getElementById('tetris-overlay-text');
+          var $btn    = document.getElementById('tetris-start-btn');
+
+          // 7 种方块及其 4 个旋转状态（用相对坐标表示）
+          // I: cyan, O: yellow, T: purple, S: green, Z: red, J: blue, L: orange
+          var PIECES = {
+            I: { color:'#38a89d', rot:[
+              [[0,1],[1,1],[2,1],[3,1]],
+              [[2,0],[2,1],[2,2],[2,3]],
+              [[0,2],[1,2],[2,2],[3,2]],
+              [[1,0],[1,1],[1,2],[1,3]]
+            ]},
+            O: { color:'#e8c547', rot:[
+              [[1,0],[2,0],[1,1],[2,1]],
+              [[1,0],[2,0],[1,1],[2,1]],
+              [[1,0],[2,0],[1,1],[2,1]],
+              [[1,0],[2,0],[1,1],[2,1]]
+            ]},
+            T: { color:'#9b59b6', rot:[
+              [[1,0],[0,1],[1,1],[2,1]],
+              [[1,0],[1,1],[2,1],[1,2]],
+              [[0,1],[1,1],[2,1],[1,2]],
+              [[1,0],[0,1],[1,1],[1,2]]
+            ]},
+            S: { color:'#27ae60', rot:[
+              [[1,0],[2,0],[0,1],[1,1]],
+              [[1,0],[1,1],[2,1],[2,2]],
+              [[1,1],[2,1],[0,2],[1,2]],
+              [[0,0],[0,1],[1,1],[1,2]]
+            ]},
+            Z: { color:'#e74c3c', rot:[
+              [[0,0],[1,0],[1,1],[2,1]],
+              [[2,0],[1,1],[2,1],[1,2]],
+              [[0,1],[1,1],[1,2],[2,2]],
+              [[1,0],[0,1],[1,1],[0,2]]
+            ]},
+            J: { color:'#2980b9', rot:[
+              [[0,0],[0,1],[1,1],[2,1]],
+              [[1,0],[2,0],[1,1],[1,2]],
+              [[0,1],[1,1],[2,1],[2,2]],
+              [[1,0],[1,1],[0,2],[1,2]]
+            ]},
+            L: { color:'#e67e22', rot:[
+              [[2,0],[0,1],[1,1],[2,1]],
+              [[1,0],[1,1],[1,2],[2,2]],
+              [[0,1],[1,1],[2,1],[0,2]],
+              [[0,0],[1,0],[1,1],[1,2]]
+            ]}
+          };
+          var TYPES = Object.keys(PIECES);
+
+          // 状态
+          var grid, current, nextQueue, holdPiece, canHold;
+          var score, level, lines, dropTimer, dropInterval, rafId, lastTime;
+          var state; // idle | running | paused | over
+          var high = parseInt(localStorage.getItem('tetrisHigh') || '0', 10);
+          $high.textContent = high;
+
+          function makeGrid(){
+            var g = [];
+            for(var r=0;r<ROWS;r++){ g.push(new Array(COLS).fill(null)); }
+            return g;
+          }
+
+          function randBag(){
+            // 7-bag 随机，保证每 7 个方块包含全部 7 种
+            var bag = TYPES.slice();
+            for(var i=bag.length-1;i>0;i--){
+              var j = Math.floor(Math.random()*(i+1));
+              var t = bag[i]; bag[i] = bag[j]; bag[j] = t;
+            }
+            return bag;
+          }
+
+          function spawn(){
+            if(nextQueue.length <= 3) nextQueue = nextQueue.concat(randBag());
+            var type = nextQueue.shift();
+            current = {
+              type: type,
+              color: PIECES[type].color,
+              rot: 0,
+              x: 3,
+              y: -1
+            };
+            canHold = true;
+            if(collides(current, 0, 0, 0)){
+              gameOver();
+            }
+          }
+
+          function cells(piece, dx, dy, drot){
+            dx = dx||0; dy = dy||0;
+            var r = (piece.rot + (drot||0) + 4) % 4;
+            var shape = PIECES[piece.type].rot[r];
+            var out = [];
+            for(var i=0;i<shape.length;i++){
+              out.push({ x: piece.x + shape[i][0] + dx, y: piece.y + shape[i][1] + dy });
+            }
+            return out;
+          }
+
+          function collides(piece, dx, dy, drot){
+            var cs = cells(piece, dx, dy, drot);
+            for(var i=0;i<cs.length;i++){
+              var c = cs[i];
+              if(c.x < 0 || c.x >= COLS || c.y >= ROWS) return true;
+              if(c.y >= 0 && grid[c.y][c.x]) return true;
+            }
+            return false;
+          }
+
+          function lock(){
+            var cs = cells(current, 0, 0, 0);
+            for(var i=0;i<cs.length;i++){
+              var c = cs[i];
+              if(c.y < 0){ gameOver(); return; }
+              grid[c.y][c.x] = current.color;
+            }
+            clearLines();
+            spawn();
+          }
+
+          function clearLines(){
+            var cleared = 0;
+            for(var r=ROWS-1;r>=0;r--){
+              var full = true;
+              for(var c=0;c<COLS;c++){ if(!grid[r][c]){ full=false; break; } }
+              if(full){
+                grid.splice(r,1);
+                grid.unshift(new Array(COLS).fill(null));
+                cleared++;
+                r++;
+              }
+            }
+            if(cleared > 0){
+              var points = [0,100,300,500,800][cleared] * level;
+              score += points;
+              lines += cleared;
+              var newLevel = Math.floor(lines / 10) + 1;
+              if(newLevel !== level){
+                level = newLevel;
+                dropInterval = Math.max(80, 800 - (level-1)*60);
+              }
+              updateHud();
+            }
+          }
+
+          function updateHud(){
+            $score.textContent = score;
+            $level.textContent = level;
+            $lines.textContent = lines;
+          }
+
+          function rotate(){
+            // 简单墙踢：依次尝试 0, -1, +1, -2, +2 偏移
+            var kicks = [0,-1,1,-2,2];
+            for(var i=0;i<kicks.length;i++){
+              if(!collides(current, kicks[i], 0, 1)){
+                current.x += kicks[i];
+                current.rot = (current.rot + 1) % 4;
+                return;
+              }
+            }
+          }
+
+          function move(dx){
+            if(!collides(current, dx, 0, 0)) current.x += dx;
+          }
+
+          function softDrop(){
+            if(!collides(current, 0, 1, 0)){
+              current.y += 1;
+              score += 1;
+              updateHud();
+            } else {
+              lock();
+            }
+          }
+
+          function hardDrop(){
+            var dist = 0;
+            while(!collides(current, 0, dist+1, 0)) dist++;
+            current.y += dist;
+            score += dist * 2;
+            updateHud();
+            lock();
+          }
+
+          function hold(){
+            if(!canHold) return;
+            var t = current.type;
+            if(holdPiece){
+              var tmp = holdPiece;
+              holdPiece = t;
+              current = { type:tmp, color:PIECES[tmp].color, rot:0, x:3, y:-1 };
+            } else {
+              holdPiece = t;
+              spawn();
+            }
+            canHold = false;
+            if(collides(current,0,0,0)) gameOver();
+          }
+
+          function ghostY(){
+            var d = 0;
+            while(!collides(current, 0, d+1, 0)) d++;
+            return current.y + d;
+          }
+
+          // ===== 绘制 =====
+          function cellRect(c, x, y, s){
+            c.fillStyle = '#eaf4f1';
+            c.fillRect(x, y, s, s);
+            c.strokeStyle = 'rgba(44,122,123,0.08)';
+            c.lineWidth = 1;
+            c.strokeRect(x+0.5, y+0.5, s-1, s-1);
+          }
+
+          function drawBlock(c, x, y, s, color, opts){
+            opts = opts || {};
+            // 主体
+            c.fillStyle = color;
+            roundRect(c, x+1, y+1, s-2, s-2, 4);
+            c.fill();
+            // 高光
+            c.fillStyle = 'rgba(255,255,255,0.35)';
+            roundRect(c, x+3, y+3, s-6, (s-6)*0.35, 3);
+            c.fill();
+            // 阴影边
+            c.fillStyle = 'rgba(0,0,0,0.12)';
+            roundRect(c, x+3, y+s-5, s-6, 2, 1);
+            c.fill();
+            if(opts.ghost){
+              c.fillStyle = 'rgba(255,255,255,0.4)';
+              roundRect(c, x+1, y+1, s-2, s-2, 4);
+              c.fill();
+            }
+          }
+
+          function roundRect(c, x, y, w, h, r){
+            c.beginPath();
+            c.moveTo(x+r, y);
+            c.arcTo(x+w, y,   x+w, y+h, r);
+            c.arcTo(x+w, y+h, x,   y+h, r);
+            c.arcTo(x,   y+h, x,   y,   r);
+            c.arcTo(x,   y,   x+w, y,   r);
+            c.closePath();
+          }
+
+          function draw(){
+            // 棋盘背景
+            for(var r=0;r<ROWS;r++){
+              for(var c=0;c<COLS;c++){
+                cellRect(ctx, c*CELL, r*CELL, CELL);
+              }
+            }
+            // 已落方块
+            for(var r2=0;r2<ROWS;r2++){
+              for(var c2=0;c2<COLS;c2++){
+                if(grid[r2][c2]) drawBlock(ctx, c2*CELL, r2*CELL, CELL, grid[r2][c2]);
+              }
+            }
+            // 幽灵投影
+            if(current && state === 'running'){
+              var gy = ghostY();
+              var gcs = cells(current, 0, gy - current.y, 0);
+              for(var gi=0;gi<gcs.length;gi++){
+                if(gcs[gi].y >= 0) drawBlock(ctx, gcs[gi].x*CELL, gcs[gi].y*CELL, CELL, current.color, {ghost:true});
+              }
+            }
+            // 当前方块
+            if(current){
+              var cs = cells(current, 0, 0, 0);
+              for(var i=0;i<cs.length;i++){
+                if(cs[i].y >= 0) drawBlock(ctx, cs[i].x*CELL, cs[i].y*CELL, CELL, current.color);
+              }
+            }
+            drawMini();
+          }
+
+          function drawMini(){
+            // Hold
+            var hw = holdCanvas.clientWidth, hh = holdCanvas.clientHeight;
+            hctx.clearRect(0,0,hw,hh);
+            if(holdPiece) drawPieceMini(hctx, holdPiece, hw, hh, 18);
+            // Next (画前 3 个)
+            var nw = nextCanvas.clientWidth, nh = nextCanvas.clientHeight;
+            nctx.clearRect(0,0,nw,nh);
+            var each = nh / 3;
+            for(var i=0;i<3 && i<nextQueue.length;i++){
+              drawPieceMini(nctx, nextQueue[i], nw, each, each*0.28, i*each);
+            }
+          }
+
+          function drawPieceMini(c, type, w, h, size, yOff){
+            yOff = yOff || 0;
+            var shape = PIECES[type].rot[0];
+            // 计算边界居中
+            var minX=4,maxX=0,minY=4,maxY=0;
+            for(var i=0;i<shape.length;i++){
+              minX=Math.min(minX,shape[i][0]); maxX=Math.max(maxX,shape[i][0]);
+              minY=Math.min(minY,shape[i][1]); maxY=Math.max(maxY,shape[i][1]);
+            }
+            var pw = (maxX-minX+1)*size;
+            var ph = (maxY-minY+1)*size;
+            var ox = (w - pw)/2 - minX*size;
+            var oy = yOff + (h - ph)/2 - minY*size;
+            for(var j=0;j<shape.length;j++){
+              drawBlock(c, ox + shape[j][0]*size, oy + shape[j][1]*size, size, PIECES[type].color);
+            }
+          }
+
+          // ===== 主循环 =====
+          function loop(time){
+            if(state !== 'running') return;
+            if(!lastTime) lastTime = time;
+            var delta = time - lastTime;
+            lastTime = time;
+            dropTimer += delta;
+            if(dropTimer >= dropInterval){
+              dropTimer = 0;
+              if(!collides(current, 0, 1, 0)){
+                current.y += 1;
+              } else {
+                lock();
+              }
+            }
+            draw();
+            rafId = requestAnimationFrame(loop);
+          }
+
+          function start(){
+            grid = makeGrid();
+            nextQueue = randBag().concat(randBag());
+            holdPiece = null;
+            score = 0; level = 1; lines = 0;
+            dropInterval = 800; dropTimer = 0; lastTime = 0;
+            updateHud();
+            spawn();
+            state = 'running';
+            $overlay.classList.add('is-hidden');
+            setupMini(holdCanvas); setupMini(nextCanvas);
+            rafId = requestAnimationFrame(loop);
+          }
+
+          function pause(){
+            if(state !== 'running') return;
+            state = 'paused';
+            if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
+            $title.textContent = '已暂停';
+            $text.textContent = '当前得分 ' + score;
+            $btn.textContent = '继续游戏';
+            $overlay.classList.remove('is-hidden');
+          }
+
+          function resume(){
+            if(state !== 'paused') return;
+            state = 'running';
+            lastTime = 0;
+            $overlay.classList.add('is-hidden');
+            rafId = requestAnimationFrame(loop);
+          }
+
+          function gameOver(){
+            state = 'over';
+            if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
+            var isNew = score > high;
+            if(isNew){
+              high = score;
+              localStorage.setItem('tetrisHigh', String(high));
+              $high.textContent = high;
+            }
+            $title.textContent = '游戏结束';
+            $text.textContent = '本局得分 ' + score + (isNew && score > 0 ? ' · 新纪录！' : '');
+            $btn.textContent = '再来一局';
+            $overlay.classList.remove('is-hidden');
+          }
+
+          // 仅当画布在视口内时拦截键盘
+          function inView(){
+            var r = board.getBoundingClientRect();
+            return r.bottom > 0 && r.top < window.innerHeight;
+          }
+
+          function doAction(act){
+            if(state === 'idle' || state === 'over'){
+              if(act === 'pause') start();
+              else { start(); }
+            }
+            if(state === 'paused'){
+              if(act === 'pause') resume();
+              return;
+            }
+            if(state !== 'running') return;
+            switch(act){
+              case 'left':   move(-1); break;
+              case 'right':  move(1); break;
+              case 'soft':   softDrop(); break;
+              case 'rotate': rotate(); break;
+              case 'hard':   hardDrop(); break;
+              case 'hold':   hold(); break;
+              case 'pause':  pause(); break;
+            }
+            draw();
+          }
+
+          document.addEventListener('keydown', function(e){
+            if(!inView()) return;
+            var k = e.key, act = null;
+            if(k === 'ArrowLeft' || k === 'a' || k === 'A') act = 'left';
+            else if(k === 'ArrowRight' || k === 'd' || k === 'D') act = 'right';
+            else if(k === 'ArrowDown'  || k === 's' || k === 'S') act = 'soft';
+            else if(k === 'ArrowUp'    || k === 'w' || k === 'W') act = 'rotate';
+            else if(k === ' ') act = 'hard';
+            else if(k === 'c' || k === 'C' || k === 'Shift') act = 'hold';
+            else if(k === 'p' || k === 'P') act = 'pause';
+            if(act){
+              e.preventDefault();
+              doAction(act);
+            }
+          });
+
+          $btn.addEventListener('click', function(){
+            if(state === 'paused') resume();
+            else start();
+          });
+
+          var padBtns = document.querySelectorAll('.tetris-pad button');
+          for(var i=0;i<padBtns.length;i++){
+            (function(btn){
+              var act = btn.getAttribute('data-act');
+              btn.addEventListener('click', function(e){
+                e.preventDefault();
+                doAction(act);
+              });
+            })(padBtns[i]);
+          }
+
+          // 初始
+          grid = makeGrid();
+          nextQueue = randBag();
+          state = 'idle';
+          setupMini(holdCanvas); setupMini(nextCanvas);
+          draw();
+        })();
+        </script>
+
+        <h2 id="features"><a href="#features" class="headerlink" title="实现要点"></a>实现要点</h2>
+        <ul>
+          <li><strong>纯 Canvas 绘制</strong>：10×20 棋盘，7 种经典方块（I/O/T/S/Z/J/L），每个方块带高光与阴影立体感。</li>
+          <li><strong>7-bag 随机</strong>：每 7 个方块为一组打乱，避免长时间不出某种方块。</li>
+          <li><strong>暂存 Hold</strong>：按 <code>C</code> 可暂存当前方块，每个方块落地前只能暂存一次。</li>
+          <li><strong>下三个预览</strong>：右侧预览队列中接下来的 3 个方块。</li>
+          <li><strong>幽灵投影</strong>：半透明显示当前方块的落点，方便瞄准。</li>
+          <li><strong>墙踢旋转</strong>：旋转受阻时自动尝试左右偏移，贴墙也能转。</li>
+          <li><strong>计分 & 等级</strong>：消 1/2/3/4 行分别 100/300/500/800 × 等级，软降 +1，硬降 +2/格，每 10 行升一级并加速。</li>
+          <li><strong>双端操控</strong>：键盘（方向键 / WASD / 空格 / C / P）+ 屏幕按钮，移动端也能玩。</li>
+          <li><strong>本地存档</strong>：最高分存 <code>localStorage</code>，刷新不丢。</li>
+        </ul>
+
+        <h2 id="core"><a href="#core" class="headerlink" title="核心逻辑"></a>核心逻辑</h2>
+        <p>俄罗斯方块的核心是「碰撞检测 + 锁定 + 消行」。每帧重力下落一格，落地后锁定到棋盘、检测并清除满行，再生成下一个方块：</p>
+        <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title">lock</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> cs = cells(current, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;cs.length; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (cs[i].y &lt; <span class="number">0</span>) <span class="keyword">return</span> gameOver();</span><br><span class="line">    grid[cs[i].y][cs[i].x] = current.color;</span><br><span class="line">  &#125;</span><br><span class="line">  clearLines();   <span class="comment">// 清除满行并计分</span></span><br><span class="line">  spawn();        <span class="comment">// 生成下一个方块</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重力：每 dropInterval 毫秒尝试下落一格</span></span><br><span class="line"><span class="keyword">if</span> (!collides(current, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>)) &#123;</span><br><span class="line">  current.y += <span class="number">1</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  lock();  <span class="comment">// 下不去就锁定</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        <hr>
+        <p>和贪吃蛇一样，整个游戏单文件、零依赖，可以直接嵌进任何静态博客。刷新页面，最高分还在。</p>
+
+    </div>
+
+
+
+
+      <footer class="post-footer">
+
+
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/09/28/periodic-table/" rel="prev" title="化学元素周期表">
+      <i class="fa fa-chevron-left"></i> 化学元素周期表
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+
+  </article>
+
+
+
+          </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+
+
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#play"><span class="nav-number">1.</span> <span class="nav-text">在线试玩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#features"><span class="nav-number">2.</span> <span class="nav-text">实现要点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#core"><span class="nav-number">3.</span> <span class="nav-text">核心逻辑</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zpc</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+
+
+
+
+<div class="copyright">
+
+  &copy;
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zpc</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+</body>
+</html>
