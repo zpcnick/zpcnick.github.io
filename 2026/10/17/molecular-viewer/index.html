@@ -187,7 +187,7 @@
 
         <p>参考 liwt31 写的<a target="_blank" rel="noopener" href="https://liwt31.github.io/2022/01/02/online_viewer/">在线分子查看器</a>，根据XYZ实时出图。</p>
         <p>用纯 <code>Canvas</code> 把它重新实现了一遍，并补上了两个功能：<strong>xyz 坐标轴</strong>和<strong>单原子位置微调</strong>。</p>
-        <p>完成分子建模工具可用<a target="_blank" rel="noopener" href="https://www.moldraw.com/">moldraw工具</a>。</p>
+        <p>完整分子建模工具可用<a target="_blank" rel="noopener" href="https://www.moldraw.com/">moldraw工具</a>。</p>
 
         <h2 id="play"><a href="#play" class="headerlink" title="在线试玩"></a>在线试玩</h2>
 
@@ -324,7 +324,6 @@ H   0.629   0.629  -0.629
         .mol-stage{
           position:relative;
           aspect-ratio:1 / 1;
-          /* background:#f6faf9; */
           background:#ffffff;
           border:1px solid #d7e8e3;
           border-radius:12px;
@@ -377,7 +376,7 @@ H   0.629   0.629  -0.629
         }
         .mol-row{
           display:grid;
-          grid-template-columns:14px 26px minmax(0,1fr) 26px;
+          grid-template-columns:14px 26px minmax(0,0.6fr) 26px;
           align-items:center;
           gap:4px;
           margin-bottom:6px;
