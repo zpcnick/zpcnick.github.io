@@ -252,7 +252,7 @@
         <style>
         /* 俄罗斯方块样式（局部作用域） */
         .tetris-game{
-          max-width:660px;
+          max-width:640px;
           margin:24px auto;
           padding:20px;
           background:#fff;
@@ -285,7 +285,7 @@
         .tetris-side{
           display:flex;
           flex-direction:column;
-          gap:10px;
+          gap:20px;
           width:84px;
         }
         .mini-box{
@@ -306,8 +306,8 @@
 
         .tetris-board-wrap{
           position:relative;
-          width:240px;
-          flex:0 0 240px;
+          width:360px;
+          flex:0 0 360px;
         }
         #tetris-board{
           display:block;
@@ -380,8 +380,8 @@
           background:#2c7a7b;
           color:#fff;
         }
-        .pad-rotate{ grid-column:2; grid-row:1; }
         .pad-hard  { grid-column:1; grid-row:1; }
+        .pad-rotate{ grid-column:2; grid-row:1; }
         .pad-hold  { grid-column:3; grid-row:1; font-size:13px; font-weight:600; }
         .pad-left  { grid-column:1; grid-row:2; }
         .pad-soft  { grid-column:2; grid-row:2; }
@@ -408,7 +408,7 @@
           var ctx = board.getContext('2d');
 
           // 逻辑尺寸：10 列 x 20 行，每格 24px
-          var COLS = 10, ROWS = 20, CELL = 24;
+          var COLS = 15, ROWS = 20, CELL = 24;
           var BW = COLS * CELL, BH = ROWS * CELL;
           var DPR = window.devicePixelRatio || 1;
           board.width = BW * DPR;
