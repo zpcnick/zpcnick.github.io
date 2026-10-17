@@ -285,7 +285,7 @@
         .tetris-side{
           display:flex;
           flex-direction:column;
-          gap:20px;
+          gap:10px;
           width:84px;
         }
         .mini-box{
@@ -294,6 +294,14 @@
           padding:8px 6px 6px;
           text-align:center;
         }
+
+.side-left {
+  margin-right: 20px; 
+}
+.side-right {
+  margin-left: 20px; 
+}
+        
         .mini-label{ font-size:11px; color:#2c7a7b; margin-bottom:4px; font-weight:600; }
         .mini-canvas{
           display:block;
@@ -358,11 +366,11 @@
         .tetris-pad{
           display:grid;
           grid-template-columns:repeat(3,1fr);
-          grid-template-rows:repeat(3,1fr);
+          grid-template-rows:repeat(2,1fr);
           gap:8px;
           margin:14px auto 8px;
           max-width:300px;
-          aspect-ratio:3 / 3;
+          aspect-ratio:3 / 2;
         }
         .tetris-pad button{
           background:#eaf4f1;
@@ -386,7 +394,7 @@
         .pad-left  { grid-column:1; grid-row:2; }
         .pad-soft  { grid-column:2; grid-row:2; }
         .pad-right { grid-column:3; grid-row:2; }
-        /* 第三行留空 */
+
         .tetris-tip{
           text-align:center;
           font-size:12px;
