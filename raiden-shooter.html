@@ -23,12 +23,24 @@
     justify-content: center;
     background: radial-gradient(ellipse at center, #0a0a2a 0%, #000 100%);
   }
-  canvas {
-    display: block;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
+  #stage {
+    position: relative;
+    height: min(100vh, 150vw);
+    height: min(100dvh, 150vw);
+    aspect-ratio: 480 / 720;
+    max-width: 100%;
+    overflow: hidden;
     box-shadow: 0 0 60px rgba(80,120,255,0.4);
     background: #000;
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    background: #000;
+    touch-action: none;
   }
   #hud {
     position: absolute;
@@ -38,7 +50,7 @@
     justify-content: space-between;
     align-items: center;
     color: #7ff;
-    font-size: 14px;
+    font-size: clamp(9px, 2.1vmin, 14px);
     text-shadow: 0 0 6px #0af;
     pointer-events: none;
     z-index: 5;
@@ -63,7 +75,7 @@
   }
   #overlay.hidden { display: none; }
   #overlay h1 {
-    font-size: 52px;
+    font-size: clamp(26px, 8vmin, 52px);
     letter-spacing: 8px;
     background: linear-gradient(180deg, #fff 0%, #5cf 50%, #08f 100%);
     -webkit-background-clip: text;
@@ -74,7 +86,7 @@
     animation: glow 2s ease-in-out infinite;
   }
   #overlay h2 {
-    font-size: 18px;
+    font-size: clamp(11px, 2.4vmin, 18px);
     color: #7cf;
     letter-spacing: 12px;
     margin-bottom: 40px;
@@ -105,9 +117,9 @@
     transform: scale(1.05);
   }
   .controls {
-    margin-top: 36px;
+    margin-top: clamp(16px, 4vh, 36px);
     color: #89a;
-    font-size: 13px;
+    font-size: clamp(10px, 1.8vmin, 13px);
     line-height: 1.9;
     letter-spacing: 1px;
   }
@@ -125,6 +137,7 @@
 </head>
 <body>
 <div id="gameWrap">
+ <div id="stage">
   <canvas id="game" width="480" height="720"></canvas>
   <div id="hud">
     <div class="hud-group">
@@ -146,8 +159,10 @@
       <div><b>空格 / J</b> &nbsp;发射子弹</div>
       <div><b>X / K</b> &nbsp;释放炸弹（清屏）</div>
       <div><b>P</b> &nbsp;暂停游戏</div>
+      <div><b>触屏</b> &nbsp;拖动移动 · 按住/轻点射击 · 双击放炸弹</div>
     </div>
   </div>
+ </div>
 </div>
 
 <script>
@@ -172,28 +187,61 @@
   });
   addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
 
-  // Touch controls
-  let touchId = null, touchStart = null;
+  // ---------- Touch controls ----------
+  // 拖动：移动战机；按住或轻点：连续射击；双击：释放炸弹
+  let touchId = null, touchStart = null, touchFiring = false;
+  let lastTapAt = 0, tapMoved = false;
+  const TAP_MOVE_LIMIT = 14;   // 位移超过该像素就不算“轻点”
+  const DOUBLE_TAP_MS = 320;   // 双击判定时间窗
+
+  const canvasScale = () => canvas.getBoundingClientRect().width / W;
+
   canvas.addEventListener('touchstart', e => {
     e.preventDefault();
+    if (state !== 'playing' || !player || !player.alive) return;
     const t = e.changedTouches[0];
+    const now = Date.now();
+    if (now - lastTapAt < DOUBLE_TAP_MS && !tapMoved) {
+      // 双击 → 炸弹
+      useBomb();
+      lastTapAt = 0;
+      tapMoved = true;   // 防止三连击重复触发
+    } else {
+      lastTapAt = now;
+      tapMoved = false;
+    }
     touchId = t.identifier;
     touchStart = { x: t.clientX, y: t.clientY, px: player.x, py: player.y };
+    touchFiring = true;
   }, { passive: false });
+
   canvas.addEventListener('touchmove', e => {
     e.preventDefault();
     if (touchId === null) return;
+    const s = canvasScale();
     for (const t of e.changedTouches) {
-      if (t.identifier === touchId) {
-        const dx = t.clientX - touchStart.x;
-        const dy = t.clientY - touchStart.y;
-        player.x = clamp(touchStart.px + dx, player.r, W - player.r);
-        player.y = clamp(touchStart.py + dy, player.r, H - player.r);
-      }
+      if (t.identifier !== touchId) continue;
+      const dx = t.clientX - touchStart.x;
+      const dy = t.clientY - touchStart.y;
+      if (Math.hypot(dx, dy) > TAP_MOVE_LIMIT) tapMoved = true;
+      player.x = clamp(touchStart.px + dx * s, player.r, W - player.r);
+      player.y = clamp(touchStart.py + dy * s, player.r, H - player.r);
     }
   }, { passive: false });
+
   canvas.addEventListener('touchend', e => {
-    for (const t of e.changedTouches) if (t.identifier === touchId) touchId = null;
+    for (const t of e.changedTouches) {
+      if (t.identifier === touchId) {
+        touchId = null;
+        touchStart = null;
+        touchFiring = false;
+      }
+    }
+  });
+  canvas.addEventListener('touchcancel', () => {
+    touchId = null;
+    touchStart = null;
+    touchFiring = false;
   });
 
   // ---------- Game State ----------
@@ -437,8 +485,8 @@
     player.y = clamp(player.y + my * player.speed, player.r, H - player.r);
 
     // Shooting
-    if (keys[' '] || keys['j']) playerShoot();
-    else if (player.fireCD > 0) player.fireCD--;
+    if (player.fireCD > 0) player.fireCD--;
+    if (keys[' '] || keys['j'] || touchFiring) playerShoot();
 
     if ((keys['x'] || keys['k']) && !player._bombHeld) { useBomb(); player._bombHeld = true; }
     if (!keys['x'] && !keys['k']) player._bombHeld = false;
