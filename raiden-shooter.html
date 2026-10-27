@@ -357,6 +357,11 @@
   }
 
   // ---------- Enemies ----------
+  function enemyHpScale() {
+    // 从第二波起血量逐步提升，最高到 2.5 倍
+    return Math.min(2.5, 1 + Math.max(0, wave - 1) * 0.15);
+  }
+
   function spawnEnemy(type, x) {
     const base = { x, y: -30, fireCD: rand(40, 80), hit: 0 };
     if (type === 'small') {
@@ -385,16 +390,20 @@
         shoot: true, fireRate: 50
       });
     }
+    const hpScale = enemyHpScale();
+    base.hp = Math.max(1, Math.ceil(base.hp * hpScale));
     enemies.push(base);
   }
 
   function spawnBoss() {
+    const hpScale = enemyHpScale();
+    const hp = Math.ceil((120 + wave * 40) * hpScale);
     enemies.push({
       type: 'boss', x: W/2, y: -80, r: 55,
-      hp: 120 + wave * 40, maxHp: 120 + wave * 40,
+      hp, maxHp: hp,
       speed: 1.2, score: 5000, color: '#f36',
       pattern: 'boss', phase: 0, fireCD: 60, enter: true,
-      targetY: 110, hit: 0
+      targetY: 110, hit: 0, phaseOffset: 0
     });
   }
 
@@ -558,9 +567,13 @@
       } else if (e.pattern === 'boss') {
         if (e.enter) {
           e.y += 1.5;
-          if (e.y >= e.targetY) { e.enter = false; }
+          if (e.y >= e.targetY) {
+            e.enter = false;
+            // 入场完成时记录相位偏移，让 Boss 从屏幕中央开始左右摆动，避免突兀跳变
+            e.phaseOffset = gameTime;
+          }
         } else {
-          e.x = W/2 + Math.sin(gameTime * 0.012) * (W/2 - 80);
+          e.x = W/2 + Math.sin((gameTime - e.phaseOffset) * 0.012) * (W/2 - 80);
           // phase by hp
           const hpRatio = e.hp / e.maxHp;
           e.phase = hpRatio > 0.66 ? 0 : hpRatio > 0.33 ? 1 : 2;
