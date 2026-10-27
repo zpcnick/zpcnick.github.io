@@ -257,6 +257,7 @@
   let gameTime = 0;
 
   function resetGame() {
+    score = 0;
     player = {
       x: W/2, y: H - 100, r: 14,
       speed: 5, lives: 3, bombs: 3,
@@ -589,7 +590,9 @@
           // multiple powerups
           for (let k = 0; k < 3; k++) dropPowerup(e.x + rand(-30, 30), e.y);
           addFloat(e.x, e.y - 30, 'BOSS DOWN!', '#ff5577');
-        } else if (Math.random() < (e.type === 'gunship' ? 0.8 : e.type === 'bomber' ? 0.5 : 0.15)) {
+        } else if (e.type === 'gunship' && Math.random() < 0.7) {
+          dropPowerup(e.x, e.y);
+        } else if (e.type === 'bomber' && Math.random() < 0.45) {
           dropPowerup(e.x, e.y);
         }
         enemies.splice(i, 1);
