@@ -278,7 +278,7 @@
   document.getElementById('hiscore').textContent = hiscore;
 
   // ---------- Entities ----------
-  let player, bullets, eBullets, enemies, particles, powerups, stars, floatTexts;
+  let player, bullets, eBullets, enemies, particles, powerups, stars, floatTexts, lasers;
   let shakeT = 0, shakeMag = 0;
   let spawnTimer = 0, waveTimer = 0, wave = 0;
   let bombFlash = 0;
@@ -288,13 +288,13 @@
     score = 0;
     player = {
       x: W/2, y: H - 100, r: 14,
-      speed: 5, lives: 3, maxLives: 5, bombs: 3,
+      speed: 5, lives: 3, maxLives: 5, bombs: 3, maxBombs: 5,
       weapon: 1, maxWeapon: 5,
       fireCD: 0, fireRate: 8,
       shield: 0, invuln: 0,
       alive: true
     };
-    bullets = []; eBullets = []; enemies = []; particles = []; powerups = []; floatTexts = [];
+    bullets = []; eBullets = []; enemies = []; particles = []; powerups = []; floatTexts = []; lasers = [];
     shakeT = 0; shakeMag = 0;
     spawnTimer = 60; waveTimer = 0; wave = 0;
     bombFlash = 0; gameTime = 0;
@@ -431,7 +431,7 @@
       hp, maxHp: hp,
       speed: 1.2, score: 5000, color: '#f36',
       pattern: 'boss', phase: 0, fireCD: 60, enter: true,
-      targetY: 110, hit: 0, phaseOffset: 0
+      targetY: 110, hit: 0, phaseOffset: 0, laserCD: 120
     });
   }
 
@@ -476,6 +476,69 @@
     }
   }
 
+  // ---------- Boss laser (8 directions, every 5s) ----------
+  const BOSS_LASER_INTERVAL = 300;  // 5 秒（60fps）
+  const BOSS_LASER_WARN = 40;       // 蓄力预警帧
+  const BOSS_LASER_LIFE = 36;       // 光束持续帧
+
+  function fireBossLaser(e) {
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2 + Math.PI / 8;
+      lasers.push({
+        x: e.x, y: e.y,
+        dx: Math.cos(a), dy: Math.sin(a),
+        t: BOSS_LASER_WARN + BOSS_LASER_LIFE,
+        halfW: 7
+      });
+    }
+    shakeT = 16; shakeMag = 7;
+  }
+
+  // 点到射线的垂直距离
+  function distToRay(px, py, L) {
+    const vx = px - L.x, vy = py - L.y;
+    const proj = Math.max(0, vx * L.dx + vy * L.dy);
+    return Math.hypot(vx - L.dx * proj, vy - L.dy * proj);
+  }
+
+  function drawLasers() {
+    for (const L of lasers) {
+      const age = BOSS_LASER_WARN + BOSS_LASER_LIFE - L.t;
+      const x1 = L.x + L.dx * 1400, y1 = L.y + L.dy * 1400;
+      ctx.save();
+      ctx.lineCap = 'round';
+      if (age < BOSS_LASER_WARN) {
+        // 蓄力预警线
+        const k = age / BOSS_LASER_WARN;
+        ctx.globalAlpha = 0.12 + k * 0.4;
+        ctx.strokeStyle = '#ff5577';
+        ctx.lineWidth = 1 + k * 2.5;
+        ctx.beginPath(); ctx.moveTo(L.x, L.y); ctx.lineTo(x1, y1); ctx.stroke();
+        ctx.globalAlpha = 0.5 + k * 0.5;
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.arc(L.x, L.y, 3 + k * 9, 0, Math.PI * 2); ctx.fill();
+      } else {
+        // 实体光束：展开 + 收束
+        const p = age - BOSS_LASER_WARN;
+        const k = Math.min(1, p / 5) * Math.min(1, (BOSS_LASER_LIFE - p) / 8);
+        ctx.shadowBlur = 18; ctx.shadowColor = '#f36';
+        ctx.strokeStyle = '#f36'; ctx.globalAlpha = 0.22 * k;
+        ctx.lineWidth = L.halfW * 3.4;
+        ctx.beginPath(); ctx.moveTo(L.x, L.y); ctx.lineTo(x1, y1); ctx.stroke();
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = '#ff7aa0'; ctx.globalAlpha = 0.65 * k;
+        ctx.lineWidth = L.halfW * 1.8;
+        ctx.beginPath(); ctx.moveTo(L.x, L.y); ctx.lineTo(x1, y1); ctx.stroke();
+        ctx.strokeStyle = '#fff'; ctx.globalAlpha = 0.95 * k;
+        ctx.lineWidth = Math.max(2, L.halfW * 0.45);
+        ctx.beginPath(); ctx.moveTo(L.x, L.y); ctx.lineTo(x1, y1); ctx.stroke();
+      }
+      ctx.restore();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+
   // ---------- Power-ups ----------
   function dropPowerup(x, y) {
     const r = Math.random();
@@ -496,6 +559,7 @@
     // destroy all enemy bullets
     for (const b of eBullets) addExplosion(b.x, b.y, 3, '#fff', 3, 15);
     eBullets.length = 0;
+    lasers.length = 0;
     // damage all enemies
     for (const e of enemies) {
       e.hp -= 8;
@@ -606,6 +670,12 @@
           // phase by hp
           const hpRatio = e.hp / e.maxHp;
           e.phase = hpRatio > 0.66 ? 0 : hpRatio > 0.33 ? 1 : 2;
+          // 八方向激光，每 5 秒一轮
+          e.laserCD--;
+          if (e.laserCD <= 0) {
+            fireBossLaser(e);
+            e.laserCD = BOSS_LASER_INTERVAL;
+          }
         }
       }
 
@@ -630,6 +700,7 @@
         addFloat(e.x, e.y, '+' + e.score, '#ffd24a');
         if (e.type === 'boss') {
           // multiple powerups
+          lasers.length = 0;
           for (let k = 0; k < 3; k++) dropPowerup(e.x + rand(-30, 30), e.y);
           addFloat(e.x, e.y - 30, 'BOSS DOWN!', '#ff5577');
         } else if (e.type === 'gunship' && Math.random() < 0.7) {
@@ -682,6 +753,30 @@
       }
     }
 
+    // Boss lasers: 蓄力→发射
+    for (let i = lasers.length - 1; i >= 0; i--) {
+      const L = lasers[i];
+      L.t--;
+      if (L.t <= 0) { lasers.splice(i, 1); }
+    }
+    if (player.alive && player.invuln <= 0) {
+      for (const L of lasers) {
+        const age = BOSS_LASER_WARN + BOSS_LASER_LIFE - L.t;
+        // 仅在光束实体化的中段判定
+        const phase = age - BOSS_LASER_WARN;
+        if (phase < 3 || phase > BOSS_LASER_LIFE - 6) continue;
+        if (distToRay(player.x, player.y, L) < L.halfW + player.r * 0.75) {
+          if (player.shield > 0) {
+            player.shield = 0;
+            addExplosion(player.x, player.y, 20, '#5cf', 5, 30);
+          } else {
+            playerHit();
+          }
+          break;
+        }
+      }
+    }
+
     // Power-ups
     for (let i = powerups.length - 1; i >= 0; i--) {
       const p = powerups[i];
@@ -692,7 +787,7 @@
           player.weapon = Math.min(player.maxWeapon, player.weapon + 1);
           addFloat(p.x, p.y, 'POWER UP!', '#5ff');
         } else if (p.kind === 'B') {
-          player.bombs = Math.min(9, player.bombs + 1);
+          player.bombs = Math.min(player.maxBombs || 5, player.bombs + 1);
           addFloat(p.x, p.y, '+1 BOMB', '#ffd24a');
         } else if (p.kind === 'S') {
           player.shield = 360;
@@ -998,6 +1093,7 @@
 
     if (state === 'playing' || state === 'paused' || state === 'gameover') {
       drawPowerups();
+      drawLasers();
       for (const e of enemies) drawEnemy(e);
       drawBullets();
       drawPlayer();
@@ -1088,8 +1184,8 @@
 
   // init stars for menu bg
   initStars();
-  player = { x: W/2, y: H - 100, r: 14, lives: 3, maxLives: 5, bombs: 3, weapon: 1 };
-  bullets = []; eBullets = []; enemies = []; particles = []; powerups = []; floatTexts = [];
+  player = { x: W/2, y: H - 100, r: 14, lives: 3, maxLives: 5, bombs: 3, maxBombs: 5, weapon: 1 };
+  bullets = []; eBullets = []; enemies = []; particles = []; powerups = []; floatTexts = []; lasers = [];
   loop();
 })();
 </script>
