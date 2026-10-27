@@ -273,8 +273,15 @@
   });
 
   // ---------- Game State ----------
+  function loadHi() {
+    try { return +localStorage.getItem('raiden_hi') || 0; } catch (e) { return 0; }
+  }
+  function saveHi(v) {
+    try { localStorage.setItem('raiden_hi', String(v)); } catch (e) { /* 隐私模式等不可用则忽略 */ }
+  }
+
   let state = 'menu'; // menu | playing | paused | gameover
-  let score = 0, hiscore = +localStorage.getItem('raiden_hi') || 0;
+  let score = 0, hiscore = loadHi();
   document.getElementById('hiscore').textContent = hiscore;
 
   // ---------- Entities ----------
@@ -1132,6 +1139,7 @@
     if (score > hiscore) {
       hiscore = score;
       document.getElementById('hiscore').textContent = hiscore.toLocaleString();
+      saveHi(hiscore);   // 实时落盘，避免中途刷新丢失
     }
   }
 
@@ -1150,7 +1158,7 @@
     state = 'gameover';
     if (score > hiscore) {
       hiscore = score;
-      localStorage.setItem('raiden_hi', hiscore);
+      saveHi(hiscore);
     }
     overlay.classList.remove('hidden');
     overlay.innerHTML = `
