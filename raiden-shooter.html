@@ -132,6 +132,29 @@
     letter-spacing: 3px;
   }
   .stat-row { color: #acf; font-size: 15px; margin: 4px 0; letter-spacing: 2px; }
+  .home-btn {
+    position: fixed;
+    top: 14px;
+    right: 16px;
+    z-index: 20;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: #7ff;
+    background: rgba(0, 20, 40, 0.55);
+    border: 1px solid rgba(119, 255, 255, 0.4);
+    border-radius: 20px;
+    text-decoration: none;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: all 0.2s;
+  }
+  .home-btn:hover {
+    background: rgba(0, 40, 70, 0.85);
+    color: #fff;
+  }
   .stat-row span { color: #fff; }
 </style>
 </head>
@@ -163,6 +186,7 @@
     </div>
   </div>
  </div>
+ <a href="/" class="home-btn" id="homeBtn" title="返回博客主页">🏠 主页</a>
 </div>
 
 <script>
@@ -170,6 +194,12 @@
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
+
+  // 文章页用 iframe 内嵌时隐藏"返回主页"按钮，仅在独立全屏页显示
+  if (window.top !== window.self) {
+    const hb = document.getElementById('homeBtn');
+    if (hb) hb.style.display = 'none';
+  }
 
   // ---------- Utility ----------
   const rand = (a, b) => a + Math.random() * (b - a);
@@ -260,7 +290,7 @@
     score = 0;
     player = {
       x: W/2, y: H - 100, r: 14,
-      speed: 5, lives: 3, bombs: 3,
+      speed: 5, lives: 3, maxLives: 5, bombs: 3,
       weapon: 1, maxWeapon: 5,
       fireCD: 0, fireRate: 8,
       shield: 0, invuln: 0,
@@ -452,9 +482,10 @@
   function dropPowerup(x, y) {
     const r = Math.random();
     let kind;
-    if (r < 0.55) kind = 'P';
-    else if (r < 0.8) kind = 'B';
-    else kind = 'S';
+    if (r < 0.5) kind = 'P';
+    else if (r < 0.73) kind = 'B';
+    else if (r < 0.9) kind = 'S';
+    else kind = 'L';
     powerups.push({ x, y, vy: 1.5, r: 12, kind, t: 0 });
   }
 
@@ -668,6 +699,9 @@
         } else if (p.kind === 'S') {
           player.shield = 360;
           addFloat(p.x, p.y, 'SHIELD!', '#7cf');
+        } else if (p.kind === 'L') {
+          player.lives = Math.min(player.maxLives || 5, player.lives + 1);
+          addFloat(p.x, p.y, '+1 LIFE', '#f9a');
         }
         addExplosion(p.x, p.y, 12, '#fff', 3, 20);
         powerups.splice(i, 1);
@@ -922,6 +956,7 @@
       let col = '#5ff', letter = 'P';
       if (p.kind === 'B') { col = '#fd4'; letter = 'B'; }
       else if (p.kind === 'S') { col = '#7cf'; letter = 'S'; }
+      else if (p.kind === 'L') { col = '#f9a'; letter = 'L'; }
       ctx.shadowBlur = 12; ctx.shadowColor = col;
       ctx.fillStyle = col;
       ctx.beginPath();
@@ -1061,7 +1096,7 @@
 
   // init stars for menu bg
   initStars();
-  player = { x: W/2, y: H - 100, r: 14, lives: 3, bombs: 3, weapon: 1 };
+  player = { x: W/2, y: H - 100, r: 14, lives: 3, maxLives: 5, bombs: 3, weapon: 1 };
   bullets = []; eBullets = []; enemies = []; particles = []; powerups = []; floatTexts = [];
   loop();
 })();
