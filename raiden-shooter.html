@@ -211,7 +211,7 @@
   addEventListener('keydown', e => {
     keys[e.key.toLowerCase()] = true;
     if (['arrowup','arrowdown','arrowleft','arrowright',' '].includes(e.key.toLowerCase())) e.preventDefault();
-    if (e.key.toLowerCase() === 'p' && state === 'playing') togglePause();
+    if (e.key.toLowerCase() === 'p' && (state === 'playing' || state === 'paused')) togglePause();
   });
   addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
 
@@ -586,7 +586,7 @@
     lasers.length = 0;
     // damage all enemies
     for (const e of enemies) {
-      e.hp -= 8;
+      e.hp -= 20;
       addExplosion(e.x, e.y, 8, '#ff8', 4, 25);
     }
   }
@@ -646,7 +646,7 @@
       const pattern = wave % 8;
       if (pattern === 7) {
         spawnBoss();
-        spawnTimer = 300;
+        spawnTimer = 360;
       } else {
         // 后期每波最低数量提升，避免"刷得少好躲"
         const minCount = 3 + Math.floor(Math.max(0, wave - 2) / 4);
@@ -663,9 +663,9 @@
             else if (wave < 6) type = r < 0.4 ? 'small' : r < 0.75 ? 'zigzag' : 'bomber';
             else type = r < 0.3 ? 'small' : r < 0.55 ? 'zigzag' : r < 0.8 ? 'bomber' : 'gunship';
             spawnEnemy(type, rand(40, W - 40));
-          }, i * 180);
+          }, i * 240);
         }
-        spawnTimer = Math.max(130, 220 - wave * 8) + randi(0, 120) + (wave <= 3 ? 80 : 0);
+        spawnTimer = Math.max(180, 300 - wave * 8) + randi(0, 150) + (wave <= 3 ? 80 : 0);
       }
     }
 
@@ -861,9 +861,9 @@
   }
 
   function shieldAbsorb(x, y) {
-    // 护盾抵挡本次伤害，并给予 3 秒无敌
+    // 护盾抵挡本次伤害，并给予 5 秒无敌
     player.shield = 0;
-    player.invuln = 180;
+    player.invuln = 300;
     addExplosion(x, y, 20, '#5cf', 5, 30);
     addFloat(player.x, player.y - 26, 'INVINCIBLE!', '#7cf');
   }
