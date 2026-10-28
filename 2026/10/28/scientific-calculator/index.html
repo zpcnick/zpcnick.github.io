@@ -199,6 +199,7 @@
                 <div class="lcd-status">
                   <span id="lcdShift">SHIFT</span>
                   <span id="lcdAngle" class="on">DEG</span>
+                  <span id="lcdSci">SCI</span>
                 </div>
                 <div class="lcd-expr"><span id="lcdExpr"></span></div>
                 <div class="lcd-result"><span id="lcdResult">0</span></div>
@@ -208,15 +209,9 @@
             <div class="casio-keys" id="casioKeys">
               <button type="button" class="ck ck-shift" data-key="shift">SHIFT</button>
               <button type="button" class="ck ck-mode" data-key="mode">MODE</button>
+              <button type="button" class="ck ck-fn ck-small" data-key="his">his</button>
               <button type="button" class="ck ck-arrow" data-key="cursorLeft" aria-label="光标左移">&#9664;</button>
               <button type="button" class="ck ck-arrow" data-key="cursorRight" aria-label="光标右移">&#9654;</button>
-              <button type="button" class="ck ck-fn has-sub" data-key="sq" data-shift="cube"><span class="k-sub">x&sup3;</span><span class="k-lbl">x&sup2;</span></button>
-
-              <button type="button" class="ck ck-fn has-sub" data-key="pow" data-shift="root"><span class="k-sub">&#739;&radic;</span><span class="k-lbl">x&#696;</span></button>
-              <button type="button" class="ck ck-fn has-sub" data-key="sqrt" data-shift="cbrt"><span class="k-sub">&sup3;&radic;</span><span class="k-lbl">&radic;</span></button>
-              <button type="button" class="ck ck-fn has-sub" data-key="inv" data-shift="rnd"><span class="k-sub">Rnd</span><span class="k-lbl">x&#8315;&sup1;</span></button>
-              <button type="button" class="ck ck-fn has-sub" data-key="log" data-shift="exp10"><span class="k-sub">10&#739;</span><span class="k-lbl">log</span></button>
-              <button type="button" class="ck ck-fn has-sub" data-key="ln" data-shift="expe"><span class="k-sub">e&#739;</span><span class="k-lbl">ln</span></button>
 
               <button type="button" class="ck ck-fn has-sub" data-key="sin" data-shift="asin"><span class="k-sub">sin&#8315;&sup1;</span><span class="k-lbl">sin</span></button>
               <button type="button" class="ck ck-fn has-sub" data-key="cos" data-shift="acos"><span class="k-sub">cos&#8315;&sup1;</span><span class="k-lbl">cos</span></button>
@@ -224,11 +219,17 @@
               <button type="button" class="ck ck-fn" data-key="lparen">(</button>
               <button type="button" class="ck ck-fn" data-key="rparen">)</button>
 
+              <button type="button" class="ck ck-fn has-sub" data-key="pow" data-shift="root"><span class="k-sub">&#739;&radic;</span><span class="k-lbl">x&#696;</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="sqrt" data-shift="cbrt"><span class="k-sub">&sup3;&radic;</span><span class="k-lbl">&radic;</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="log" data-shift="exp10"><span class="k-sub">10&#739;</span><span class="k-lbl">log</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="ln" data-shift="expe"><span class="k-sub">e&#739;</span><span class="k-lbl">ln</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="sq" data-shift="cube"><span class="k-sub">x&sup3;</span><span class="k-lbl">x&sup2;</span></button>
+
+              <button type="button" class="ck ck-fn" data-key="fact">x!</button>
               <button type="button" class="ck ck-fn ck-small" data-key="frac">a/b</button>
               <button type="button" class="ck ck-fn has-sub" data-key="abs" data-shift="int"><span class="k-sub">Int</span><span class="k-lbl">Abs</span></button>
-              <button type="button" class="ck ck-fn" data-key="fact">x!</button>
               <button type="button" class="ck ck-fn has-sub" data-key="pi" data-shift="euler"><span class="k-sub">e</span><span class="k-lbl">&pi;</span></button>
-              <button type="button" class="ck ck-fn ck-small" data-key="exp">&times;10&#739;</button>
+              <button type="button" class="ck ck-fn ck-small" data-key="sci">SCI</button>
 
               <button type="button" class="ck ck-num" data-key="7">7</button>
               <button type="button" class="ck ck-num" data-key="8">8</button>
@@ -365,7 +366,7 @@
           box-shadow:inset 0 1px 4px rgba(0,0,0,0.16);
           display:flex;
           flex-direction:column;
-          justify-content:space-between;
+          justify-content:flex-start;
         }
         .lcd-status{
           display:flex;
@@ -382,10 +383,11 @@
           position:relative;
           min-width:0;
           margin-top:10px;
+          flex:0 0 auto;
+          height:22px;
           font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
           font-size:15px;
           line-height:1.35;
-          min-height:22px;
           color:#5c5c5c;
           letter-spacing:0.4px;
           white-space:nowrap;
@@ -406,9 +408,10 @@
         .lcd-result{
           display:flex;
           justify-content:flex-end;
+          align-items:flex-end;
           overflow:hidden;
           min-width:0;
-          margin-top:4px;
+          margin-top:auto;
           font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
           font-size:42px;
           font-weight:700;
@@ -521,7 +524,7 @@
           .casio-calc .ck-eq{ font-size:17px; }
           .casio-calc .ck .k-sub{ font-size:7px; left:5px; }
           .lcd-result{ font-size:36px; }
-          .lcd-expr{ font-size:13px; min-height:19px; }
+          .lcd-expr{ font-size:13px; height:19px; }
           .casio-lcd{ min-height:132px; padding:10px 12px 10px; }
         }
         </style>
@@ -535,6 +538,7 @@
           var resultEl = document.getElementById('lcdResult');
           var shiftEl = document.getElementById('lcdShift');
           var angleEl = document.getElementById('lcdAngle');
+          var sciEl = document.getElementById('lcdSci');
 
           var expr = '';
           var cursor = 0;
@@ -544,6 +548,11 @@
           var angleMode = 'DEG';
           var evaluated = false;
           var errorState = false;
+          var sciMode = false;
+          var history = [];
+          var histIdx = -1;
+          var lpTimer = null;
+          var lpFired = false;
 
           var FUNC_PREFIX = [
             ['sin⁻¹(', 'asin'],
@@ -603,6 +612,7 @@
             shiftEl.className = shiftOn ? 'on' : '';
             angleEl.textContent = angleMode;
             angleEl.className = 'on';
+            sciEl.className = sciMode ? 'on' : '';
           }
 
           function trimDecimal(s){
@@ -615,6 +625,11 @@
           function formatNumber(x){
             if(!isFinite(x)) return 'Math ERROR';
             if(Math.abs(x) < 1e-12) x = 0;
+            if(sciMode && x !== 0){
+              var parts = x.toExponential(9).split('e');
+              var exp = parseInt(parts[1], 10);
+              return trimDecimal(parts[0]) + '×10^' + (exp < 0 ? '-' : '') + Math.abs(exp);
+            }
             var abs = Math.abs(x);
             if(abs !== 0 && (abs >= 1e10 || abs < 1e-9)){
               var parts = x.toExponential(9).split('e');
@@ -929,6 +944,11 @@
               resultText = formatNumber(value);
               evaluated = true;
               errorState = false;
+              if(history[0] !== expr){
+                history.unshift(expr);
+                if(history.length > 30) history.pop();
+              }
+              histIdx = -1;
             } catch(err){
               resultText = 'Math ERROR';
               errorState = true;
@@ -986,6 +1006,18 @@
                 return;
               case 'mode':
                 toggleMode();
+                break;
+              case 'sci':
+                sciMode = !sciMode;
+                if(evaluated && !errorState && resultText !== 'Math ERROR'){
+                  resultText = formatNumber(lastAnswer);
+                }
+                break;
+              case 'his':
+                if(!history.length) break;
+                histIdx = (histIdx + 1) % history.length;
+                if(errorState || evaluated) resetEntry();
+                insertAt(history[histIdx]);
                 break;
               case 'ac':
                 doClear();
@@ -1120,9 +1152,32 @@
             }
           }
 
+          var eqBtn = document.querySelector('#casioKeys button[data-key="eq"]');
+          if(eqBtn){
+            eqBtn.addEventListener('pointerdown', function(){
+              lpFired = false;
+              lpTimer = setTimeout(function(){
+                lpFired = true;
+                shiftOn = !shiftOn;
+                render();
+              }, 500);
+            });
+            function clearLp(){
+              if(lpTimer){ clearTimeout(lpTimer); lpTimer = null; }
+            }
+            eqBtn.addEventListener('pointerup', clearLp);
+            eqBtn.addEventListener('pointerleave', clearLp);
+            eqBtn.addEventListener('pointercancel', clearLp);
+          }
+
           root.addEventListener('click', function(e){
             var btn = e.target.closest ? e.target.closest('button[data-key]') : null;
             if(!btn || !root.contains(btn)) return;
+            if(btn.getAttribute('data-key') === 'eq' && lpFired){
+              lpFired = false;
+              if(btn.blur) btn.blur();
+              return;
+            }
             var action = btn.getAttribute('data-key');
             if(shiftOn && btn.getAttribute('data-shift')){
               action = btn.getAttribute('data-shift');
