@@ -300,7 +300,7 @@
       speed: 5, lives: 3, maxLives: 5, bombs: 3, maxBombs: 5,
       weapon: 1, maxWeapon: 5,
       fireCD: 0, fireRate: 8,
-      shield: 0, invuln: 0,
+      shield: 0, invuln: 0, invulnBlink: false,
       alive: true
     };
     bullets = []; eBullets = []; enemies = []; particles = []; powerups = []; floatTexts = []; lasers = [];
@@ -620,7 +620,10 @@
     if ((keys['x'] || keys['k']) && !player._bombHeld) { useBomb(); player._bombHeld = true; }
     if (!keys['x'] && !keys['k']) player._bombHeld = false;
 
-    if (player.invuln > 0) player.invuln--;
+    if (player.invuln > 0) {
+      player.invuln--;
+      if (player.invuln <= 0) player.invulnBlink = false;
+    }
     if (player.shield > 0) player.shield--;
 
     // Engine trail
@@ -866,8 +869,8 @@
     // 护盾抵挡本次伤害，并给予 4 秒无敌
     player.shield = 0;
     player.invuln = 240;
+    player.invulnBlink = true;
     addExplosion(x, y, 20, '#5cf', 5, 30);
-    addFloat(player.x, player.y - 26, 'INVINCIBLE!', '#7cf');
   }
 
   function playerHit() {
@@ -1110,6 +1113,16 @@
       ctx.fillStyle = f.color;
       ctx.font = 'bold 14px monospace';
       ctx.fillText(f.text, f.x, f.y);
+    }
+    // 护盾触发的无敌持续闪烁 INVINCIBLE!
+    if (player && player.alive && player.invulnBlink) {
+      const blink = Math.floor(player.invuln / 6) % 2 === 0;
+      ctx.globalAlpha = blink ? 1 : 0.35;
+      ctx.fillStyle = '#7cf';
+      ctx.font = 'bold 16px monospace';
+      ctx.fillText('INVINCIBLE!', player.x, player.y - 30);
+      ctx.globalAlpha = 0.25;
+      ctx.fillText('INVINCIBLE!', player.x + 2, player.y - 30);
     }
     ctx.globalAlpha = 1;
   }
