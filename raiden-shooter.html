@@ -492,7 +492,7 @@
     for (let i = 0; i < 8; i++) {
       const a = (i / 8) * Math.PI * 2 + Math.PI / 8;
       lasers.push({
-        x: e.x, y: e.y,
+        x: e.x, y: e.y, src: e,
         dx: Math.cos(a), dy: Math.sin(a),
         t: BOSS_LASER_WARN + BOSS_LASER_LIFE,
         halfW: 7
@@ -706,9 +706,8 @@
         score += e.score;
         addFloat(e.x, e.y, '+' + e.score, '#ffd24a');
         if (e.type === 'boss') {
-          // multiple powerups
           lasers.length = 0;
-          for (let k = 0; k < 3; k++) dropPowerup(e.x + rand(-30, 30), e.y);
+          dropPowerup(e.x, e.y);
           addFloat(e.x, e.y - 30, 'BOSS DOWN!', '#ff5577');
         } else if (e.type === 'gunship' && Math.random() < 0.7) {
           dropPowerup(e.x, e.y);
@@ -763,6 +762,8 @@
     // Boss lasers: 蓄力→发射
     for (let i = lasers.length - 1; i >= 0; i--) {
       const L = lasers[i];
+      // 起点跟随 Boss 移动
+      if (L.src) { L.x = L.src.x; L.y = L.src.y; }
       L.t--;
       if (L.t <= 0) { lasers.splice(i, 1); }
     }
