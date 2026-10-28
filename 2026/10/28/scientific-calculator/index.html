@@ -1016,8 +1016,10 @@
               case 'his':
                 if(!history.length) break;
                 histIdx = (histIdx + 1) % history.length;
-                if(errorState || evaluated) resetEntry();
-                insertAt(history[histIdx]);
+                expr = history[histIdx];
+                cursor = expr.length;
+                evaluated = false;
+                errorState = false;
                 break;
               case 'ac':
                 doClear();
