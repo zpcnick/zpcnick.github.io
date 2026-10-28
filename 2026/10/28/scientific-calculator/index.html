@@ -207,6 +207,14 @@
               </div>
             </div>
 
+            <div class="casio-replay" role="group" aria-label="光标移动">
+              <button type="button" class="rp-up" data-key="cursorUp" aria-label="光标上移">▲</button>
+              <button type="button" class="rp-left" data-key="cursorLeft" aria-label="光标左移">◀</button>
+              <span class="replay-center" aria-hidden="true"></span>
+              <button type="button" class="rp-right" data-key="cursorRight" aria-label="光标右移">▶</button>
+              <button type="button" class="rp-down" data-key="cursorDown" aria-label="光标下移">▼</button>
+            </div>
+
             <div class="casio-keys" id="casioKeys">
               <button type="button" class="ck ck-shift" data-key="shift">SHIFT</button>
               <button type="button" class="ck ck-alpha" data-key="alpha">ALPHA</button>
@@ -361,13 +369,9 @@
           min-height:152px;
           padding:12px 15px 12px;
           border-radius:8px;
-          color:#14241a;
-          background:
-            repeating-linear-gradient(0deg, rgba(24,48,30,0.05) 0 1px, rgba(24,48,30,0) 1px 3px),
-            linear-gradient(168deg, #cedbc5 0%, #b8c9ae 58%, #a8ba9c 100%);
-          box-shadow:
-            inset 0 2px 9px rgba(20,40,25,0.35),
-            inset 0 -1px 0 rgba(255,255,255,0.55);
+          color:#141414;
+          background:#ffffff;
+          box-shadow:inset 0 1px 4px rgba(0,0,0,0.16);
           display:flex;
           flex-direction:column;
           justify-content:space-between;
@@ -384,18 +388,29 @@
         .lcd-status span{ opacity:0.16; transition:opacity .12s; }
         .lcd-status span.on{ opacity:1; }
         .lcd-expr{
-          display:flex;
-          justify-content:flex-end;
-          overflow:hidden;
+          position:relative;
           margin-top:10px;
           font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
           font-size:15px;
-          line-height:1.3;
+          line-height:1.35;
           min-height:22px;
-          color:rgba(18,36,24,0.66);
+          color:#5c5c5c;
           letter-spacing:0.4px;
+          white-space:nowrap;
+          overflow:hidden;
+          text-align:left;
         }
-        .lcd-expr span{ white-space:nowrap; flex:0 0 auto; }
+        .lcd-expr #lcdExpr{ display:inline-block; }
+        .lcd-cursor{
+          display:inline-block;
+          width:2px;
+          height:1.05em;
+          margin:0 1px;
+          vertical-align:-0.16em;
+          background:#141414;
+          animation:lcdBlink 1s steps(1) infinite;
+        }
+        @keyframes lcdBlink{ 0%,49%{ opacity:1; } 50%,100%{ opacity:0; } }
         .lcd-result{
           display:flex;
           justify-content:flex-end;
@@ -406,14 +421,47 @@
           font-weight:700;
           line-height:1.15;
           letter-spacing:0.4px;
-          text-shadow:0 1px 0 rgba(255,255,255,0.35);
         }
         .lcd-result span{ white-space:nowrap; flex:0 0 auto; }
+        .casio-replay{
+          display:grid;
+          grid-template-columns:repeat(3, 30px);
+          grid-template-rows:repeat(3, 30px);
+          gap:3px;
+          justify-content:end;
+          margin:14px 4px 0;
+        }
+        .casio-replay button{
+          padding:0;
+          border-radius:8px;
+          border:1px solid #0d1013;
+          background:linear-gradient(180deg, #4a5056 0%, #34393e 55%, #2a2f34 100%);
+          color:#d2d8de;
+          font-size:9px;
+          line-height:1;
+          box-shadow:0 2px 3px rgba(0,0,0,0.35);
+          cursor:pointer;
+          touch-action:manipulation;
+          -webkit-tap-highlight-color:transparent;
+        }
+        .casio-replay button:active{
+          background:linear-gradient(180deg, #33383d 0%, #22272b 100%);
+        }
+        .casio-replay .replay-center{
+          grid-area:2 / 2;
+          border-radius:50%;
+          background:radial-gradient(circle at 50% 42%, #3d4349 0%, #1e2327 78%);
+          box-shadow:inset 0 1px 2px rgba(255,255,255,0.08), 0 1px 2px rgba(0,0,0,0.5);
+        }
+        .casio-replay .rp-up{ grid-area:1 / 2; }
+        .casio-replay .rp-left{ grid-area:2 / 1; }
+        .casio-replay .rp-down{ grid-area:3 / 2; }
+        .casio-replay .rp-right{ grid-area:2 / 3; }
         .casio-keys{
           display:grid;
           grid-template-columns:repeat(5, 1fr);
           gap:8px;
-          margin-top:18px;
+          margin-top:16px;
         }
         .casio-calc .ck{
           position:relative;
@@ -520,6 +568,7 @@
           .lcd-result{ font-size:36px; }
           .lcd-expr{ font-size:13px; min-height:19px; }
           .casio-lcd{ min-height:132px; padding:10px 12px 10px; }
+          .casio-replay{ grid-template-columns:repeat(3, 26px); grid-template-rows:repeat(3, 26px); margin-top:12px; }
         }
         </style>
 
@@ -534,9 +583,9 @@
           var alphaEl = document.getElementById('lcdAlpha');
           var memEl = document.getElementById('lcdMem');
           var angleEl = document.getElementById('lcdAngle');
-          var keypad = document.getElementById('casioKeys');
 
           var expr = '';
+          var cursor = 0;
           var resultText = '0';
           var lastAnswer = 0;
           var memory = 0;
@@ -564,8 +613,29 @@
           ];
           var FUNC_STRINGS = ['sin⁻¹(', 'cos⁻¹(', 'tan⁻¹(', 'sin(', 'cos(', 'tan(', 'log(', 'ln(', '√(', '∛(', '10^(', 'Abs(', 'Int(', 'Rnd(', 'e^('];
 
+          var exprBefore = document.createTextNode('');
+          var exprAfter = document.createTextNode('');
+          var caretEl = document.createElement('span');
+          caretEl.className = 'lcd-cursor';
+          exprEl.textContent = '';
+          exprEl.appendChild(exprBefore);
+          exprEl.appendChild(caretEl);
+          exprEl.appendChild(exprAfter);
+          var lcdLine = exprEl.parentNode;
+
+          function renderExpr(){
+            exprBefore.textContent = expr.slice(0, cursor);
+            exprAfter.textContent = expr.slice(cursor);
+            var left = caretEl.offsetLeft;
+            if(left > lcdLine.scrollLeft + lcdLine.clientWidth - 18){
+              lcdLine.scrollLeft = left - lcdLine.clientWidth + 26;
+            } else if(left - 2 < lcdLine.scrollLeft){
+              lcdLine.scrollLeft = Math.max(0, left - 8);
+            }
+          }
+
           function render(){
-            exprEl.textContent = expr;
+            renderExpr();
             resultEl.textContent = resultText;
             shiftEl.className = shiftOn ? 'on' : '';
             alphaEl.className = alphaOn ? 'on' : '';
@@ -812,29 +882,36 @@
 
           function resetEntry(){
             expr = '';
+            cursor = 0;
             resultText = '0';
             evaluated = false;
             errorState = false;
           }
 
+          function insertAt(text){
+            expr = expr.slice(0, cursor) + text + expr.slice(cursor);
+            cursor += text.length;
+          }
+
           function insert(text){
             if(errorState || evaluated) resetEntry();
-            expr += text;
+            insertAt(text);
             render();
           }
 
           function inputDigit(d){
             if(errorState || evaluated) resetEntry();
-            expr += d;
+            insertAt(d);
             render();
           }
 
           function inputDot(){
             if(errorState || evaluated) resetEntry();
-            var tail = expr.match(/[0-9.]*$/)[0];
+            var before = expr.slice(0, cursor);
+            var tail = before.match(/[0-9.]*$/)[0];
             if(tail.indexOf('.') >= 0) return;
-            if(expr === '' || /[+\-×÷^(]$/.test(expr)) expr += '0';
-            expr += '.';
+            if(before === '' || /[+\-×÷^(]$/.test(before)) insertAt('0.');
+            else insertAt('.');
             render();
           }
 
@@ -842,21 +919,22 @@
             if(errorState) resetEntry();
             if(evaluated){
               expr = 'Ans';
+              cursor = 3;
               resultText = '0';
               evaluated = false;
             }
-            if(expr === ''){
-              if(op === '-'){ expr = '-'; render(); }
+            if(cursor === 0){
+              if(op === '-'){ insertAt('-'); render(); }
               return;
             }
-            var last = expr.slice(-1);
+            var last = expr.charAt(cursor - 1);
             if(/[+\-×÷^]/.test(last)){
-              if(op === '-' && /[×÷^]/.test(last)) expr += '-';
-              else expr = expr.slice(0, -1) + op;
+              if(op === '-' && /[×÷^]/.test(last)) insertAt('-');
+              else expr = expr.slice(0, cursor - 1) + op + expr.slice(cursor);
             } else if(last === '('){
-              if(op === '-') expr += '-';
+              if(op === '-') insertAt('-');
             } else {
-              expr += op;
+              insertAt(op);
             }
             render();
           }
@@ -864,21 +942,22 @@
           function inputParen(open){
             if(errorState || evaluated) resetEntry();
             if(open){
-              expr += '(';
+              insertAt('(');
             } else {
               var depth = 0;
               for(var i = 0; i < expr.length; i++){
                 if(expr.charAt(i) === '(') depth++;
                 else if(expr.charAt(i) === ')') depth--;
               }
-              if(depth > 0) expr += ')';
+              if(depth > 0) insertAt(')');
             }
             render();
           }
 
           function inputPostfix(ch){
             if(errorState || evaluated) resetEntry();
-            if(/[0-9)πeM]$/.test(expr) || expr.slice(-3) === 'Ans') expr += ch;
+            var before = expr.slice(0, cursor);
+            if(/[0-9)πeM]$/.test(before) || before.slice(-3) === 'Ans') insertAt(ch);
             render();
           }
 
@@ -904,17 +983,34 @@
               render();
               return;
             }
+            if(cursor === 0){ render(); return; }
+            var before = expr.slice(0, cursor);
+            var cut = 1;
             for(var i = 0; i < FUNC_STRINGS.length; i++){
               var p = FUNC_STRINGS[i];
-              if(expr.length >= p.length && expr.slice(-p.length) === p){
-                expr = expr.slice(0, -p.length);
-                render();
-                return;
+              if(before.length >= p.length && before.slice(-p.length) === p){
+                cut = p.length;
+                break;
               }
             }
-            if(expr.slice(-3) === 'Ans') expr = expr.slice(0, -3);
-            else expr = expr.slice(0, -1);
+            if(cut === 1 && before.slice(-3) === 'Ans') cut = 3;
+            expr = expr.slice(0, cursor - cut) + expr.slice(cursor);
+            cursor -= cut;
             if(!expr) resultText = '0';
+            render();
+          }
+
+          function moveCursor(delta){
+            if(errorState) return;
+            if(evaluated) evaluated = false;
+            cursor = Math.max(0, Math.min(expr.length, cursor + delta));
+            render();
+          }
+
+          function jumpCursor(toEnd){
+            if(errorState) return;
+            if(evaluated) evaluated = false;
+            cursor = toEnd ? expr.length : 0;
             render();
           }
 
@@ -1027,9 +1123,22 @@
                 break;
               case 'frac':
                 if(errorState || evaluated) resetEntry();
-                if(!expr || /[+\-×÷^(]$/.test(expr)) expr += '1/';
-                else expr += '/';
+                var beforeF = expr.slice(0, cursor);
+                if(beforeF === '' || /[+\-×÷^(]$/.test(beforeF)) insertAt('1/');
+                else insertAt('/');
                 render();
+                break;
+              case 'cursorLeft':
+                moveCursor(-1);
+                break;
+              case 'cursorRight':
+                moveCursor(1);
+                break;
+              case 'cursorUp':
+                jumpCursor(false);
+                break;
+              case 'cursorDown':
+                jumpCursor(true);
                 break;
               case 'abs':
                 insert('Abs(');
@@ -1100,16 +1209,16 @@
               default:
                 if(/^[0-9]$/.test(action)) inputDigit(action);
             }
-            if(action !== 'shift' && action !== 'alpha'){
+            if(action !== 'shift' && action !== 'alpha' && !/^cursor/.test(action)){
               shiftOn = false;
               alphaOn = false;
               render();
             }
           }
 
-          keypad.addEventListener('click', function(e){
+          root.addEventListener('click', function(e){
             var btn = e.target.closest ? e.target.closest('button[data-key]') : null;
-            if(!btn) return;
+            if(!btn || !root.contains(btn)) return;
             var action = btn.getAttribute('data-key');
             if(alphaOn && btn.getAttribute('data-alpha')){
               action = btn.getAttribute('data-alpha');
@@ -1117,6 +1226,11 @@
               action = btn.getAttribute('data-shift');
             }
             press(action);
+            if(btn.blur) btn.blur();
+          });
+
+          root.addEventListener('mousedown', function(e){
+            if(e.target.closest && e.target.closest('button')) e.preventDefault();
           });
 
           document.addEventListener('keydown', function(e){
@@ -1125,7 +1239,9 @@
               '0':'0','1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9',
               '.':'dot','+':'add','-':'sub','*':'mul','×':'mul','/':'div','÷':'div','^':'pow',
               '(':'lparen',')':'rparen','!':'fact','%':'pct',
-              'Enter':'eq','=':'eq','Backspace':'del','Escape':'ac'
+              'Enter':'eq','=':'eq','Backspace':'del','Escape':'ac',
+              'ArrowLeft':'cursorLeft','ArrowRight':'cursorRight',
+              'ArrowUp':'cursorUp','ArrowDown':'cursorDown'
             };
             var action = map[e.key];
             if(!action) return;
