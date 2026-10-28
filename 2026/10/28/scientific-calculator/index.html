@@ -219,11 +219,11 @@
               <button type="button" class="ck ck-fn" data-key="lparen">(</button>
               <button type="button" class="ck ck-fn" data-key="rparen">)</button>
 
+              <button type="button" class="ck ck-fn has-sub" data-key="sq" data-shift="cube"><span class="k-sub">x&sup3;</span><span class="k-lbl">x&sup2;</span></button>
               <button type="button" class="ck ck-fn has-sub" data-key="pow" data-shift="root"><span class="k-sub">&#739;&radic;</span><span class="k-lbl">x&#696;</span></button>
               <button type="button" class="ck ck-fn has-sub" data-key="sqrt" data-shift="cbrt"><span class="k-sub">&sup3;&radic;</span><span class="k-lbl">&radic;</span></button>
               <button type="button" class="ck ck-fn has-sub" data-key="log" data-shift="exp10"><span class="k-sub">10&#739;</span><span class="k-lbl">log</span></button>
               <button type="button" class="ck ck-fn has-sub" data-key="ln" data-shift="expe"><span class="k-sub">e&#739;</span><span class="k-lbl">ln</span></button>
-              <button type="button" class="ck ck-fn has-sub" data-key="sq" data-shift="cube"><span class="k-sub">x&sup3;</span><span class="k-lbl">x&sup2;</span></button>
 
               <button type="button" class="ck ck-fn" data-key="fact">x!</button>
               <button type="button" class="ck ck-fn ck-small" data-key="frac">a/b</button>
@@ -384,17 +384,18 @@
           min-width:0;
           margin-top:10px;
           flex:0 0 auto;
-          height:22px;
+          height:40px;
           font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
           font-size:15px;
-          line-height:1.35;
+          line-height:1.3;
           color:#5c5c5c;
           letter-spacing:0.4px;
-          white-space:nowrap;
+          white-space:normal;
+          word-break:break-all;
           overflow:hidden;
           text-align:left;
         }
-        .lcd-expr #lcdExpr{ display:inline-block; }
+        .lcd-expr #lcdExpr{ display:block; }
         .lcd-cursor{
           display:inline-block;
           width:2px;
@@ -525,7 +526,7 @@
           .casio-calc .ck-eq{ font-size:17px; }
           .casio-calc .ck .k-sub{ font-size:7px; left:5px; }
           .lcd-result{ font-size:36px; }
-          .lcd-expr{ font-size:13px; height:19px; }
+          .lcd-expr{ font-size:13px; height:35px; }
           .casio-lcd{ min-height:132px; padding:10px 12px 10px; }
         }
         </style>
@@ -581,17 +582,10 @@
           exprEl.appendChild(exprBefore);
           exprEl.appendChild(caretEl);
           exprEl.appendChild(exprAfter);
-          var lcdLine = exprEl.parentNode;
 
           function renderExpr(){
             exprBefore.textContent = expr.slice(0, cursor);
             exprAfter.textContent = expr.slice(cursor);
-            var left = caretEl.offsetLeft;
-            if(left > lcdLine.scrollLeft + lcdLine.clientWidth - 18){
-              lcdLine.scrollLeft = left - lcdLine.clientWidth + 26;
-            } else if(left - 2 < lcdLine.scrollLeft){
-              lcdLine.scrollLeft = Math.max(0, left - 8);
-            }
           }
 
           function fitResult(){
