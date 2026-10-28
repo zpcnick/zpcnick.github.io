@@ -409,7 +409,7 @@
     const base = { x, y: -30, fireCD: rand(40, 80), hit: 0 };
     if (type === 'small') {
       Object.assign(base, {
-        type, r: 14, hp: 1, speed: rand(2.5, 3.5),
+        type, r: 14, hp: 1, speed: rand(2.5, 3.5) * (wave <= 3 ? 0.85 : 1),
         score: 100, color: '#f55', pattern: 'straight',
         shoot: false
       });
@@ -650,7 +650,9 @@
       } else {
         // 后期每波最低数量提升，避免"刷得少好躲"
         const minCount = 3 + Math.floor(Math.max(0, wave - 2) / 3);
-        const count = randi(minCount, 6 + Math.min(wave, 6));
+        let count = randi(minCount, 6 + Math.min(wave, 6));
+        // 前三波压低数量上限，给玩家热身空间
+        if (wave <= 3) count = Math.min(count, 4 + wave);
         for (let i = 0; i < count; i++) {
           setTimeout(() => {
             if (state !== 'playing') return;
@@ -663,7 +665,7 @@
             spawnEnemy(type, rand(40, W - 40));
           }, i * 180);
         }
-        spawnTimer = Math.max(130, 220 - wave * 8) + randi(0, 120);
+        spawnTimer = Math.max(130, 220 - wave * 8) + randi(0, 120) + (wave <= 3 ? 80 : 0);
       }
     }
 
@@ -820,7 +822,7 @@
           player.bombs = Math.min(player.maxBombs || 5, player.bombs + 1);
           addFloat(p.x, p.y, '+1 BOMB', '#ffd24a');
         } else if (p.kind === 'S') {
-          player.shield = 360;
+          player.shield = 600;   // 10 秒护盾
           addFloat(p.x, p.y, 'SHIELD!', '#7cf');
         } else if (p.kind === 'L') {
           player.lives = Math.min(player.maxLives || 5, player.lives + 1);
