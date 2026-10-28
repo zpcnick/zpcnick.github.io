@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+  <meta name="theme-color" content="#222">
+  <meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zpcnick.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="仿卡西欧 fx-991EX 风格的科学计算器，支持三角函数、对数、幂运算、阶乘、角度弧度切换与内存运算。">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="科学计算器">
+  <meta property="og:url" content="https://zpcnick.github.io/2026/10/28/scientific-calculator/">
+  <meta property="og:site_name" content="ZPC&#39;s homepage">
+  <meta property="og:description" content="仿卡西欧 fx-991EX 风格的科学计算器，支持三角函数、对数、幂运算、阶乘、角度弧度切换与内存运算。">
+  <meta property="og:locale">
+  <meta property="article:published_time" content="2026-10-27T16:00:00.000Z">
+  <meta property="article:modified_time" content="2026-10-28T00:00:00.000Z">
+  <meta property="article:author" content="zpc">
+  <meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zpcnick.github.io/2026/10/28/scientific-calculator/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'ch'
+  };
+</script>
+
+  <title>科学计算器 | ZPC's homepage</title>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">ZPC's homepage</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+        </ul>
+</nav>
+
+
+
+</div>
+    </header>
+
+
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+
+          <div class="content post posts-expand">
+
+
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="ch">
+    <link itemprop="mainEntityOfPage" href="https://zpcnick.github.io/2026/10/28/scientific-calculator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zpc">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/WPOrganization">
+      <meta itemprop="name" content="ZPC's homepage">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          科学计算器
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-10-28 00:00:00" itemprop="dateCreated datePublished" datetime="2026-10-28T00:00:00+08:00">2026-10-28</time>
+            </span>
+
+        </div>
+      </header>
+
+
+
+    <div class="post-body" itemprop="articleBody">
+
+        <div class="casio-wrap">
+          <div class="casio-calc" id="casioCalc" aria-label="仿卡西欧科学计算器">
+            <div class="casio-head">
+              <div class="casio-brand-row">
+                <span class="casio-natural">NATURAL-V.P.A.M.</span>
+                <span class="casio-brand">CASIO</span>
+              </div>
+              <div class="casio-model-row">
+                <span class="casio-fx">fx-991EX</span>
+                <span class="casio-classwiz">CLASSWIZ</span>
+              </div>
+              <div class="casio-solar" aria-hidden="true">
+                <i></i><i></i><i></i><i></i><i></i><i></i>
+              </div>
+            </div>
+
+            <div class="casio-screen">
+              <div class="casio-lcd">
+                <div class="lcd-status">
+                  <span id="lcdShift">SHIFT</span>
+                  <span id="lcdAlpha">ALPHA</span>
+                  <span id="lcdMem">M</span>
+                  <span id="lcdAngle" class="on">DEG</span>
+                </div>
+                <div class="lcd-expr"><span id="lcdExpr"></span></div>
+                <div class="lcd-result"><span id="lcdResult">0</span></div>
+              </div>
+            </div>
+
+            <div class="casio-keys" id="casioKeys">
+              <button type="button" class="ck ck-shift" data-key="shift">SHIFT</button>
+              <button type="button" class="ck ck-alpha" data-key="alpha">ALPHA</button>
+              <button type="button" class="ck ck-mode" data-key="mode">MODE</button>
+              <button type="button" class="ck ck-fn has-sub" data-key="mplus" data-shift="mminus" data-alpha="mrecall" aria-label="M+">
+                <span class="k-sub">M&minus;</span><span class="k-sub k-sub-a">M</span><span class="k-lbl">M+</span>
+              </button>
+              <button type="button" class="ck ck-fn" data-key="on">ON</button>
+
+              <button type="button" class="ck ck-fn has-sub" data-key="sq" data-shift="cube"><span class="k-sub">x&sup3;</span><span class="k-lbl">x&sup2;</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="pow" data-shift="root"><span class="k-sub">&#739;&radic;</span><span class="k-lbl">x&#696;</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="sqrt" data-shift="cbrt"><span class="k-sub">&sup3;&radic;</span><span class="k-lbl">&radic;</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="inv" data-shift="fact"><span class="k-sub">n!</span><span class="k-lbl">x&#8315;&sup1;</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="log" data-shift="exp10"><span class="k-sub">10&#739;</span><span class="k-lbl">log</span></button>
+
+              <button type="button" class="ck ck-fn has-sub" data-key="sin" data-shift="asin"><span class="k-sub">sin&#8315;&sup1;</span><span class="k-lbl">sin</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="cos" data-shift="acos"><span class="k-sub">cos&#8315;&sup1;</span><span class="k-lbl">cos</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="tan" data-shift="atan"><span class="k-sub">tan&#8315;&sup1;</span><span class="k-lbl">tan</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="lparen" data-shift="pi"><span class="k-sub">&pi;</span><span class="k-lbl">(</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="rparen" data-shift="constE"><span class="k-sub">e</span><span class="k-lbl">)</span></button>
+
+              <button type="button" class="ck ck-num" data-key="7">7</button>
+              <button type="button" class="ck ck-num" data-key="8">8</button>
+              <button type="button" class="ck ck-num" data-key="9">9</button>
+              <button type="button" class="ck ck-fn ck-clear" data-key="del">DEL</button>
+              <button type="button" class="ck ck-fn ck-clear" data-key="ac">AC</button>
+
+              <button type="button" class="ck ck-num" data-key="4">4</button>
+              <button type="button" class="ck ck-num" data-key="5">5</button>
+              <button type="button" class="ck ck-num" data-key="6">6</button>
+              <button type="button" class="ck ck-fn" data-key="mul">&times;</button>
+              <button type="button" class="ck ck-fn" data-key="div">&divide;</button>
+
+              <button type="button" class="ck ck-num" data-key="1">1</button>
+              <button type="button" class="ck ck-num" data-key="2">2</button>
+              <button type="button" class="ck ck-num" data-key="3">3</button>
+              <button type="button" class="ck ck-fn" data-key="add">+</button>
+              <button type="button" class="ck ck-fn" data-key="sub">&minus;</button>
+
+              <button type="button" class="ck ck-num" data-key="0">0</button>
+              <button type="button" class="ck ck-num" data-key="dot">.</button>
+              <button type="button" class="ck ck-fn ck-small" data-key="exp">&times;10&#739;</button>
+              <button type="button" class="ck ck-fn ck-small" data-key="ans">Ans</button>
+              <button type="button" class="ck ck-eq" data-key="eq">=</button>
+            </div>
+          </div>
+        </div>
+
+        <style>
+        .casio-wrap{
+          margin:30px auto 34px;
+          display:flex;
+          justify-content:center;
+        }
+        .casio-calc{
+          width:min(92vw, 392px);
+          padding:20px 18px 22px;
+          border-radius:28px;
+          background:
+            radial-gradient(120% 80% at 50% -12%, rgba(255,255,255,0.18), rgba(255,255,255,0) 58%),
+            linear-gradient(165deg, #3c4248 0%, #2a2f34 44%, #191c1f 100%);
+          border:1px solid #0b0d0f;
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.14),
+            inset 0 -10px 22px rgba(0,0,0,0.38),
+            0 24px 50px rgba(0,20,30,0.35),
+            0 6px 14px rgba(0,0,0,0.25);
+          font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+          user-select:none;
+          -webkit-user-select:none;
+          position:relative;
+        }
+        .casio-calc::after{
+          content:"";
+          position:absolute;
+          inset:6px;
+          border-radius:23px;
+          border:1px solid rgba(255,255,255,0.045);
+          pointer-events:none;
+        }
+        .casio-head{ position:relative; z-index:1; }
+        .casio-brand-row{
+          display:flex;
+          align-items:flex-end;
+          justify-content:space-between;
+          padding:0 5px 4px;
+        }
+        .casio-natural{
+          font-size:8px;
+          font-weight:600;
+          letter-spacing:0.16em;
+          color:#79848d;
+        }
+        .casio-brand{
+          font-family:Georgia,"Times New Roman",serif;
+          font-size:21px;
+          font-weight:700;
+          letter-spacing:0.13em;
+          color:#eef2f6;
+          text-shadow:0 1px 0 #000, 0 0 1px #fff;
+        }
+        .casio-model-row{
+          display:flex;
+          align-items:baseline;
+          gap:8px;
+          padding:0 5px;
+        }
+        .casio-fx{
+          font-size:13px;
+          font-weight:700;
+          letter-spacing:0.05em;
+          color:#dfe6ec;
+        }
+        .casio-classwiz{
+          font-size:8px;
+          font-weight:700;
+          letter-spacing:0.22em;
+          color:#66c4d6;
+        }
+        .casio-solar{
+          display:flex;
+          gap:2px;
+          height:15px;
+          margin:12px 5px 12px;
+          padding:2px;
+          border-radius:4px;
+          border:1px solid #090b0d;
+          background:#0b0e11;
+          box-shadow:inset 0 1px 4px rgba(0,0,0,0.9);
+        }
+        .casio-solar i{
+          flex:1;
+          border-radius:1px;
+          background:linear-gradient(180deg, #2a343d 0%, #141a1f 55%, #0c1115 100%);
+          box-shadow:inset 0 0 0 1px rgba(90,120,140,0.12);
+        }
+        .casio-screen{
+          padding:8px;
+          border-radius:14px;
+          background:linear-gradient(180deg, #0a0d0f, #171b1e);
+          box-shadow:
+            inset 0 2px 7px rgba(0,0,0,0.85),
+            0 1px 0 rgba(255,255,255,0.07);
+        }
+        .casio-lcd{
+          min-height:104px;
+          padding:10px 13px 9px;
+          border-radius:8px;
+          color:#14241a;
+          background:
+            repeating-linear-gradient(0deg, rgba(24,48,30,0.05) 0 1px, rgba(24,48,30,0) 1px 3px),
+            linear-gradient(168deg, #cedbc5 0%, #b8c9ae 58%, #a8ba9c 100%);
+          box-shadow:
+            inset 0 2px 9px rgba(20,40,25,0.35),
+            inset 0 -1px 0 rgba(255,255,255,0.55);
+          display:flex;
+          flex-direction:column;
+          justify-content:space-between;
+        }
+        .lcd-status{
+          display:flex;
+          gap:9px;
+          font-size:8px;
+          font-weight:700;
+          letter-spacing:0.12em;
+          color:#24402c;
+          line-height:1;
+        }
+        .lcd-status span{ opacity:0.16; transition:opacity .12s; }
+        .lcd-status span.on{ opacity:1; }
+        .lcd-expr{
+          display:flex;
+          justify-content:flex-end;
+          overflow:hidden;
+          margin-top:8px;
+          font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+          font-size:13px;
+          line-height:1.3;
+          min-height:18px;
+          color:rgba(18,36,24,0.66);
+          letter-spacing:0.4px;
+        }
+        .lcd-expr span{ white-space:nowrap; flex:0 0 auto; }
+        .lcd-result{
+          display:flex;
+          justify-content:flex-end;
+          overflow:hidden;
+          margin-top:2px;
+          font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+          font-size:31px;
+          font-weight:700;
+          line-height:1.15;
+          letter-spacing:0.4px;
+          text-shadow:0 1px 0 rgba(255,255,255,0.35);
+        }
+        .lcd-result span{ white-space:nowrap; flex:0 0 auto; }
+        .casio-keys{
+          display:grid;
+          grid-template-columns:repeat(5, 1fr);
+          gap:8px 7px;
+          margin-top:17px;
+        }
+        .casio-calc .ck{
+          position:relative;
+          height:45px;
+          padding:0;
+          border-radius:11px;
+          border:1px solid #0d1013;
+          background:linear-gradient(180deg, #50565c 0%, #363b40 52%, #2c3136 100%);
+          color:#edf1f5;
+          font-family:inherit;
+          font-size:12.5px;
+          font-weight:600;
+          letter-spacing:0.01em;
+          cursor:pointer;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          box-shadow:
+            0 2px 0 #0e1114,
+            0 4px 7px rgba(0,0,0,0.32),
+            inset 0 1px 0 rgba(255,255,255,0.16);
+          transition:transform .055s ease, box-shadow .055s ease, filter .12s ease;
+          -webkit-tap-highlight-color:transparent;
+          touch-action:manipulation;
+        }
+        .casio-calc .ck:active,
+        .casio-calc .ck.is-pressed{
+          transform:translateY(2px);
+          box-shadow:
+            0 0 0 #0e1114,
+            0 1px 2px rgba(0,0,0,0.3),
+            inset 0 2px 5px rgba(0,0,0,0.42);
+          filter:brightness(1.12);
+        }
+        .casio-calc .ck:focus-visible{
+          outline:2px solid #7fd0e0;
+          outline-offset:2px;
+        }
+        .casio-calc .ck-num{
+          background:linear-gradient(180deg, #f6f7f8 0%, #e2e5e8 55%, #cfd3d7 100%);
+          border-color:#9ba1a7;
+          color:#1a1d21;
+          font-size:15px;
+          font-weight:700;
+          box-shadow:
+            0 2px 0 #90969c,
+            0 4px 7px rgba(0,0,0,0.28),
+            inset 0 1px 0 rgba(255,255,255,0.9);
+        }
+        .casio-calc .ck-num:active,
+        .casio-calc .ck-num.is-pressed{
+          box-shadow:
+            0 0 0 #90969c,
+            0 1px 2px rgba(0,0,0,0.25),
+            inset 0 2px 5px rgba(0,0,0,0.18);
+        }
+        .casio-calc .ck-shift{ color:#ffb454; font-weight:800; letter-spacing:0.04em; }
+        .casio-calc .ck-alpha{ color:#ff7777; font-weight:800; letter-spacing:0.04em; }
+        .casio-calc .ck-mode{ color:#8ed4e5; font-weight:700; letter-spacing:0.04em; }
+        .casio-calc .ck-clear{ color:#ffb454; font-weight:700; }
+        .casio-calc .ck-small{ font-size:10.5px; letter-spacing:0.02em; }
+        .casio-calc .ck-eq{
+          background:linear-gradient(180deg, #f4f6f8 0%, #dde1e5 55%, #c9ced3 100%);
+          border-color:#9ba1a7;
+          color:#14171a;
+          font-size:19px;
+          font-weight:800;
+          box-shadow:
+            0 2px 0 #90969c,
+            0 4px 8px rgba(0,0,0,0.3),
+            inset 0 1px 0 rgba(255,255,255,0.9);
+        }
+        .casio-calc .ck-eq:active,
+        .casio-calc .ck-eq.is-pressed{
+          box-shadow:
+            0 0 0 #90969c,
+            0 1px 2px rgba(0,0,0,0.25),
+            inset 0 2px 5px rgba(0,0,0,0.18);
+        }
+        .ck .k-lbl{ display:block; line-height:1; }
+        .ck.has-sub .k-lbl{ transform:translateY(4px); }
+        .ck .k-sub{
+          position:absolute;
+          top:4px;
+          left:6px;
+          font-size:7.5px;
+          font-weight:700;
+          line-height:1;
+          color:#ffb454;
+          letter-spacing:0.02em;
+          opacity:0.95;
+        }
+        .ck .k-sub-a{
+          left:auto;
+          right:6px;
+          color:#ff7d7d;
+        }
+        @media (max-width: 430px){
+          .casio-calc{ width:100%; padding:17px 13px 18px; border-radius:24px; }
+          .casio-calc .ck{ height:41px; border-radius:10px; font-size:11.5px; }
+          .casio-calc .ck-num{ font-size:14px; }
+          .casio-calc .ck-eq{ font-size:17px; }
+          .casio-calc .ck .k-sub{ font-size:7px; left:5px; }
+          .lcd-result{ font-size:27px; }
+          .casio-lcd{ min-height:96px; padding:9px 11px 8px; }
+        }
+        </style>
+
+        <script>
+        (function(){
+          var root = document.getElementById('casioCalc');
+          if(!root) return;
+
+          var exprEl = document.getElementById('lcdExpr');
+          var resultEl = document.getElementById('lcdResult');
+          var shiftEl = document.getElementById('lcdShift');
+          var alphaEl = document.getElementById('lcdAlpha');
+          var memEl = document.getElementById('lcdMem');
+          var angleEl = document.getElementById('lcdAngle');
+          var keypad = document.getElementById('casioKeys');
+
+          var expr = '';
+          var resultText = '0';
+          var lastAnswer = 0;
+          var memory = 0;
+          var shiftOn = false;
+          var alphaOn = false;
+          var degree = true;
+          var evaluated = false;
+          var errorState = false;
+
+          var FUNC_PREFIX = [
+            ['sin⁻¹(', 'asin'],
+            ['cos⁻¹(', 'acos'],
+            ['tan⁻¹(', 'atan'],
+            ['sin(', 'sin'],
+            ['cos(', 'cos'],
+            ['tan(', 'tan'],
+            ['log(', 'log'],
+            ['ln(', 'ln'],
+            ['√(', 'sqrt'],
+            ['∛(', 'cbrt'],
+            ['10^(', 'exp10']
+          ];
+          var FUNC_STRINGS = ['sin⁻¹(', 'cos⁻¹(', 'tan⁻¹(', 'sin(', 'cos(', 'tan(', 'log(', 'ln(', '√(', '∛(', '10^('];
+
+          function render(){
+            exprEl.textContent = expr;
+            resultEl.textContent = resultText;
+            shiftEl.className = shiftOn ? 'on' : '';
+            alphaEl.className = alphaOn ? 'on' : '';
+            memEl.className = memory !== 0 ? 'on' : '';
+            angleEl.textContent = degree ? 'DEG' : 'RAD';
+            angleEl.className = 'on';
+          }
+
+          function trimDecimal(s){
+            if(s.indexOf('e') >= 0) return s;
+            if(s.indexOf('.') >= 0) s = s.replace(/0+$/, '').replace(/\.$/, '');
+            if(s === '-0') s = '0';
+            return s;
+          }
+
+          function formatNumber(x){
+            if(!isFinite(x)) return 'Math ERROR';
+            if(Math.abs(x) < 1e-12) x = 0;
+            var abs = Math.abs(x);
+            if(abs !== 0 && (abs >= 1e10 || abs < 1e-9)){
+              var parts = x.toExponential(9).split('e');
+              var exp = parseInt(parts[1], 10);
+              return trimDecimal(parts[0]) + '×10^' + (exp < 0 ? '-' : '') + Math.abs(exp);
+            }
+            return trimDecimal(x.toPrecision(10));
+          }
+
+          function applyFunc(name, value){
+            var rad = degree ? value * Math.PI / 180 : value;
+            var out;
+            switch(name){
+              case 'sin': out = Math.sin(rad); break;
+              case 'cos': out = Math.cos(rad); break;
+              case 'tan': out = Math.tan(rad); break;
+              case 'asin':
+                if(value < -1 || value > 1) throw new Error('Math ERROR');
+                out = Math.asin(value);
+                if(degree) out = out * 180 / Math.PI;
+                break;
+              case 'acos':
+                if(value < -1 || value > 1) throw new Error('Math ERROR');
+                out = Math.acos(value);
+                if(degree) out = out * 180 / Math.PI;
+                break;
+              case 'atan':
+                out = Math.atan(value);
+                if(degree) out = out * 180 / Math.PI;
+                break;
+              case 'log':
+                if(value <= 0) throw new Error('Math ERROR');
+                out = Math.log10(value);
+                break;
+              case 'ln':
+                if(value <= 0) throw new Error('Math ERROR');
+                out = Math.log(value);
+                break;
+              case 'sqrt':
+                if(value < 0) throw new Error('Math ERROR');
+                out = Math.sqrt(value);
+                break;
+              case 'cbrt': out = Math.cbrt(value); break;
+              case 'exp10': out = Math.pow(10, value); break;
+              default: throw new Error('Math ERROR');
+            }
+            if(!isFinite(out)) throw new Error('Math ERROR');
+            return out;
+          }
+
+          function factorial(n){
+            if(n < 0 || Math.floor(n) !== n || n > 170) throw new Error('Math ERROR');
+            var r = 1;
+            for(var i = 2; i <= n; i++) r *= i;
+            return r;
+          }
+
+          function tokenize(src){
+            var out = [];
+            var i = 0;
+            while(i < src.length){
+              var ch = src.charAt(i);
+              if(ch === ' '){ i++; continue; }
+
+              var matched = false;
+              for(var f = 0; f < FUNC_PREFIX.length; f++){
+                var p = FUNC_PREFIX[f][0];
+                if(src.substr(i, p.length) === p){
+                  out.push({ t:'func', v:FUNC_PREFIX[f][1] });
+                  i += p.length;
+                  matched = true;
+                  break;
+                }
+              }
+              if(matched) continue;
+
+              if(/[0-9.]/.test(ch)){
+                var j = i;
+                while(j < src.length && /[0-9.]/.test(src.charAt(j))) j++;
+                var numStr = src.slice(i, j);
+                if(!/^\d*\.?\d+$/.test(numStr)) throw new Error('Math ERROR');
+                out.push({ t:'num', v:parseFloat(numStr) });
+                i = j;
+                continue;
+              }
+              if(ch === 'π'){ out.push({ t:'const', v:Math.PI }); i++; continue; }
+              if(ch === 'e'){ out.push({ t:'const', v:Math.E }); i++; continue; }
+              if(src.substr(i, 3) === 'Ans'){ out.push({ t:'var', v:'Ans' }); i += 3; continue; }
+              if(ch === 'M'){ out.push({ t:'var', v:'M' }); i++; continue; }
+
+              if(ch === '+' ){ out.push({ t:'op', v:'+' }); i++; continue; }
+              if(ch === '-' ){ out.push({ t:'op', v:'-' }); i++; continue; }
+              if(ch === '×' ){ out.push({ t:'op', v:'*' }); i++; continue; }
+              if(ch === '÷' ){ out.push({ t:'op', v:'/' }); i++; continue; }
+              if(ch === '^' ){ out.push({ t:'op', v:'^' }); i++; continue; }
+              if(ch === '!' ){ out.push({ t:'post', v:'!' }); i++; continue; }
+              if(ch === '%' ){ out.push({ t:'post', v:'%' }); i++; continue; }
+              if(ch === '(' ){ out.push({ t:'lp' }); i++; continue; }
+              if(ch === ')' ){ out.push({ t:'rp' }); i++; continue; }
+
+              throw new Error('Math ERROR');
+            }
+            return out;
+          }
+
+          function evaluate(src){
+            var toks = tokenize(src);
+            var pos = 0;
+
+            function peek(){ return toks[pos]; }
+            function take(){ return toks[pos++]; }
+
+            function expectRp(){
+              var tk = take();
+              if(!tk || tk.t !== 'rp') throw new Error('Math ERROR');
+            }
+
+            function startsPrimary(tk){
+              return !!tk && (tk.t === 'num' || tk.t === 'const' || tk.t === 'var' || tk.t === 'func' || tk.t === 'lp');
+            }
+
+            function parseExpr(){
+              var v = parseTerm();
+              while(peek() && peek().t === 'op' && (peek().v === '+' || peek().v === '-')){
+                var op = take().v;
+                var r = parseTerm();
+                v = op === '+' ? v + r : v - r;
+              }
+              return v;
+            }
+
+            function parseTerm(){
+              var v = parseUnary();
+              while(true){
+                var tk = peek();
+                if(tk && tk.t === 'op' && (tk.v === '*' || tk.v === '/')){
+                  var op = take().v;
+                  var r = parseUnary();
+                  if(op === '/' && r === 0) throw new Error('Math ERROR');
+                  v = op === '*' ? v * r : v / r;
+                } else if(startsPrimary(tk)){
+                  v = v * parseUnary();
+                } else {
+                  break;
+                }
+              }
+              return v;
+            }
+
+            function parseUnary(){
+              var tk = peek();
+              if(tk && tk.t === 'op' && (tk.v === '-' || tk.v === '+')){
+                take();
+                var v = parseUnary();
+                return tk.v === '-' ? -v : v;
+              }
+              return parsePower();
+            }
+
+            function parsePower(){
+              var base = parsePostfix();
+              var tk = peek();
+              if(tk && tk.t === 'op' && tk.v === '^'){
+                take();
+                return Math.pow(base, parseUnary());
+              }
+              return base;
+            }
+
+            function parsePostfix(){
+              var v = parsePrimary();
+              while(peek() && peek().t === 'post'){
+                var p = take().v;
+                v = p === '!' ? factorial(v) : v / 100;
+              }
+              return v;
+            }
+
+            function parsePrimary(){
+              var tk = take();
+              if(!tk) throw new Error('Math ERROR');
+              if(tk.t === 'num' || tk.t === 'const') return tk.v;
+              if(tk.t === 'var') return tk.v === 'Ans' ? lastAnswer : memory;
+              if(tk.t === 'func'){
+                var arg = parseExpr();
+                expectRp();
+                return applyFunc(tk.v, arg);
+              }
+              if(tk.t === 'lp'){
+                var v = parseExpr();
+                expectRp();
+                return v;
+              }
+              throw new Error('Math ERROR');
+            }
+
+            var value = parseExpr();
+            if(pos !== toks.length) throw new Error('Math ERROR');
+            if(!isFinite(value)) throw new Error('Math ERROR');
+            return value;
+          }
+
+          function evaluateExpr(src){
+            if(!src) throw new Error('Math ERROR');
+            var s = src.replace(/[+\-×÷^]+$/, '');
+            var open = 0;
+            for(var i = 0; i < s.length; i++){
+              if(s.charAt(i) === '(') open++;
+              else if(s.charAt(i) === ')') open--;
+            }
+            while(open > 0){ s += ')'; open--; }
+            return evaluate(s);
+          }
+
+          function resetEntry(){
+            expr = '';
+            resultText = '0';
+            evaluated = false;
+            errorState = false;
+          }
+
+          function insert(text){
+            if(errorState || evaluated) resetEntry();
+            expr += text;
+            render();
+          }
+
+          function inputDigit(d){
+            if(errorState || evaluated) resetEntry();
+            expr += d;
+            render();
+          }
+
+          function inputDot(){
+            if(errorState || evaluated) resetEntry();
+            var tail = expr.match(/[0-9.]*$/)[0];
+            if(tail.indexOf('.') >= 0) return;
+            if(expr === '' || /[+\-×÷^(]$/.test(expr)) expr += '0';
+            expr += '.';
+            render();
+          }
+
+          function inputOp(op){
+            if(errorState) resetEntry();
+            if(evaluated){
+              expr = 'Ans';
+              resultText = '0';
+              evaluated = false;
+            }
+            if(expr === ''){
+              if(op === '-'){ expr = '-'; render(); }
+              return;
+            }
+            var last = expr.slice(-1);
+            if(/[+\-×÷^]/.test(last)){
+              if(op === '-' && /[×÷^]/.test(last)) expr += '-';
+              else expr = expr.slice(0, -1) + op;
+            } else if(last === '('){
+              if(op === '-') expr += '-';
+            } else {
+              expr += op;
+            }
+            render();
+          }
+
+          function inputParen(open){
+            if(errorState || evaluated) resetEntry();
+            if(open){
+              expr += '(';
+            } else {
+              var depth = 0;
+              for(var i = 0; i < expr.length; i++){
+                if(expr.charAt(i) === '(') depth++;
+                else if(expr.charAt(i) === ')') depth--;
+              }
+              if(depth > 0) expr += ')';
+            }
+            render();
+          }
+
+          function inputPostfix(ch){
+            if(errorState || evaluated) resetEntry();
+            if(/[0-9)πeM]$/.test(expr) || expr.slice(-3) === 'Ans') expr += ch;
+            render();
+          }
+
+          function doEquals(){
+            if(!expr) return;
+            try{
+              var value = evaluateExpr(expr);
+              lastAnswer = value;
+              resultText = formatNumber(value);
+              evaluated = true;
+              errorState = false;
+            } catch(err){
+              resultText = 'Math ERROR';
+              errorState = true;
+              evaluated = false;
+            }
+            render();
+          }
+
+          function doBackspace(){
+            if(errorState || evaluated){
+              resetEntry();
+              render();
+              return;
+            }
+            for(var i = 0; i < FUNC_STRINGS.length; i++){
+              var p = FUNC_STRINGS[i];
+              if(expr.length >= p.length && expr.slice(-p.length) === p){
+                expr = expr.slice(0, -p.length);
+                render();
+                return;
+              }
+            }
+            if(expr.slice(-3) === 'Ans') expr = expr.slice(0, -3);
+            else expr = expr.slice(0, -1);
+            if(!expr) resultText = '0';
+            render();
+          }
+
+          function doClear(){
+            resetEntry();
+            shiftOn = false;
+            alphaOn = false;
+            render();
+          }
+
+          function doMemory(subtract){
+            if(alphaOn){
+              insert('M');
+              return;
+            }
+            var value;
+            try{
+              value = expr ? evaluateExpr(expr) : lastAnswer;
+            } catch(err){
+              resultText = 'Math ERROR';
+              errorState = true;
+              evaluated = false;
+              render();
+              return;
+            }
+            memory += subtract ? -value : value;
+            lastAnswer = value;
+            resultText = formatNumber(value);
+            evaluated = true;
+            errorState = false;
+            render();
+          }
+
+          function toggleMode(){
+            degree = !degree;
+            render();
+          }
+
+          function press(action){
+            switch(action){
+              case 'shift':
+                shiftOn = !shiftOn;
+                if(shiftOn) alphaOn = false;
+                render();
+                return;
+              case 'alpha':
+                alphaOn = !alphaOn;
+                if(alphaOn) shiftOn = false;
+                render();
+                return;
+              case 'on':
+                doClear();
+                memory = 0;
+                degree = true;
+                render();
+                return;
+              case 'mode':
+                toggleMode();
+                break;
+              case 'ac':
+                doClear();
+                return;
+              case 'del':
+                doBackspace();
+                break;
+              case 'eq':
+                doEquals();
+                break;
+              case 'dot':
+                inputDot();
+                break;
+              case 'lparen':
+                inputParen(true);
+                break;
+              case 'rparen':
+                inputParen(false);
+                break;
+              case 'add':
+                inputOp('+');
+                break;
+              case 'sub':
+                inputOp('-');
+                break;
+              case 'mul':
+                inputOp('×');
+                break;
+              case 'div':
+                inputOp('÷');
+                break;
+              case 'pow':
+                insert('^');
+                break;
+              case 'root':
+                insert('^(1/');
+                break;
+              case 'sq':
+                insert('^2');
+                break;
+              case 'cube':
+                insert('^3');
+                break;
+              case 'inv':
+                insert('^(-1)');
+                break;
+              case 'fact':
+                inputPostfix('!');
+                break;
+              case 'pct':
+                inputPostfix('%');
+                break;
+              case 'sqrt':
+                insert('√(');
+                break;
+              case 'cbrt':
+                insert('∛(');
+                break;
+              case 'log':
+                insert('log(');
+                break;
+              case 'exp10':
+                insert('10^(');
+                break;
+              case 'sin':
+                insert('sin(');
+                break;
+              case 'cos':
+                insert('cos(');
+                break;
+              case 'tan':
+                insert('tan(');
+                break;
+              case 'asin':
+                insert('sin⁻¹(');
+                break;
+              case 'acos':
+                insert('cos⁻¹(');
+                break;
+              case 'atan':
+                insert('tan⁻¹(');
+                break;
+              case 'pi':
+                insert('π');
+                break;
+              case 'constE':
+                insert('e');
+                break;
+              case 'exp':
+                insert('×10^(');
+                break;
+              case 'ans':
+                insert('Ans');
+                break;
+              case 'mplus':
+                doMemory(false);
+                break;
+              case 'mminus':
+                doMemory(true);
+                break;
+              case 'mrecall':
+                insert('M');
+                break;
+              default:
+                if(/^[0-9]$/.test(action)) inputDigit(action);
+            }
+            if(action !== 'shift' && action !== 'alpha'){
+              shiftOn = false;
+              alphaOn = false;
+              render();
+            }
+          }
+
+          keypad.addEventListener('click', function(e){
+            var btn = e.target.closest ? e.target.closest('button[data-key]') : null;
+            if(!btn) return;
+            var action = btn.getAttribute('data-key');
+            if(alphaOn && btn.getAttribute('data-alpha')){
+              action = btn.getAttribute('data-alpha');
+            } else if(shiftOn && btn.getAttribute('data-shift')){
+              action = btn.getAttribute('data-shift');
+            }
+            press(action);
+          });
+
+          document.addEventListener('keydown', function(e){
+            if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+            var map = {
+              '0':'0','1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9',
+              '.':'dot','+':'add','-':'sub','*':'mul','×':'mul','/':'div','÷':'div','^':'pow',
+              '(':'lparen',')':'rparen','!':'fact','%':'pct',
+              'Enter':'eq','=':'eq','Backspace':'del','Escape':'ac'
+            };
+            var action = map[e.key];
+            if(!action) return;
+            e.preventDefault();
+            press(action);
+          });
+
+          render();
+        })();
+        </script>
+
+    </div>
+
+      <footer class="post-footer">
+
+
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/10/27/raiden-shooter/" rel="prev" title="雷电战机">
+      <i class="fa fa-chevron-left"></i> 雷电战机
+    </a></div>
+    </div>
+      </footer>
+
+  </article>
+
+
+
+          </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+
+
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zpc</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+
+
+
+
+<div class="copyright">
+
+  &copy;
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zpc</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+</body>
+</html>
