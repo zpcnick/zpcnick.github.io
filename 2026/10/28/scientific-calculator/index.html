@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"zpcnick.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="参考 fx-991CN X 布局的科学计算器，支持分数、三角函数与反三角、对数与指数、幂与根式、阶乘、取整、百分比、角度制切换与内存运算。">
+  <meta name="description" content="参考 fx-991CN X 布局的科学计算器，支持分数、三角函数与反三角、对数与指数、幂与根式、阶乘、取整、百分比、角度制切换与光标编辑。">
   <meta property="og:type" content="article">
   <meta property="og:title" content="科学计算器">
   <meta property="og:url" content="https://zpcnick.github.io/2026/10/28/scientific-calculator/">
   <meta property="og:site_name" content="ZPC&#39;s homepage">
-  <meta property="og:description" content="参考 fx-991CN X 布局的科学计算器，支持分数、三角函数与反三角、对数与指数、幂与根式、阶乘、取整、百分比、角度制切换与内存运算。">
+  <meta property="og:description" content="参考 fx-991CN X 布局的科学计算器，支持分数、三角函数与反三角、对数与指数、幂与根式、阶乘、取整、百分比、角度制切换与光标编辑。">
   <meta property="og:locale">
   <meta property="article:published_time" content="2026-10-27T16:00:00.000Z">
   <meta property="article:modified_time" content="2026-10-28T00:00:00.000Z">
@@ -198,8 +198,6 @@
               <div class="casio-lcd">
                 <div class="lcd-status">
                   <span id="lcdShift">SHIFT</span>
-                  <span id="lcdAlpha">ALPHA</span>
-                  <span id="lcdMem">M</span>
                   <span id="lcdAngle" class="on">DEG</span>
                 </div>
                 <div class="lcd-expr"><span id="lcdExpr"></span></div>
@@ -207,40 +205,30 @@
               </div>
             </div>
 
-            <div class="casio-replay" role="group" aria-label="光标移动">
-              <button type="button" class="rp-up" data-key="cursorUp" aria-label="光标上移">▲</button>
-              <button type="button" class="rp-left" data-key="cursorLeft" aria-label="光标左移">◀</button>
-              <span class="replay-center" aria-hidden="true"></span>
-              <button type="button" class="rp-right" data-key="cursorRight" aria-label="光标右移">▶</button>
-              <button type="button" class="rp-down" data-key="cursorDown" aria-label="光标下移">▼</button>
-            </div>
-
             <div class="casio-keys" id="casioKeys">
               <button type="button" class="ck ck-shift" data-key="shift">SHIFT</button>
-              <button type="button" class="ck ck-alpha" data-key="alpha">ALPHA</button>
               <button type="button" class="ck ck-mode" data-key="mode">MODE</button>
-              <button type="button" class="ck ck-fn has-sub" data-key="mplus" data-shift="mminus" data-alpha="mrecall" aria-label="M+">
-                <span class="k-sub">M&minus;</span><span class="k-sub k-sub-a">M</span><span class="k-lbl">M+</span>
-              </button>
-              <button type="button" class="ck ck-fn" data-key="on">ON</button>
-
+              <button type="button" class="ck ck-arrow" data-key="cursorLeft" aria-label="光标左移">&#9664;</button>
+              <button type="button" class="ck ck-arrow" data-key="cursorRight" aria-label="光标右移">&#9654;</button>
               <button type="button" class="ck ck-fn has-sub" data-key="sq" data-shift="cube"><span class="k-sub">x&sup3;</span><span class="k-lbl">x&sup2;</span></button>
+
               <button type="button" class="ck ck-fn has-sub" data-key="pow" data-shift="root"><span class="k-sub">&#739;&radic;</span><span class="k-lbl">x&#696;</span></button>
               <button type="button" class="ck ck-fn has-sub" data-key="sqrt" data-shift="cbrt"><span class="k-sub">&sup3;&radic;</span><span class="k-lbl">&radic;</span></button>
               <button type="button" class="ck ck-fn has-sub" data-key="inv" data-shift="rnd"><span class="k-sub">Rnd</span><span class="k-lbl">x&#8315;&sup1;</span></button>
               <button type="button" class="ck ck-fn has-sub" data-key="log" data-shift="exp10"><span class="k-sub">10&#739;</span><span class="k-lbl">log</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="ln" data-shift="expe"><span class="k-sub">e&#739;</span><span class="k-lbl">ln</span></button>
 
               <button type="button" class="ck ck-fn has-sub" data-key="sin" data-shift="asin"><span class="k-sub">sin&#8315;&sup1;</span><span class="k-lbl">sin</span></button>
               <button type="button" class="ck ck-fn has-sub" data-key="cos" data-shift="acos"><span class="k-sub">cos&#8315;&sup1;</span><span class="k-lbl">cos</span></button>
               <button type="button" class="ck ck-fn has-sub" data-key="tan" data-shift="atan"><span class="k-sub">tan&#8315;&sup1;</span><span class="k-lbl">tan</span></button>
-              <button type="button" class="ck ck-fn has-sub" data-key="ln" data-shift="expe"><span class="k-sub">e&#739;</span><span class="k-lbl">ln</span></button>
               <button type="button" class="ck ck-fn" data-key="lparen">(</button>
+              <button type="button" class="ck ck-fn" data-key="rparen">)</button>
 
               <button type="button" class="ck ck-fn ck-small" data-key="frac">a/b</button>
               <button type="button" class="ck ck-fn has-sub" data-key="abs" data-shift="int"><span class="k-sub">Int</span><span class="k-lbl">Abs</span></button>
               <button type="button" class="ck ck-fn" data-key="fact">x!</button>
               <button type="button" class="ck ck-fn has-sub" data-key="pi" data-shift="euler"><span class="k-sub">e</span><span class="k-lbl">&pi;</span></button>
-              <button type="button" class="ck ck-fn" data-key="rparen">)</button>
+              <button type="button" class="ck ck-fn ck-small" data-key="exp">&times;10&#739;</button>
 
               <button type="button" class="ck ck-num" data-key="7">7</button>
               <button type="button" class="ck ck-num" data-key="8">8</button>
@@ -262,7 +250,6 @@
 
               <button type="button" class="ck ck-num" data-key="0">0</button>
               <button type="button" class="ck ck-num" data-key="dot">.</button>
-              <button type="button" class="ck ck-fn ck-small" data-key="exp">&times;10&#739;</button>
               <button type="button" class="ck ck-fn ck-small has-sub" data-key="ans" data-shift="pct"><span class="k-sub">%</span><span class="k-lbl">Ans</span></button>
               <button type="button" class="ck ck-eq" data-key="eq">=</button>
             </div>
@@ -277,6 +264,9 @@
         }
         .casio-calc{
           width:min(92vw, 414px);
+          max-width:min(92vw, 414px);
+          flex:0 0 auto;
+          min-width:0;
           padding:18px 18px 22px;
           border-radius:28px;
           background:
@@ -367,6 +357,7 @@
         }
         .casio-lcd{
           min-height:152px;
+          min-width:0;
           padding:12px 15px 12px;
           border-radius:8px;
           color:#141414;
@@ -389,6 +380,7 @@
         .lcd-status span.on{ opacity:1; }
         .lcd-expr{
           position:relative;
+          min-width:0;
           margin-top:10px;
           font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
           font-size:15px;
@@ -415,6 +407,7 @@
           display:flex;
           justify-content:flex-end;
           overflow:hidden;
+          min-width:0;
           margin-top:4px;
           font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
           font-size:42px;
@@ -423,40 +416,6 @@
           letter-spacing:0.4px;
         }
         .lcd-result span{ white-space:nowrap; flex:0 0 auto; }
-        .casio-replay{
-          display:grid;
-          grid-template-columns:repeat(3, 30px);
-          grid-template-rows:repeat(3, 30px);
-          gap:3px;
-          justify-content:end;
-          margin:14px 4px 0;
-        }
-        .casio-replay button{
-          padding:0;
-          border-radius:8px;
-          border:1px solid #0d1013;
-          background:linear-gradient(180deg, #4a5056 0%, #34393e 55%, #2a2f34 100%);
-          color:#d2d8de;
-          font-size:9px;
-          line-height:1;
-          box-shadow:0 2px 3px rgba(0,0,0,0.35);
-          cursor:pointer;
-          touch-action:manipulation;
-          -webkit-tap-highlight-color:transparent;
-        }
-        .casio-replay button:active{
-          background:linear-gradient(180deg, #33383d 0%, #22272b 100%);
-        }
-        .casio-replay .replay-center{
-          grid-area:2 / 2;
-          border-radius:50%;
-          background:radial-gradient(circle at 50% 42%, #3d4349 0%, #1e2327 78%);
-          box-shadow:inset 0 1px 2px rgba(255,255,255,0.08), 0 1px 2px rgba(0,0,0,0.5);
-        }
-        .casio-replay .rp-up{ grid-area:1 / 2; }
-        .casio-replay .rp-left{ grid-area:2 / 1; }
-        .casio-replay .rp-down{ grid-area:3 / 2; }
-        .casio-replay .rp-right{ grid-area:2 / 3; }
         .casio-keys{
           display:grid;
           grid-template-columns:repeat(5, 1fr);
@@ -519,11 +478,12 @@
             inset 0 2px 5px rgba(0,0,0,0.18);
         }
         .casio-calc .ck-shift{ color:#ffb454; font-weight:800; letter-spacing:0.04em; }
-        .casio-calc .ck-alpha{ color:#ff7777; font-weight:800; letter-spacing:0.04em; }
         .casio-calc .ck-mode{ color:#8ed4e5; font-weight:700; letter-spacing:0.04em; }
+        .casio-calc .ck-arrow{ color:#cfd6dc; font-size:13px; font-weight:700; }
         .casio-calc .ck-clear{ color:#ffb454; font-weight:700; }
         .casio-calc .ck-small{ font-size:10.5px; letter-spacing:0.02em; }
         .casio-calc .ck-eq{
+          grid-column:span 2;
           background:linear-gradient(180deg, #f4f6f8 0%, #dde1e5 55%, #c9ced3 100%);
           border-color:#9ba1a7;
           color:#14171a;
@@ -554,11 +514,6 @@
           letter-spacing:0.02em;
           opacity:0.95;
         }
-        .ck .k-sub-a{
-          left:auto;
-          right:6px;
-          color:#ff7d7d;
-        }
         @media (max-width: 430px){
           .casio-calc{ width:100%; padding:16px 13px 18px; border-radius:24px; }
           .casio-calc .ck{ height:39px; border-radius:10px; font-size:11.5px; }
@@ -568,7 +523,6 @@
           .lcd-result{ font-size:36px; }
           .lcd-expr{ font-size:13px; min-height:19px; }
           .casio-lcd{ min-height:132px; padding:10px 12px 10px; }
-          .casio-replay{ grid-template-columns:repeat(3, 26px); grid-template-rows:repeat(3, 26px); margin-top:12px; }
         }
         </style>
 
@@ -580,17 +534,13 @@
           var exprEl = document.getElementById('lcdExpr');
           var resultEl = document.getElementById('lcdResult');
           var shiftEl = document.getElementById('lcdShift');
-          var alphaEl = document.getElementById('lcdAlpha');
-          var memEl = document.getElementById('lcdMem');
           var angleEl = document.getElementById('lcdAngle');
 
           var expr = '';
           var cursor = 0;
           var resultText = '0';
           var lastAnswer = 0;
-          var memory = 0;
           var shiftOn = false;
-          var alphaOn = false;
           var angleMode = 'DEG';
           var evaluated = false;
           var errorState = false;
@@ -634,12 +584,23 @@
             }
           }
 
+          function fitResult(){
+            var box = resultEl.parentNode;
+            var avail = ((box && box.clientWidth) || 320) - 4;
+            var base = window.innerWidth <= 430 ? 36 : 42;
+            resultEl.style.fontSize = base + 'px';
+            var w = resultEl.scrollWidth;
+            if(w > avail){
+              var size = Math.max(15, Math.floor(base * avail / w));
+              resultEl.style.fontSize = size + 'px';
+            }
+          }
+
           function render(){
             renderExpr();
             resultEl.textContent = resultText;
+            fitResult();
             shiftEl.className = shiftOn ? 'on' : '';
-            alphaEl.className = alphaOn ? 'on' : '';
-            memEl.className = memory !== 0 ? 'on' : '';
             angleEl.textContent = angleMode;
             angleEl.className = 'on';
           }
@@ -753,7 +714,6 @@
               if(ch === 'π'){ out.push({ t:'const', v:Math.PI }); i++; continue; }
               if(ch === 'e'){ out.push({ t:'const', v:Math.E }); i++; continue; }
               if(src.substr(i, 3) === 'Ans'){ out.push({ t:'var', v:'Ans' }); i += 3; continue; }
-              if(ch === 'M'){ out.push({ t:'var', v:'M' }); i++; continue; }
 
               if(ch === '+' ){ out.push({ t:'op', v:'+' }); i++; continue; }
               if(ch === '-' ){ out.push({ t:'op', v:'-' }); i++; continue; }
@@ -848,7 +808,7 @@
               var tk = take();
               if(!tk) throw new Error('Math ERROR');
               if(tk.t === 'num' || tk.t === 'const') return tk.v;
-              if(tk.t === 'var') return tk.v === 'Ans' ? lastAnswer : memory;
+              if(tk.t === 'var') return lastAnswer;
               if(tk.t === 'func'){
                 var arg = parseExpr();
                 expectRp();
@@ -957,7 +917,7 @@
           function inputPostfix(ch){
             if(errorState || evaluated) resetEntry();
             var before = expr.slice(0, cursor);
-            if(/[0-9)πeM]$/.test(before) || before.slice(-3) === 'Ans') insertAt(ch);
+            if(/[0-9)πe]$/.test(before) || before.slice(-3) === 'Ans') insertAt(ch);
             render();
           }
 
@@ -1007,40 +967,9 @@
             render();
           }
 
-          function jumpCursor(toEnd){
-            if(errorState) return;
-            if(evaluated) evaluated = false;
-            cursor = toEnd ? expr.length : 0;
-            render();
-          }
-
           function doClear(){
             resetEntry();
             shiftOn = false;
-            alphaOn = false;
-            render();
-          }
-
-          function doMemory(subtract){
-            if(alphaOn){
-              insert('M');
-              return;
-            }
-            var value;
-            try{
-              value = expr ? evaluateExpr(expr) : lastAnswer;
-            } catch(err){
-              resultText = 'Math ERROR';
-              errorState = true;
-              evaluated = false;
-              render();
-              return;
-            }
-            memory += subtract ? -value : value;
-            lastAnswer = value;
-            resultText = formatNumber(value);
-            evaluated = true;
-            errorState = false;
             render();
           }
 
@@ -1053,18 +982,6 @@
             switch(action){
               case 'shift':
                 shiftOn = !shiftOn;
-                if(shiftOn) alphaOn = false;
-                render();
-                return;
-              case 'alpha':
-                alphaOn = !alphaOn;
-                if(alphaOn) shiftOn = false;
-                render();
-                return;
-              case 'on':
-                doClear();
-                memory = 0;
-                angleMode = 'DEG';
                 render();
                 return;
               case 'mode':
@@ -1134,12 +1051,6 @@
               case 'cursorRight':
                 moveCursor(1);
                 break;
-              case 'cursorUp':
-                jumpCursor(false);
-                break;
-              case 'cursorDown':
-                jumpCursor(true);
-                break;
               case 'abs':
                 insert('Abs(');
                 break;
@@ -1163,6 +1074,9 @@
                 break;
               case 'log':
                 insert('log(');
+                break;
+              case 'ln':
+                insert('ln(');
                 break;
               case 'exp10':
                 insert('10^(');
@@ -1197,21 +1111,11 @@
               case 'ans':
                 insert('Ans');
                 break;
-              case 'mplus':
-                doMemory(false);
-                break;
-              case 'mminus':
-                doMemory(true);
-                break;
-              case 'mrecall':
-                insert('M');
-                break;
               default:
                 if(/^[0-9]$/.test(action)) inputDigit(action);
             }
-            if(action !== 'shift' && action !== 'alpha' && !/^cursor/.test(action)){
+            if(action !== 'shift' && !/^cursor/.test(action)){
               shiftOn = false;
-              alphaOn = false;
               render();
             }
           }
@@ -1220,9 +1124,7 @@
             var btn = e.target.closest ? e.target.closest('button[data-key]') : null;
             if(!btn || !root.contains(btn)) return;
             var action = btn.getAttribute('data-key');
-            if(alphaOn && btn.getAttribute('data-alpha')){
-              action = btn.getAttribute('data-alpha');
-            } else if(shiftOn && btn.getAttribute('data-shift')){
+            if(shiftOn && btn.getAttribute('data-shift')){
               action = btn.getAttribute('data-shift');
             }
             press(action);
@@ -1240,8 +1142,7 @@
               '.':'dot','+':'add','-':'sub','*':'mul','×':'mul','/':'div','÷':'div','^':'pow',
               '(':'lparen',')':'rparen','!':'fact','%':'pct',
               'Enter':'eq','=':'eq','Backspace':'del','Escape':'ac',
-              'ArrowLeft':'cursorLeft','ArrowRight':'cursorRight',
-              'ArrowUp':'cursorUp','ArrowDown':'cursorDown'
+              'ArrowLeft':'cursorLeft','ArrowRight':'cursorRight'
             };
             var action = map[e.key];
             if(!action) return;
