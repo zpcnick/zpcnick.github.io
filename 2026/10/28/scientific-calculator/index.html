@@ -586,6 +586,14 @@
           function renderExpr(){
             exprBefore.textContent = expr.slice(0, cursor);
             exprAfter.textContent = expr.slice(cursor);
+            var lcdLine = exprEl.parentNode;
+            var cTop = caretEl.offsetTop;
+            var cBot = cTop + caretEl.offsetHeight;
+            if(cBot > lcdLine.scrollTop + lcdLine.clientHeight){
+              lcdLine.scrollTop = cBot - lcdLine.clientHeight;
+            } else if(cTop < lcdLine.scrollTop){
+              lcdLine.scrollTop = cTop;
+            }
           }
 
           function fitResult(){
@@ -1151,9 +1159,9 @@
           for(var si = 0; si < shiftBtns.length; si++){
             (function(btn){
               btn.addEventListener('pointerdown', function(){
-                lpFired = false;
+                btn._lpFired = false;
                 lpTimer = setTimeout(function(){
-                  lpFired = true;
+                  btn._lpFired = true;
                   press(btn.getAttribute('data-shift'));
                 }, 500);
               });
@@ -1166,11 +1174,33 @@
             })(shiftBtns[si]);
           }
 
+          var leftBtn = document.querySelector('#casioKeys button[data-key="cursorLeft"]');
+          var rightBtn = document.querySelector('#casioKeys button[data-key="cursorRight"]');
+          function bindCursorLongPress(btn, toEnd){
+            if(!btn) return;
+            btn.addEventListener('pointerdown', function(){
+              btn._lpFired = false;
+              lpTimer = setTimeout(function(){
+                btn._lpFired = true;
+                cursor = toEnd ? expr.length : 0;
+                render();
+              }, 500);
+            });
+            function clearLp(){
+              if(lpTimer){ clearTimeout(lpTimer); lpTimer = null; }
+            }
+            btn.addEventListener('pointerup', clearLp);
+            btn.addEventListener('pointerleave', clearLp);
+            btn.addEventListener('pointercancel', clearLp);
+          }
+          bindCursorLongPress(leftBtn, false);
+          bindCursorLongPress(rightBtn, true);
+
           root.addEventListener('click', function(e){
             var btn = e.target.closest ? e.target.closest('button[data-key]') : null;
             if(!btn || !root.contains(btn)) return;
-            if(lpFired){
-              lpFired = false;
+            if(btn._lpFired){
+              btn._lpFired = false;
               if(btn.blur) btn.blur();
               return;
             }
