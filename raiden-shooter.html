@@ -613,7 +613,7 @@
 
     // Shooting
     if (player.fireCD > 0) player.fireCD--;
-    if (keys[' '] || keys['j'] || touchFiring) playerShoot();
+    if (player.alive && (keys[' '] || keys['j'] || touchFiring)) playerShoot();
 
     if ((keys['x'] || keys['k']) && !player._bombHeld) { useBomb(); player._bombHeld = true; }
     if (!keys['x'] && !keys['k']) player._bombHeld = false;
@@ -757,8 +757,7 @@
       // Collide with player
       if (player.alive && player.invuln <= 0 && circleHit(e, player)) {
         if (player.shield > 0) {
-          player.shield = 0;
-          addExplosion(player.x, player.y, 20, '#5cf', 5, 30);
+          shieldAbsorb(player.x, player.y);
         } else {
           playerHit();
         }
@@ -773,8 +772,8 @@
         if (circleHit(b, player)) {
           eBullets.splice(i, 1);
           if (player.shield > 0) {
-            player.shield = 0;
-            addExplosion(b.x, b.y, 8, '#5cf', 3, 20);
+            shieldAbsorb(b.x, b.y);
+            break;
           } else {
             playerHit();
             break;
@@ -799,8 +798,7 @@
         if (phase < 3 || phase > BOSS_LASER_LIFE - 6) continue;
         if (distToRay(player.x, player.y, L) < L.halfW + player.r * 0.75) {
           if (player.shield > 0) {
-            player.shield = 0;
-            addExplosion(player.x, player.y, 20, '#5cf', 5, 30);
+            shieldAbsorb(player.x, player.y);
           } else {
             playerHit();
           }
@@ -860,6 +858,14 @@
     if (bombFlash > 0) bombFlash--;
 
     updateHUD();
+  }
+
+  function shieldAbsorb(x, y) {
+    // 护盾抵挡本次伤害，并给予 3 秒无敌
+    player.shield = 0;
+    player.invuln = 180;
+    addExplosion(x, y, 20, '#5cf', 5, 30);
+    addFloat(player.x, player.y - 26, 'INVINCIBLE!', '#7cf');
   }
 
   function playerHit() {
