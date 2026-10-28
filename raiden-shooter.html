@@ -586,7 +586,7 @@
     lasers.length = 0;
     // damage all enemies
     for (const e of enemies) {
-      e.hp -= 20;
+      e.hp -= 16;
       addExplosion(e.x, e.y, 8, '#ff8', 4, 25);
     }
   }
@@ -861,9 +861,9 @@
   }
 
   function shieldAbsorb(x, y) {
-    // 护盾抵挡本次伤害，并给予 5 秒无敌
+    // 护盾抵挡本次伤害，并给予 4 秒无敌
     player.shield = 0;
-    player.invuln = 300;
+    player.invuln = 240;
     addExplosion(x, y, 20, '#5cf', 5, 30);
     addFloat(player.x, player.y - 26, 'INVINCIBLE!', '#7cf');
   }
