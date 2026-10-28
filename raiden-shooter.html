@@ -247,13 +247,15 @@
     e.preventDefault();
     if (touchId === null) return;
     const s = canvasScale();
+    const rect = canvas.getBoundingClientRect();
     for (const t of e.changedTouches) {
       if (t.identifier !== touchId) continue;
       const dx = t.clientX - touchStart.x;
       const dy = t.clientY - touchStart.y;
       if (Math.hypot(dx, dy) > TAP_MOVE_LIMIT) tapMoved = true;
-      player.x = clamp(touchStart.px + dx * s, player.r, W - player.r);
-      player.y = clamp(touchStart.py + dy * s, player.r, H - player.r);
+      // 灵敏度 ×1.6：让玩家跟随手指更跟手
+      player.x = clamp(touchStart.px + dx * s * 1.6, player.r, W - player.r);
+      player.y = clamp(touchStart.py + dy * s * 1.6, player.r, H - player.r);
     }
   }, { passive: false });
 
@@ -820,7 +822,7 @@
           player.bombs = Math.min(player.maxBombs || 5, player.bombs + 1);
           addFloat(p.x, p.y, '+1 BOMB', '#ffd24a');
         } else if (p.kind === 'S') {
-          player.shield = 600;   // 10 秒护盾
+          player.shield = 480;   // 8 秒护盾
           addFloat(p.x, p.y, 'SHIELD!', '#7cf');
         } else if (p.kind === 'L') {
           player.lives = Math.min(player.maxLives || 5, player.lives + 1);
