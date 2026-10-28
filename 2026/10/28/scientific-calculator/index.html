@@ -209,7 +209,7 @@
             <div class="casio-keys" id="casioKeys">
               <button type="button" class="ck ck-shift" data-key="shift">SHIFT</button>
               <button type="button" class="ck ck-mode" data-key="mode">MODE</button>
-              <button type="button" class="ck ck-fn ck-small" data-key="his">his</button>
+              <button type="button" class="ck ck-fn ck-small ck-blue" data-key="his">HIS</button>
               <button type="button" class="ck ck-arrow" data-key="cursorLeft" aria-label="光标左移">&#9664;</button>
               <button type="button" class="ck ck-arrow" data-key="cursorRight" aria-label="光标右移">&#9654;</button>
 
@@ -229,13 +229,13 @@
               <button type="button" class="ck ck-fn ck-small" data-key="frac">a/b</button>
               <button type="button" class="ck ck-fn has-sub" data-key="abs" data-shift="int"><span class="k-sub">Int</span><span class="k-lbl">Abs</span></button>
               <button type="button" class="ck ck-fn has-sub" data-key="pi" data-shift="euler"><span class="k-sub">e</span><span class="k-lbl">&pi;</span></button>
-              <button type="button" class="ck ck-fn ck-small" data-key="sci">SCI</button>
+              <button type="button" class="ck ck-fn ck-small ck-blue" data-key="sci">SCI</button>
 
               <button type="button" class="ck ck-num" data-key="7">7</button>
               <button type="button" class="ck ck-num" data-key="8">8</button>
               <button type="button" class="ck ck-num" data-key="9">9</button>
-              <button type="button" class="ck ck-fn ck-clear" data-key="del">DEL</button>
-              <button type="button" class="ck ck-fn ck-clear" data-key="ac">AC</button>
+              <button type="button" class="ck ck-fn ck-clear ck-blue" data-key="del">DEL</button>
+              <button type="button" class="ck ck-fn ck-clear ck-blue" data-key="ac">AC</button>
 
               <button type="button" class="ck ck-num" data-key="4">4</button>
               <button type="button" class="ck ck-num" data-key="5">5</button>
@@ -484,6 +484,7 @@
         .casio-calc .ck-mode{ color:#8ed4e5; font-weight:700; letter-spacing:0.04em; }
         .casio-calc .ck-arrow{ color:#cfd6dc; font-size:13px; font-weight:700; }
         .casio-calc .ck-clear{ color:#ffb454; font-weight:700; }
+        .casio-calc .ck-blue{ color:#8ed4e5; font-weight:700; letter-spacing:0.04em; }
         .casio-calc .ck-small{ font-size:10.5px; letter-spacing:0.02em; }
         .casio-calc .ck-eq{
           grid-column:span 2;
@@ -641,13 +642,11 @@
 
           function toRadians(v){
             if(angleMode === 'DEG') return v * Math.PI / 180;
-            if(angleMode === 'GRAD') return v * Math.PI / 200;
             return v;
           }
 
           function fromRadians(v){
             if(angleMode === 'DEG') return v * 180 / Math.PI;
-            if(angleMode === 'GRAD') return v * 200 / Math.PI;
             return v;
           }
 
@@ -994,7 +993,7 @@
           }
 
           function toggleMode(){
-            angleMode = angleMode === 'DEG' ? 'RAD' : (angleMode === 'RAD' ? 'GRA' : 'DEG');
+            angleMode = angleMode === 'DEG' ? 'RAD' : 'DEG';
             render();
           }
 
@@ -1154,28 +1153,29 @@
             }
           }
 
-          var eqBtn = document.querySelector('#casioKeys button[data-key="eq"]');
-          if(eqBtn){
-            eqBtn.addEventListener('pointerdown', function(){
-              lpFired = false;
-              lpTimer = setTimeout(function(){
-                lpFired = true;
-                shiftOn = !shiftOn;
-                render();
-              }, 500);
-            });
-            function clearLp(){
-              if(lpTimer){ clearTimeout(lpTimer); lpTimer = null; }
-            }
-            eqBtn.addEventListener('pointerup', clearLp);
-            eqBtn.addEventListener('pointerleave', clearLp);
-            eqBtn.addEventListener('pointercancel', clearLp);
+          var shiftBtns = document.querySelectorAll('#casioKeys button[data-shift]');
+          for(var si = 0; si < shiftBtns.length; si++){
+            (function(btn){
+              btn.addEventListener('pointerdown', function(){
+                lpFired = false;
+                lpTimer = setTimeout(function(){
+                  lpFired = true;
+                  press(btn.getAttribute('data-shift'));
+                }, 500);
+              });
+              function clearLp(){
+                if(lpTimer){ clearTimeout(lpTimer); lpTimer = null; }
+              }
+              btn.addEventListener('pointerup', clearLp);
+              btn.addEventListener('pointerleave', clearLp);
+              btn.addEventListener('pointercancel', clearLp);
+            })(shiftBtns[si]);
           }
 
           root.addEventListener('click', function(e){
             var btn = e.target.closest ? e.target.closest('button[data-key]') : null;
             if(!btn || !root.contains(btn)) return;
-            if(btn.getAttribute('data-key') === 'eq' && lpFired){
+            if(lpFired){
               lpFired = false;
               if(btn.blur) btn.blur();
               return;
