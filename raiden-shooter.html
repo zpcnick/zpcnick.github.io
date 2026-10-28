@@ -396,6 +396,14 @@
     // 从第二波起敌机血量逐步提升，每波 +20%，最高 3 倍
     return Math.min(3, 1 + Math.max(0, wave - 1) * 0.2);
   }
+  function bulletSpeedScale() {
+    // 后期敌弹更快，最高 1.5 倍
+    return Math.min(1.5, 1 + Math.max(0, wave - 1) * 0.04);
+  }
+  function fireRateScale() {
+    // 后期敌机射击冷却更短，最短压到 55%
+    return Math.max(0.55, 1 - Math.max(0, wave - 1) * 0.035);
+  }
 
   function spawnEnemy(type, x) {
     const base = { x, y: -30, fireCD: rand(40, 80), hit: 0 };
@@ -444,6 +452,7 @@
 
   // ---------- Enemy shooting ----------
   function enemyShoot(e) {
+    const startIdx = eBullets.length;
     if (e.type === 'zigzag') {
       eBullets.push({ x: e.x, y: e.y + e.r, vx: 0, vy: 4, r: 5, color: '#fa3' });
     } else if (e.type === 'bomber') {
@@ -479,6 +488,14 @@
           const a = gameTime * 0.06 + k * Math.PI * 2 / 3;
           eBullets.push({ x: e.x, y: e.y, vx: Math.cos(a)*3.2, vy: Math.sin(a)*3.2 + 1, r: 5, color: '#f6f' });
         }
+      }
+    }
+    // 后期敌弹整体加速
+    const bs = bulletSpeedScale();
+    if (bs !== 1) {
+      for (let i = startIdx; i < eBullets.length; i++) {
+        eBullets[i].vx *= bs;
+        eBullets[i].vy *= bs;
       }
     }
   }
@@ -631,7 +648,9 @@
         spawnBoss();
         spawnTimer = 300;
       } else {
-        const count = randi(3, 6 + Math.min(wave, 6));
+        // 后期每波最低数量提升，避免"刷得少好躲"
+        const minCount = 3 + Math.floor(Math.max(0, wave - 2) / 3);
+        const count = randi(minCount, 6 + Math.min(wave, 6));
         for (let i = 0; i < count; i++) {
           setTimeout(() => {
             if (state !== 'playing') return;
@@ -644,7 +663,7 @@
             spawnEnemy(type, rand(40, W - 40));
           }, i * 180);
         }
-        spawnTimer = 220 + randi(0, 120);
+        spawnTimer = Math.max(130, 220 - wave * 8) + randi(0, 120);
       }
     }
 
@@ -674,6 +693,8 @@
           }
         } else {
           e.x = W/2 + Math.sin((gameTime - e.phaseOffset) * 0.012) * (W/2 - 80);
+          // 上下浮动：从入场高度连续开始，110~190 之间缓慢起伏
+          e.y = e.targetY + 40 * (1 - Math.cos((gameTime - e.phaseOffset) * 0.008));
           // phase by hp
           const hpRatio = e.hp / e.maxHp;
           e.phase = hpRatio > 0.66 ? 0 : hpRatio > 0.33 ? 1 : 2;
@@ -691,7 +712,8 @@
         e.fireCD--;
         if (e.fireCD <= 0) {
           enemyShoot(e);
-          e.fireCD = e.type === 'boss' ? (e.phase === 2 ? 22 : e.phase === 1 ? 40 : 55) : (e.fireRate || 60);
+          const baseCD = e.type === 'boss' ? (e.phase === 2 ? 22 : e.phase === 1 ? 40 : 55) : (e.fireRate || 60);
+          e.fireCD = Math.max(14, Math.round(baseCD * fireRateScale()));
         }
       }
 
@@ -709,9 +731,9 @@
           lasers.length = 0;
           dropPowerup(e.x, e.y);
           addFloat(e.x, e.y - 30, 'BOSS DOWN!', '#ff5577');
-        } else if (e.type === 'gunship' && Math.random() < 0.7) {
+        } else if (e.type === 'gunship' && Math.random() < 0.55) {
           dropPowerup(e.x, e.y);
-        } else if (e.type === 'bomber' && Math.random() < 0.45) {
+        } else if (e.type === 'bomber' && Math.random() < 0.32) {
           dropPowerup(e.x, e.y);
         }
         enemies.splice(i, 1);
