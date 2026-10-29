@@ -627,14 +627,14 @@
 
           function formatNumber(x){
             if(!isFinite(x)) return 'Math ERROR';
-            if(Math.abs(x) < 1e-12) x = 0;
+            if(Math.abs(x) < 1e-15) x = 0;
             if(sciMode && x !== 0){
               var parts = x.toExponential(9).split('e');
               var exp = parseInt(parts[1], 10);
               return trimDecimal(parts[0]) + '×10^' + (exp < 0 ? '-' : '') + Math.abs(exp);
             }
             var abs = Math.abs(x);
-            if(abs !== 0 && (abs >= 1e10 || abs < 1e-9)){
+            if(abs !== 0 && (abs >= 1e10 || abs < 1e-6)){
               var parts = x.toExponential(9).split('e');
               var exp = parseInt(parts[1], 10);
               return trimDecimal(parts[0]) + '×10^' + (exp < 0 ? '-' : '') + Math.abs(exp);
@@ -1155,6 +1155,7 @@
             }
           }
 
+          // 长按触发 SHIFT 功能（单次触发）
           var shiftBtns = document.querySelectorAll('#casioKeys button[data-shift]');
           for(var si = 0; si < shiftBtns.length; si++){
             (function(btn){
@@ -1174,33 +1175,52 @@
             })(shiftBtns[si]);
           }
 
-          var leftBtn = document.querySelector('#casioKeys button[data-key="cursorLeft"]');
-          var rightBtn = document.querySelector('#casioKeys button[data-key="cursorRight"]');
-          function bindCursorLongPress(btn, toEnd){
-            if(!btn) return;
-            btn.addEventListener('pointerdown', function(){
-              btn._lpFired = false;
-              lpTimer = setTimeout(function(){
-                btn._lpFired = true;
-                cursor = toEnd ? expr.length : 0;
-                render();
-              }, 500);
-            });
-            function clearLp(){
-              if(lpTimer){ clearTimeout(lpTimer); lpTimer = null; }
-            }
-            btn.addEventListener('pointerup', clearLp);
-            btn.addEventListener('pointerleave', clearLp);
-            btn.addEventListener('pointercancel', clearLp);
+          // 长按连发（600ms 启动，之后每 150ms 重复）
+          var REPEAT_DELAY = 600;
+          var REPEAT_INTERVAL = 150;
+          var autorepeatKeys = ['cursorLeft','cursorRight','0','1','2','3','4','5','6','7','8','9','dot','add','sub','mul','div'];
+          for(var ri = 0; ri < autorepeatKeys.length; ri++){
+            var abtn = document.querySelector('#casioKeys button[data-key="'+autorepeatKeys[ri]+'"]');
+            if(!abtn) continue;
+            (function(btn){
+              var repeatTimer = null;
+              var repeatStart = null;
+              btn.addEventListener('pointerdown', function(){
+                btn._repeated = false;
+                btn._pressed = true;
+                repeatStart = setTimeout(function(){
+                  btn._repeated = true;
+                  var action = btn.getAttribute('data-key');
+                  if(shiftOn && btn.getAttribute('data-shift')) action = btn.getAttribute('data-shift');
+                  press(action);
+                  repeatTimer = setInterval(function(){
+                    action = btn.getAttribute('data-key');
+                    if(shiftOn && btn.getAttribute('data-shift')) action = btn.getAttribute('data-shift');
+                    press(action);
+                  }, REPEAT_INTERVAL);
+                }, REPEAT_DELAY);
+              });
+              function stopRepeat(){
+                btn._pressed = false;
+                if(repeatStart){ clearTimeout(repeatStart); repeatStart = null; }
+                if(repeatTimer){ clearInterval(repeatTimer); repeatTimer = null; }
+              }
+              btn.addEventListener('pointerup', stopRepeat);
+              btn.addEventListener('pointerleave', stopRepeat);
+              btn.addEventListener('pointercancel', stopRepeat);
+            })(abtn);
           }
-          bindCursorLongPress(leftBtn, false);
-          bindCursorLongPress(rightBtn, true);
 
           root.addEventListener('click', function(e){
             var btn = e.target.closest ? e.target.closest('button[data-key]') : null;
             if(!btn || !root.contains(btn)) return;
             if(btn._lpFired){
               btn._lpFired = false;
+              if(btn.blur) btn.blur();
+              return;
+            }
+            if(btn._repeated){
+              btn._repeated = false;
               if(btn.blur) btn.blur();
               return;
             }
