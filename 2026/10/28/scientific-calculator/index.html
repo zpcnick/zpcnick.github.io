@@ -627,14 +627,14 @@
 
           function formatNumber(x){
             if(!isFinite(x)) return 'Math ERROR';
-            if(Math.abs(x) < 1e-15) x = 0;
-            if(sciMode && x !== 0){
+            if(x === 0) return '0';
+            if(sciMode){
               var parts = x.toExponential(9).split('e');
               var exp = parseInt(parts[1], 10);
               return trimDecimal(parts[0]) + '×10^' + (exp < 0 ? '-' : '') + Math.abs(exp);
             }
             var abs = Math.abs(x);
-            if(abs !== 0 && (abs >= 1e10 || abs < 1e-6)){
+            if(abs >= 1e10 || abs < 1e-6){
               var parts = x.toExponential(9).split('e');
               var exp = parseInt(parts[1], 10);
               return trimDecimal(parts[0]) + '×10^' + (exp < 0 ? '-' : '') + Math.abs(exp);
