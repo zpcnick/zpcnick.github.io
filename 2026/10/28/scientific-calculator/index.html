@@ -572,7 +572,7 @@
             ['Int(', 'int'],
             ['Rnd(', 'rnd']
           ];
-          var FUNC_STRINGS = ['sin⁻¹(', 'cos⁻¹(', 'tan⁻¹(', 'sin(', 'cos(', 'tan(', 'log(', 'ln(', '√(', '∛(', '10^(', 'Abs(', 'Int(', 'Rnd(', 'e^('];
+          var FUNC_STRINGS = ['ˣ√', 'sin⁻¹(', 'cos⁻¹(', 'tan⁻¹(', 'sin(', 'cos(', 'tan(', 'log(', 'ln(', '√(', '∛(', '10^(', 'Abs(', 'Int(', 'Rnd(', 'e^('];
 
           var exprBefore = document.createTextNode('');
           var exprAfter = document.createTextNode('');
@@ -699,12 +699,33 @@
             return r;
           }
 
+          // n 次开方：n=次数（前），x=被开方数（后），即 n√x
+          function nthRoot(n, x){
+            if(n === 0) throw new Error('Math ERROR');
+            if(x < 0){
+              if(Math.floor(n) !== n || n % 2 === 0) throw new Error('Math ERROR');
+              return -Math.pow(-x, 1 / n);
+            }
+            return Math.pow(x, 1 / n);
+          }
+
+          // 负数底数的奇次根修正（Math.pow(-8, 1/3) 在 JS 中为 NaN）
+          function safePow(base, exp){
+            if(base < 0 && Math.floor(exp) !== exp){
+              var inv = 1 / exp;
+              var n = Math.round(inv);
+              if(Math.abs(inv - n) < 1e-9 && n % 2 !== 0) return -Math.pow(-base, exp);
+            }
+            return Math.pow(base, exp);
+          }
+
           function tokenize(src){
             var out = [];
             var i = 0;
             while(i < src.length){
               var ch = src.charAt(i);
               if(ch === ' '){ i++; continue; }
+              if(src.substr(i, 2) === 'ˣ√'){ out.push({ t:'op', v:'nroot' }); i += 2; continue; }
 
               var matched = false;
               for(var f = 0; f < FUNC_PREFIX.length; f++){
@@ -806,7 +827,11 @@
               var tk = peek();
               if(tk && tk.t === 'op' && tk.v === '^'){
                 take();
-                return Math.pow(base, parseUnary());
+                return safePow(base, parseUnary());
+              }
+              if(tk && tk.t === 'op' && tk.v === 'nroot'){
+                take();
+                return nthRoot(base, parseUnary());
               }
               return base;
             }
@@ -1057,7 +1082,9 @@
                 insert('^');
                 break;
               case 'root':
-                insert('^(1/');
+                var beforeR = expr.slice(0, cursor);
+                if(beforeR === '' || /[+\-×÷^(ˣ√]$/.test(beforeR)) break;
+                insert('ˣ√');
                 break;
               case 'sq':
                 insert('^2');
@@ -1161,9 +1188,8 @@
           for(var si = 0; si < shiftBtns.length; si++){
             (function(btn){
               btn.addEventListener('pointerdown', function(){
-                btn._lpFired = false;
                 lpTimer = setTimeout(function(){
-                  btn._lpFired = true;
+                  btn._lpUntil = Date.now() + 300;
                   press(btn.getAttribute('data-shift'));
                 }, 500);
               });
@@ -1187,10 +1213,9 @@
               var repeatTimer = null;
               var repeatStart = null;
               btn.addEventListener('pointerdown', function(){
-                btn._repeated = false;
                 btn._pressed = true;
                 repeatStart = setTimeout(function(){
-                  btn._repeated = true;
+                  btn._lpUntil = Date.now() + 300;
                   var action = btn.getAttribute('data-key');
                   if(shiftOn && btn.getAttribute('data-shift')) action = btn.getAttribute('data-shift');
                   press(action);
@@ -1204,7 +1229,7 @@
               function stopRepeat(){
                 btn._pressed = false;
                 if(repeatStart){ clearTimeout(repeatStart); repeatStart = null; }
-                if(repeatTimer){ clearInterval(repeatTimer); repeatTimer = null; }
+                if(repeatTimer){ clearInterval(repeatTimer); repeatTimer = null; btn._lpUntil = Date.now() + 300; }
               }
               btn.addEventListener('pointerup', stopRepeat);
               btn.addEventListener('pointerleave', stopRepeat);
@@ -1215,13 +1240,8 @@
           root.addEventListener('click', function(e){
             var btn = e.target.closest ? e.target.closest('button[data-key]') : null;
             if(!btn || !root.contains(btn)) return;
-            if(btn._lpFired){
-              btn._lpFired = false;
-              if(btn.blur) btn.blur();
-              return;
-            }
-            if(btn._repeated){
-              btn._repeated = false;
+            if(btn._lpUntil && Date.now() < btn._lpUntil){
+              btn._lpUntil = 0;
               if(btn.blur) btn.blur();
               return;
             }
