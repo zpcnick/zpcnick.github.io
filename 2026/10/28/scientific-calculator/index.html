@@ -959,11 +959,12 @@
           }
 
           function doBackspace(){
-            if(errorState || evaluated){
+            if(errorState){
               resetEntry();
               render();
               return;
             }
+            if(evaluated) evaluated = false;
             if(cursor === 0){ render(); return; }
             var before = expr.slice(0, cursor);
             var cut = 1;
