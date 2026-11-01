@@ -2491,17 +2491,24 @@ embed {
 
 /* ---------- 头部 ---------- */
 .header-inner {
-  padding-top: 26px;
-}
-@media (max-width: 767px) {
-  .header-inner {
-    padding-top: 14px;
-  }
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: 24px auto 0;
+  padding: 26px 24px 24px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #1f5f60 0%, #2c7a7b 45%, #45a89a 100%);
+  box-shadow: 0 16px 34px rgba(20, 60, 60, 0.22);
 }
 .content {
   padding-top: 44px;
 }
 @media (max-width: 767px) {
+  .header-inner {
+    margin-top: 14px;
+    padding: 20px 16px 18px;
+    border-radius: 18px;
+  }
   .content {
     padding-top: 28px;
   }
@@ -2512,35 +2519,38 @@ embed {
   height: 5px;
 }
 
-/* 品牌区整体做成渐变主视觉 */
-.site-brand-container {
-  position: relative;
-  overflow: hidden;
-  padding: 34px 24px 32px;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #1f5f60 0%, #2c7a7b 45%, #45a89a 100%);
-  box-shadow: 0 16px 34px rgba(20, 60, 60, 0.22);
-}
-.site-brand-container::before,
-.site-brand-container::after {
+/* 装饰圆点，让绿色背景更通透 */
+.header-inner::before,
+.header-inner::after {
   content: "";
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
 }
-.site-brand-container::before {
+.header-inner::before {
   width: 190px;
   height: 190px;
   right: -70px;
   top: -100px;
   background: rgba(255, 255, 255, 0.16);
 }
-.site-brand-container::after {
+.header-inner::after {
   width: 150px;
   height: 150px;
   left: -60px;
   bottom: -90px;
   background: rgba(107, 191, 156, 0.28);
+}
+
+/* 品牌区融进绿色背景 */
+.site-brand-container {
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 .site-meta {
   position: relative;
@@ -2557,7 +2567,7 @@ embed {
 }
 .site-title {
   color: #fff;
-  font-size: 2.15em;
+  font-size: 2.1em;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.22);
@@ -2566,35 +2576,26 @@ embed {
 .site-brand-container .brand:hover {
   color: #fff !important;
 }
-.brand::after {
-  content: "教研工具 · 小游戏 · 日记";
-  display: block;
-  margin-top: 12px;
-  color: rgba(255, 255, 255, 0.82);
-  font-size: 0.92rem;
-  font-weight: 400;
-  letter-spacing: 0.16em;
-}
 
-/* 导航：悬浮胶囊条，字体整体放大 */
+/* 导航条整体收进绿色背景框内 */
 .site-nav {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   width: -moz-fit-content;
   width: fit-content;
-  margin: -26px auto 0;
-  padding: 7px;
-  background: rgba(255, 255, 255, 0.97);
-  border: 1px solid rgba(44, 122, 123, 0.12);
-  border-radius: 999px;
-  box-shadow: 0 12px 26px rgba(20, 60, 60, 0.16);
+  margin: 20px auto 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 .menu {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  margin-top: 0;
+  gap: 10px;
+  margin: 0;
   padding-left: 0;
 }
 .menu-item {
@@ -2603,61 +2604,62 @@ embed {
 }
 .menu .menu-item a,
 .menu .menu-item span.exturl {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 11px 22px;
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 999px;
-  color: #24403f;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
   font-size: 1.0625rem;
   font-weight: 600;
-  line-height: 1.2;
-  transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+  line-height: 1;
+  text-shadow: none;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
 .menu .menu-item .fa,
 .menu .menu-item .fab,
 .menu .menu-item .far,
 .menu .menu-item .fas {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   width: auto;
-  margin-right: 7px;
-  color: #2c7a7b;
+  margin-right: 8px;
+  color: #eafaf5;
   font-size: 0.95em;
   line-height: 1;
-  vertical-align: baseline;
+  vertical-align: middle;
 }
 .menu .menu-item a:hover,
 .menu .menu-item span.exturl:hover {
-  background: rgba(44, 122, 123, 0.1);
-  color: #1a5959;
-  border-bottom-color: transparent !important;
+  background: rgba(255, 255, 255, 0.26);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
 }
 .menu-item-active a,
 .menu .menu-item a:hover {
-  border-bottom-color: transparent !important;
+  border-bottom-color: rgba(255, 255, 255, 0.4) !important;
 }
 .menu-item-active a {
-  background: linear-gradient(135deg, #2c7a7b, #38a89d) !important;
-  color: #fff !important;
-  box-shadow: 0 8px 16px rgba(44, 122, 123, 0.28);
+  background: #fff !important;
+  border-color: #fff !important;
+  color: #2c7a7b !important;
+  box-shadow: 0 8px 16px rgba(20, 60, 60, 0.2);
 }
 .menu-item-active a .fa,
 .menu-item-active a .fab,
 .menu-item-active a .far,
 .menu-item-active a .fas {
-  color: #fff;
+  color: #2c7a7b;
 }
 
 @media (max-width: 767px) {
   .site-brand-container {
-    padding: 26px 18px 40px;
-    border-radius: 16px;
+    border-radius: 0;
   }
   .site-title {
-    font-size: 1.6em;
-  }
-  .brand::after {
-    margin-top: 8px;
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
+    font-size: 1.55em;
   }
   .site-nav-toggle .toggle {
     color: #fff;
@@ -2668,10 +2670,10 @@ embed {
   }
   .site-nav {
     display: none;
-    width: auto;
-    margin: -26px 12px 0;
-    padding: 8px;
-    border-radius: 16px;
+    width: 100%;
+    margin: 14px auto 0;
+    padding: 0;
+    background: transparent;
   }
   .site-nav.site-nav-on {
     display: block;
@@ -2679,15 +2681,22 @@ embed {
   .menu {
     display: block;
   }
+  .menu .menu-item {
+    margin-bottom: 8px;
+  }
+  .menu .menu-item:last-child {
+    margin-bottom: 0;
+  }
   .menu .menu-item a,
   .menu .menu-item span.exturl {
-    display: block;
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
     padding: 12px 16px;
     font-size: 1rem;
-    text-align: left;
   }
   .menu .menu-item .fa {
-    display: inline-block;
+    display: inline-flex;
     width: 22px;
     margin-right: 6px;
   }
