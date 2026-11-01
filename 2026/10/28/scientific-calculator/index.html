@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+  <meta name="theme-color" content="#222">
+  <meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zpcnick.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="参考 fx-991CN X 布局的科学计算器，支持分数、三角函数与反三角、对数与指数、幂与根式、阶乘、取整、百分比、角度制切换与光标编辑。">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="科学计算器">
+  <meta property="og:url" content="https://zpcnick.github.io/2026/10/28/scientific-calculator/">
+  <meta property="og:site_name" content="ZPC&#39;s homepage">
+  <meta property="og:description" content="参考 fx-991CN X 布局的科学计算器，支持分数、三角函数与反三角、对数与指数、幂与根式、阶乘、取整、百分比、角度制切换与光标编辑。">
+  <meta property="og:locale">
+  <meta property="article:published_time" content="2026-10-27T16:00:00.000Z">
+  <meta property="article:modified_time" content="2026-10-28T00:00:00.000Z">
+  <meta property="article:author" content="zpc">
+  <meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zpcnick.github.io/2026/10/28/scientific-calculator/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'ch'
+  };
+</script>
+
+  <title>科学计算器 | ZPC's homepage</title>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">ZPC's homepage</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+        </ul>
+</nav>
+
+
+
+</div>
+    </header>
+
+
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+
+          <div class="content post posts-expand">
+
+
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="ch">
+    <link itemprop="mainEntityOfPage" href="https://zpcnick.github.io/2026/10/28/scientific-calculator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zpc">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/WPOrganization">
+      <meta itemprop="name" content="ZPC's homepage">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          科学计算器
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-10-28 00:00:00" itemprop="dateCreated datePublished" datetime="2026-10-28T00:00:00+08:00">2026-10-28</time>
+            </span>
+
+        </div>
+      </header>
+
+
+
+    <div class="post-body" itemprop="articleBody">
+
+        <div class="casio-wrap">
+          <div class="casio-calc" id="casioCalc" aria-label="科学计算器">
+            <div class="casio-head">
+              <div class="casio-solar" aria-hidden="true">
+                <i></i><i></i><i></i><i></i><i></i><i></i>
+              </div>
+            </div>
+
+            <div class="casio-screen">
+              <div class="casio-lcd">
+                <div class="lcd-status">
+                  <span id="lcdShift">SHIFT</span>
+                  <span id="lcdAngle" class="on">DEG</span>
+                  <span id="lcdSci">SCI</span>
+                </div>
+                <div class="lcd-expr"><span id="lcdExpr"></span></div>
+                <div class="lcd-result"><span id="lcdResult">0</span></div>
+              </div>
+            </div>
+
+            <div class="casio-keys" id="casioKeys">
+              <button type="button" class="ck ck-shift" data-key="shift">SHIFT</button>
+              <button type="button" class="ck ck-mode" data-key="mode">MODE</button>
+              <button type="button" class="ck ck-fn ck-small ck-blue" data-key="his">HIS</button>
+              <button type="button" class="ck ck-arrow" data-key="cursorLeft" aria-label="光标左移">&#9664;</button>
+              <button type="button" class="ck ck-arrow" data-key="cursorRight" aria-label="光标右移">&#9654;</button>
+
+              <button type="button" class="ck ck-fn has-sub" data-key="sin" data-shift="asin"><span class="k-sub">sin&#8315;&sup1;</span><span class="k-lbl">sin</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="cos" data-shift="acos"><span class="k-sub">cos&#8315;&sup1;</span><span class="k-lbl">cos</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="tan" data-shift="atan"><span class="k-sub">tan&#8315;&sup1;</span><span class="k-lbl">tan</span></button>
+              <button type="button" class="ck ck-fn" data-key="lparen">(</button>
+              <button type="button" class="ck ck-fn" data-key="rparen">)</button>
+
+              <button type="button" class="ck ck-fn has-sub" data-key="sq" data-shift="cube"><span class="k-sub">x&sup3;</span><span class="k-lbl">x&sup2;</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="pow" data-shift="root"><span class="k-sub">&#739;&radic;</span><span class="k-lbl">x&#696;</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="sqrt" data-shift="cbrt"><span class="k-sub">&sup3;&radic;</span><span class="k-lbl">&radic;</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="log" data-shift="exp10"><span class="k-sub">10&#739;</span><span class="k-lbl">log</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="ln" data-shift="expe"><span class="k-sub">e&#739;</span><span class="k-lbl">ln</span></button>
+
+              <button type="button" class="ck ck-fn" data-key="fact">x!</button>
+              <button type="button" class="ck ck-fn ck-small" data-key="frac">a/b</button>
+              <button type="button" class="ck ck-fn has-sub" data-key="abs" data-shift="int"><span class="k-sub">Int</span><span class="k-lbl">Abs</span></button>
+              <button type="button" class="ck ck-fn has-sub" data-key="pi" data-shift="euler"><span class="k-sub">e</span><span class="k-lbl">&pi;</span></button>
+              <button type="button" class="ck ck-fn ck-small ck-blue" data-key="sci">SCI</button>
+
+              <button type="button" class="ck ck-num" data-key="7">7</button>
+              <button type="button" class="ck ck-num" data-key="8">8</button>
+              <button type="button" class="ck ck-num" data-key="9">9</button>
+              <button type="button" class="ck ck-fn ck-clear ck-blue" data-key="del">DEL</button>
+              <button type="button" class="ck ck-fn ck-clear ck-blue" data-key="ac">AC</button>
+
+              <button type="button" class="ck ck-num" data-key="4">4</button>
+              <button type="button" class="ck ck-num" data-key="5">5</button>
+              <button type="button" class="ck ck-num" data-key="6">6</button>
+              <button type="button" class="ck ck-fn" data-key="mul">&times;</button>
+              <button type="button" class="ck ck-fn" data-key="div">&divide;</button>
+
+              <button type="button" class="ck ck-num" data-key="1">1</button>
+              <button type="button" class="ck ck-num" data-key="2">2</button>
+              <button type="button" class="ck ck-num" data-key="3">3</button>
+              <button type="button" class="ck ck-fn" data-key="add">+</button>
+              <button type="button" class="ck ck-fn" data-key="sub">&minus;</button>
+
+              <button type="button" class="ck ck-num" data-key="0">0</button>
+              <button type="button" class="ck ck-num" data-key="dot">.</button>
+              <button type="button" class="ck ck-fn ck-small has-sub" data-key="ans" data-shift="pct"><span class="k-sub">%</span><span class="k-lbl">Ans</span></button>
+              <button type="button" class="ck ck-eq" data-key="eq">=</button>
+            </div>
+          </div>
+        </div>
+
+        <style>
+        .casio-wrap{
+          margin:30px auto 34px;
+          display:flex;
+          justify-content:center;
+        }
+        .casio-calc{
+          width:min(92vw, 414px);
+          max-width:min(92vw, 414px);
+          flex:0 0 auto;
+          min-width:0;
+          padding:18px 18px 22px;
+          border-radius:28px;
+          background:
+            radial-gradient(120% 80% at 50% -12%, rgba(255,255,255,0.18), rgba(255,255,255,0) 58%),
+            linear-gradient(165deg, #3c4248 0%, #2a2f34 44%, #191c1f 100%);
+          border:1px solid #0b0d0f;
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.14),
+            inset 0 -10px 22px rgba(0,0,0,0.38),
+            0 24px 50px rgba(0,20,30,0.35),
+            0 6px 14px rgba(0,0,0,0.25);
+          font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+          user-select:none;
+          -webkit-user-select:none;
+          position:relative;
+        }
+        .casio-calc::after{
+          content:"";
+          position:absolute;
+          inset:6px;
+          border-radius:23px;
+          border:1px solid rgba(255,255,255,0.045);
+          pointer-events:none;
+        }
+        .casio-head{ position:relative; z-index:1; }
+        .casio-brand-row{
+          display:flex;
+          align-items:flex-end;
+          justify-content:space-between;
+          padding:0 5px 4px;
+        }
+        .casio-natural{
+          font-size:8px;
+          font-weight:600;
+          letter-spacing:0.16em;
+          color:#79848d;
+        }
+        .casio-brand{
+          font-family:Georgia,"Times New Roman",serif;
+          font-size:21px;
+          font-weight:700;
+          letter-spacing:0.13em;
+          color:#eef2f6;
+          text-shadow:0 1px 0 #000, 0 0 1px #fff;
+        }
+        .casio-model-row{
+          display:flex;
+          align-items:baseline;
+          gap:8px;
+          padding:0 5px;
+        }
+        .casio-fx{
+          font-size:13px;
+          font-weight:700;
+          letter-spacing:0.05em;
+          color:#dfe6ec;
+        }
+        .casio-classwiz{
+          font-size:8px;
+          font-weight:700;
+          letter-spacing:0.22em;
+          color:#66c4d6;
+        }
+        .casio-solar{
+          display:flex;
+          gap:2px;
+          height:15px;
+          margin:2px 5px 14px;
+          padding:2px;
+          border-radius:4px;
+          border:1px solid #090b0d;
+          background:#0b0e11;
+          box-shadow:inset 0 1px 4px rgba(0,0,0,0.9);
+        }
+        .casio-solar i{
+          flex:1;
+          border-radius:1px;
+          background:linear-gradient(180deg, #2a343d 0%, #141a1f 55%, #0c1115 100%);
+          box-shadow:inset 0 0 0 1px rgba(90,120,140,0.12);
+        }
+        .casio-screen{
+          padding:8px;
+          border-radius:14px;
+          background:linear-gradient(180deg, #0a0d0f, #171b1e);
+          box-shadow:
+            inset 0 2px 7px rgba(0,0,0,0.85),
+            0 1px 0 rgba(255,255,255,0.07);
+        }
+        .casio-lcd{
+          min-height:152px;
+          min-width:0;
+          padding:12px 15px 12px;
+          border-radius:8px;
+          color:#141414;
+          background:#ffffff;
+          box-shadow:inset 0 1px 4px rgba(0,0,0,0.16);
+          display:flex;
+          flex-direction:column;
+          justify-content:flex-start;
+        }
+        .lcd-status{
+          display:flex;
+          gap:10px;
+          font-size:9px;
+          font-weight:700;
+          letter-spacing:0.12em;
+          color:#24402c;
+          line-height:1;
+        }
+        .lcd-status span{ opacity:0.16; transition:opacity .12s; }
+        .lcd-status span.on{ opacity:1; }
+        .lcd-expr{
+          position:relative;
+          min-width:0;
+          margin-top:10px;
+          flex:0 0 auto;
+          height:40px;
+          font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+          font-size:15px;
+          line-height:1.3;
+          color:#5c5c5c;
+          letter-spacing:0.4px;
+          white-space:normal;
+          word-break:break-all;
+          overflow:hidden;
+          text-align:left;
+        }
+        .lcd-expr #lcdExpr{ display:block; }
+        .lcd-cursor{
+          display:inline-block;
+          width:2px;
+          height:1.05em;
+          margin:0 1px;
+          vertical-align:-0.16em;
+          background:#141414;
+          animation:lcdBlink 1s steps(1) infinite;
+        }
+        @keyframes lcdBlink{ 0%,49%{ opacity:1; } 50%,100%{ opacity:0; } }
+        .lcd-result{
+          display:flex;
+          justify-content:flex-end;
+          align-items:flex-end;
+          overflow:hidden;
+          min-width:0;
+          margin-top:auto;
+          font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+          font-size:42px;
+          font-weight:700;
+          line-height:1.15;
+          letter-spacing:0.4px;
+        }
+        .lcd-result span{ white-space:nowrap; flex:0 0 auto; }
+        .casio-keys{
+          display:grid;
+          grid-template-columns:repeat(5, 1fr);
+          gap:8px;
+          margin-top:16px;
+        }
+        .casio-calc .ck{
+          position:relative;
+          height:42px;
+          padding:0;
+          border-radius:11px;
+          border:1px solid #0d1013;
+          background:linear-gradient(180deg, #50565c 0%, #363b40 52%, #2c3136 100%);
+          color:#edf1f5;
+          font-family:inherit;
+          font-size:12.5px;
+          font-weight:600;
+          letter-spacing:0.01em;
+          cursor:pointer;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          box-shadow:
+            0 2px 0 #0e1114,
+            0 4px 7px rgba(0,0,0,0.32),
+            inset 0 1px 0 rgba(255,255,255,0.16);
+          transition:transform .055s ease, box-shadow .055s ease, filter .12s ease;
+          -webkit-tap-highlight-color:transparent;
+          touch-action:manipulation;
+        }
+        .casio-calc .ck:active,
+        .casio-calc .ck.is-pressed{
+          transform:translateY(2px);
+          box-shadow:
+            0 0 0 #0e1114,
+            0 1px 2px rgba(0,0,0,0.3),
+            inset 0 2px 5px rgba(0,0,0,0.42);
+          filter:brightness(1.12);
+        }
+        .casio-calc .ck:focus-visible{
+          outline:2px solid #7fd0e0;
+          outline-offset:2px;
+        }
+        .casio-calc .ck-num{
+          background:linear-gradient(180deg, #f6f7f8 0%, #e2e5e8 55%, #cfd3d7 100%);
+          border-color:#9ba1a7;
+          color:#1a1d21;
+          font-size:15px;
+          font-weight:700;
+          box-shadow:
+            0 2px 0 #90969c,
+            0 4px 7px rgba(0,0,0,0.28),
+            inset 0 1px 0 rgba(255,255,255,0.9);
+        }
+        .casio-calc .ck-num:active,
+        .casio-calc .ck-num.is-pressed{
+          box-shadow:
+            0 0 0 #90969c,
+            0 1px 2px rgba(0,0,0,0.25),
+            inset 0 2px 5px rgba(0,0,0,0.18);
+        }
+        .casio-calc .ck-shift{ color:#ffb454; font-weight:800; letter-spacing:0.04em; }
+        .casio-calc .ck-mode{ color:#8ed4e5; font-weight:700; letter-spacing:0.04em; }
+        .casio-calc .ck-arrow{ color:#cfd6dc; font-size:13px; font-weight:700; }
+        .casio-calc .ck-clear{ color:#ffb454; font-weight:700; }
+        .casio-calc .ck-blue{ color:#8ed4e5; font-weight:700; letter-spacing:0.04em; }
+        .casio-calc .ck-small{ font-size:10.5px; letter-spacing:0.02em; }
+        .casio-calc .ck-eq{
+          grid-column:span 2;
+          background:linear-gradient(180deg, #f4f6f8 0%, #dde1e5 55%, #c9ced3 100%);
+          border-color:#9ba1a7;
+          color:#14171a;
+          font-size:19px;
+          font-weight:800;
+          box-shadow:
+            0 2px 0 #90969c,
+            0 4px 8px rgba(0,0,0,0.3),
+            inset 0 1px 0 rgba(255,255,255,0.9);
+        }
+        .casio-calc .ck-eq:active,
+        .casio-calc .ck-eq.is-pressed{
+          box-shadow:
+            0 0 0 #90969c,
+            0 1px 2px rgba(0,0,0,0.25),
+            inset 0 2px 5px rgba(0,0,0,0.18);
+        }
+        .ck .k-lbl{ display:block; line-height:1; }
+        .ck.has-sub .k-lbl{ transform:translateY(4px); }
+        .ck .k-sub{
+          position:absolute;
+          top:4px;
+          left:6px;
+          font-size:7.5px;
+          font-weight:700;
+          line-height:1;
+          color:#ffb454;
+          letter-spacing:0.02em;
+          opacity:0.95;
+        }
+        @media (max-width: 430px){
+          .casio-calc{ width:100%; padding:16px 13px 18px; border-radius:24px; }
+          .casio-calc .ck{ height:39px; border-radius:10px; font-size:11.5px; }
+          .casio-calc .ck-num{ font-size:14px; }
+          .casio-calc .ck-eq{ font-size:17px; }
+          .casio-calc .ck .k-sub{ font-size:7px; left:5px; }
+          .lcd-result{ font-size:36px; }
+          .lcd-expr{ font-size:13px; height:35px; }
+          .casio-lcd{ min-height:132px; padding:10px 12px 10px; }
+        }
+        </style>
+
+        <script>
+        (function(){
+          var root = document.getElementById('casioCalc');
+          if(!root) return;
+
+          var exprEl = document.getElementById('lcdExpr');
+          var resultEl = document.getElementById('lcdResult');
+          var shiftEl = document.getElementById('lcdShift');
+          var angleEl = document.getElementById('lcdAngle');
+          var sciEl = document.getElementById('lcdSci');
+
+          var expr = '';
+          var cursor = 0;
+          var resultText = '0';
+          var lastAnswer = 0;
+          var shiftOn = false;
+          var angleMode = 'DEG';
+          var evaluated = false;
+          var errorState = false;
+          var sciMode = false;
+          var history = [];
+          var histIdx = -1;
+          var lpTimer = null;
+          var lpFired = false;
+
+          var FUNC_PREFIX = [
+            ['sin⁻¹(', 'asin'],
+            ['cos⁻¹(', 'acos'],
+            ['tan⁻¹(', 'atan'],
+            ['sin(', 'sin'],
+            ['cos(', 'cos'],
+            ['tan(', 'tan'],
+            ['log(', 'log'],
+            ['ln(', 'ln'],
+            ['√(', 'sqrt'],
+            ['∛(', 'cbrt'],
+            ['10^(', 'exp10'],
+            ['Abs(', 'abs'],
+            ['Int(', 'int'],
+            ['Rnd(', 'rnd']
+          ];
+          var FUNC_STRINGS = ['ˣ√', 'sin⁻¹(', 'cos⁻¹(', 'tan⁻¹(', 'sin(', 'cos(', 'tan(', 'log(', 'ln(', '√(', '∛(', '10^(', 'Abs(', 'Int(', 'Rnd(', 'e^('];
+
+          var exprBefore = document.createTextNode('');
+          var exprAfter = document.createTextNode('');
+          var caretEl = document.createElement('span');
+          caretEl.className = 'lcd-cursor';
+          exprEl.textContent = '';
+          exprEl.appendChild(exprBefore);
+          exprEl.appendChild(caretEl);
+          exprEl.appendChild(exprAfter);
+
+          function renderExpr(){
+            exprBefore.textContent = expr.slice(0, cursor);
+            exprAfter.textContent = expr.slice(cursor);
+            var lcdLine = exprEl.parentNode;
+            var cTop = caretEl.offsetTop;
+            var cBot = cTop + caretEl.offsetHeight;
+            if(cBot > lcdLine.scrollTop + lcdLine.clientHeight){
+              lcdLine.scrollTop = cBot - lcdLine.clientHeight;
+            } else if(cTop < lcdLine.scrollTop){
+              lcdLine.scrollTop = cTop;
+            }
+          }
+
+          function fitResult(){
+            var box = resultEl.parentNode;
+            var avail = ((box && box.clientWidth) || 320) - 4;
+            var base = window.innerWidth <= 430 ? 36 : 42;
+            resultEl.style.fontSize = base + 'px';
+            var w = resultEl.scrollWidth;
+            if(w > avail){
+              var size = Math.max(15, Math.floor(base * avail / w));
+              resultEl.style.fontSize = size + 'px';
+            }
+          }
+
+          function render(){
+            renderExpr();
+            resultEl.textContent = resultText;
+            fitResult();
+            shiftEl.className = shiftOn ? 'on' : '';
+            angleEl.textContent = angleMode;
+            angleEl.className = 'on';
+            sciEl.className = sciMode ? 'on' : '';
+          }
+
+          function trimDecimal(s){
+            if(s.indexOf('e') >= 0) return s;
+            if(s.indexOf('.') >= 0) s = s.replace(/0+$/, '').replace(/\.$/, '');
+            if(s === '-0') s = '0';
+            return s;
+          }
+
+          function formatNumber(x){
+            if(!isFinite(x)) return 'Math ERROR';
+            if(x === 0) return '0';
+            if(sciMode){
+              var parts = x.toExponential(9).split('e');
+              var exp = parseInt(parts[1], 10);
+              return trimDecimal(parts[0]) + '×10^' + (exp < 0 ? '-' : '') + Math.abs(exp);
+            }
+            var abs = Math.abs(x);
+            if(abs >= 1e10 || abs < 1e-6){
+              var parts = x.toExponential(9).split('e');
+              var exp = parseInt(parts[1], 10);
+              return trimDecimal(parts[0]) + '×10^' + (exp < 0 ? '-' : '') + Math.abs(exp);
+            }
+            return trimDecimal(x.toPrecision(10));
+          }
+
+          function toRadians(v){
+            if(angleMode === 'DEG') return v * Math.PI / 180;
+            return v;
+          }
+
+          function fromRadians(v){
+            if(angleMode === 'DEG') return v * 180 / Math.PI;
+            return v;
+          }
+
+          function applyFunc(name, value){
+            var out;
+            switch(name){
+              case 'sin': out = Math.sin(toRadians(value)); break;
+              case 'cos': out = Math.cos(toRadians(value)); break;
+              case 'tan': out = Math.tan(toRadians(value)); break;
+              case 'asin':
+                if(value < -1 || value > 1) throw new Error('Math ERROR');
+                out = fromRadians(Math.asin(value));
+                break;
+              case 'acos':
+                if(value < -1 || value > 1) throw new Error('Math ERROR');
+                out = fromRadians(Math.acos(value));
+                break;
+              case 'atan':
+                out = fromRadians(Math.atan(value));
+                break;
+              case 'log':
+                if(value <= 0) throw new Error('Math ERROR');
+                out = Math.log10(value);
+                break;
+              case 'ln':
+                if(value <= 0) throw new Error('Math ERROR');
+                out = Math.log(value);
+                break;
+              case 'sqrt':
+                if(value < 0) throw new Error('Math ERROR');
+                out = Math.sqrt(value);
+                break;
+              case 'cbrt': out = Math.cbrt(value); break;
+              case 'exp10': out = Math.pow(10, value); break;
+              case 'abs': out = Math.abs(value); break;
+              case 'int': out = Math.trunc(value); break;
+              case 'rnd': out = Math.round(value); break;
+              default: throw new Error('Math ERROR');
+            }
+            if(!isFinite(out)) throw new Error('Math ERROR');
+            return out;
+          }
+
+          function factorial(n){
+            if(n < 0 || Math.floor(n) !== n || n > 170) throw new Error('Math ERROR');
+            var r = 1;
+            for(var i = 2; i <= n; i++) r *= i;
+            return r;
+          }
+
+          // n 次开方：n=次数（前），x=被开方数（后），即 n√x
+          function nthRoot(n, x){
+            if(n === 0) throw new Error('Math ERROR');
+            if(x < 0){
+              if(Math.floor(n) !== n || n % 2 === 0) throw new Error('Math ERROR');
+              return -Math.pow(-x, 1 / n);
+            }
+            return Math.pow(x, 1 / n);
+          }
+
+          // 负数底数的奇次根修正（Math.pow(-8, 1/3) 在 JS 中为 NaN）
+          function safePow(base, exp){
+            if(base < 0 && Math.floor(exp) !== exp){
+              var inv = 1 / exp;
+              var n = Math.round(inv);
+              if(Math.abs(inv - n) < 1e-9 && n % 2 !== 0) return -Math.pow(-base, exp);
+            }
+            return Math.pow(base, exp);
+          }
+
+          function tokenize(src){
+            var out = [];
+            var i = 0;
+            while(i < src.length){
+              var ch = src.charAt(i);
+              if(ch === ' '){ i++; continue; }
+              if(src.substr(i, 2) === 'ˣ√'){ out.push({ t:'op', v:'nroot' }); i += 2; continue; }
+
+              var matched = false;
+              for(var f = 0; f < FUNC_PREFIX.length; f++){
+                var p = FUNC_PREFIX[f][0];
+                if(src.substr(i, p.length) === p){
+                  out.push({ t:'func', v:FUNC_PREFIX[f][1] });
+                  i += p.length;
+                  matched = true;
+                  break;
+                }
+              }
+              if(matched) continue;
+
+              if(/[0-9.]/.test(ch)){
+                var j = i;
+                while(j < src.length && /[0-9.]/.test(src.charAt(j))) j++;
+                var numStr = src.slice(i, j);
+                if(!/^\d*\.?\d+$/.test(numStr)) throw new Error('Math ERROR');
+                out.push({ t:'num', v:parseFloat(numStr) });
+                i = j;
+                continue;
+              }
+              if(ch === 'π'){ out.push({ t:'const', v:Math.PI }); i++; continue; }
+              if(ch === 'e'){ out.push({ t:'const', v:Math.E }); i++; continue; }
+              if(src.substr(i, 3) === 'Ans'){ out.push({ t:'var', v:'Ans' }); i += 3; continue; }
+
+              if(ch === '+' ){ out.push({ t:'op', v:'+' }); i++; continue; }
+              if(ch === '-' ){ out.push({ t:'op', v:'-' }); i++; continue; }
+              if(ch === '×' ){ out.push({ t:'op', v:'*' }); i++; continue; }
+              if(ch === '÷' ){ out.push({ t:'op', v:'/' }); i++; continue; }
+              if(ch === '/' ){ out.push({ t:'op', v:'/' }); i++; continue; }
+              if(ch === '^' ){ out.push({ t:'op', v:'^' }); i++; continue; }
+              if(ch === '!' ){ out.push({ t:'post', v:'!' }); i++; continue; }
+              if(ch === '%' ){ out.push({ t:'post', v:'%' }); i++; continue; }
+              if(ch === '(' ){ out.push({ t:'lp' }); i++; continue; }
+              if(ch === ')' ){ out.push({ t:'rp' }); i++; continue; }
+
+              throw new Error('Math ERROR');
+            }
+            return out;
+          }
+
+          function evaluate(src){
+            var toks = tokenize(src);
+            var pos = 0;
+
+            function peek(){ return toks[pos]; }
+            function take(){ return toks[pos++]; }
+
+            function expectRp(){
+              var tk = take();
+              if(!tk || tk.t !== 'rp') throw new Error('Math ERROR');
+            }
+
+            function startsPrimary(tk){
+              return !!tk && (tk.t === 'num' || tk.t === 'const' || tk.t === 'var' || tk.t === 'func' || tk.t === 'lp');
+            }
+
+            function parseExpr(){
+              var v = parseTerm();
+              while(peek() && peek().t === 'op' && (peek().v === '+' || peek().v === '-')){
+                var op = take().v;
+                var r = parseTerm();
+                v = op === '+' ? v + r : v - r;
+              }
+              return v;
+            }
+
+            function parseTerm(){
+              var v = parseUnary();
+              while(true){
+                var tk = peek();
+                if(tk && tk.t === 'op' && (tk.v === '*' || tk.v === '/')){
+                  var op = take().v;
+                  var r = parseUnary();
+                  if(op === '/' && r === 0) throw new Error('Math ERROR');
+                  v = op === '*' ? v * r : v / r;
+                } else if(startsPrimary(tk)){
+                  v = v * parseUnary();
+                } else {
+                  break;
+                }
+              }
+              return v;
+            }
+
+            function parseUnary(){
+              var tk = peek();
+              if(tk && tk.t === 'op' && (tk.v === '-' || tk.v === '+')){
+                take();
+                var v = parseUnary();
+                return tk.v === '-' ? -v : v;
+              }
+              return parsePower();
+            }
+
+            function parsePower(){
+              var base = parsePostfix();
+              var tk = peek();
+              if(tk && tk.t === 'op' && tk.v === '^'){
+                take();
+                return safePow(base, parseUnary());
+              }
+              if(tk && tk.t === 'op' && tk.v === 'nroot'){
+                take();
+                return nthRoot(base, parseUnary());
+              }
+              return base;
+            }
+
+            function parsePostfix(){
+              var v = parsePrimary();
+              while(peek() && peek().t === 'post'){
+                var p = take().v;
+                v = p === '!' ? factorial(v) : v / 100;
+              }
+              return v;
+            }
+
+            function parsePrimary(){
+              var tk = take();
+              if(!tk) throw new Error('Math ERROR');
+              if(tk.t === 'num' || tk.t === 'const') return tk.v;
+              if(tk.t === 'var') return lastAnswer;
+              if(tk.t === 'func'){
+                var arg = parseExpr();
+                expectRp();
+                return applyFunc(tk.v, arg);
+              }
+              if(tk.t === 'lp'){
+                var v = parseExpr();
+                expectRp();
+                return v;
+              }
+              throw new Error('Math ERROR');
+            }
+
+            var value = parseExpr();
+            if(pos !== toks.length) throw new Error('Math ERROR');
+            if(!isFinite(value)) throw new Error('Math ERROR');
+            return value;
+          }
+
+          function evaluateExpr(src){
+            if(!src) throw new Error('Math ERROR');
+            var s = src.replace(/[+\-×÷^]+$/, '');
+            var open = 0;
+            for(var i = 0; i < s.length; i++){
+              if(s.charAt(i) === '(') open++;
+              else if(s.charAt(i) === ')') open--;
+            }
+            while(open > 0){ s += ')'; open--; }
+            return evaluate(s);
+          }
+
+          function resetEntry(){
+            expr = '';
+            cursor = 0;
+            resultText = '0';
+            evaluated = false;
+            errorState = false;
+          }
+
+          function insertAt(text){
+            expr = expr.slice(0, cursor) + text + expr.slice(cursor);
+            cursor += text.length;
+          }
+
+          function insert(text){
+            if(errorState || evaluated) resetEntry();
+            insertAt(text);
+            render();
+          }
+
+          function inputDigit(d){
+            if(errorState || evaluated) resetEntry();
+            insertAt(d);
+            render();
+          }
+
+          function inputDot(){
+            if(errorState || evaluated) resetEntry();
+            var before = expr.slice(0, cursor);
+            var tail = before.match(/[0-9.]*$/)[0];
+            if(tail.indexOf('.') >= 0) return;
+            if(before === '' || /[+\-×÷^(]$/.test(before)) insertAt('0.');
+            else insertAt('.');
+            render();
+          }
+
+          function inputOp(op){
+            if(errorState) resetEntry();
+            if(evaluated){
+              expr = 'Ans';
+              cursor = 3;
+              resultText = '0';
+              evaluated = false;
+            }
+            if(cursor === 0){
+              if(op === '-'){ insertAt('-'); render(); }
+              return;
+            }
+            var last = expr.charAt(cursor - 1);
+            if(/[+\-×÷^]/.test(last)){
+              if(op === '-' && /[×÷^]/.test(last)) insertAt('-');
+              else expr = expr.slice(0, cursor - 1) + op + expr.slice(cursor);
+            } else if(last === '('){
+              if(op === '-') insertAt('-');
+            } else {
+              insertAt(op);
+            }
+            render();
+          }
+
+          function inputParen(open){
+            if(errorState || evaluated) resetEntry();
+            if(open){
+              insertAt('(');
+            } else {
+              var depth = 0;
+              for(var i = 0; i < expr.length; i++){
+                if(expr.charAt(i) === '(') depth++;
+                else if(expr.charAt(i) === ')') depth--;
+              }
+              if(depth > 0) insertAt(')');
+            }
+            render();
+          }
+
+          function inputPostfix(ch){
+            if(errorState || evaluated) resetEntry();
+            var before = expr.slice(0, cursor);
+            if(/[0-9)πe]$/.test(before) || before.slice(-3) === 'Ans') insertAt(ch);
+            render();
+          }
+
+          function doEquals(){
+            if(!expr) return;
+            try{
+              var value = evaluateExpr(expr);
+              lastAnswer = value;
+              resultText = formatNumber(value);
+              evaluated = true;
+              errorState = false;
+              if(history[0] !== expr){
+                history.unshift(expr);
+                if(history.length > 30) history.pop();
+              }
+              histIdx = -1;
+            } catch(err){
+              resultText = 'Math ERROR';
+              errorState = true;
+              evaluated = false;
+            }
+            render();
+          }
+
+          function doBackspace(){
+            if(errorState){
+              resetEntry();
+              render();
+              return;
+            }
+            if(evaluated) evaluated = false;
+            if(cursor === 0){ render(); return; }
+            var before = expr.slice(0, cursor);
+            var cut = 1;
+            for(var i = 0; i < FUNC_STRINGS.length; i++){
+              var p = FUNC_STRINGS[i];
+              if(before.length >= p.length && before.slice(-p.length) === p){
+                cut = p.length;
+                break;
+              }
+            }
+            if(cut === 1 && before.slice(-3) === 'Ans') cut = 3;
+            expr = expr.slice(0, cursor - cut) + expr.slice(cursor);
+            cursor -= cut;
+            if(!expr) resultText = '0';
+            render();
+          }
+
+          function moveCursor(delta){
+            if(errorState) return;
+            if(evaluated) evaluated = false;
+            cursor = Math.max(0, Math.min(expr.length, cursor + delta));
+            render();
+          }
+
+          function doClear(){
+            resetEntry();
+            shiftOn = false;
+            render();
+          }
+
+          function toggleMode(){
+            angleMode = angleMode === 'DEG' ? 'RAD' : 'DEG';
+            render();
+          }
+
+          function press(action){
+            switch(action){
+              case 'shift':
+                shiftOn = !shiftOn;
+                render();
+                return;
+              case 'mode':
+                toggleMode();
+                break;
+              case 'sci':
+                sciMode = !sciMode;
+                if(evaluated && !errorState && resultText !== 'Math ERROR'){
+                  resultText = formatNumber(lastAnswer);
+                }
+                break;
+              case 'his':
+                if(!history.length) break;
+                histIdx = (histIdx + 1) % history.length;
+                expr = history[histIdx];
+                cursor = expr.length;
+                evaluated = false;
+                errorState = false;
+                break;
+              case 'ac':
+                doClear();
+                return;
+              case 'del':
+                doBackspace();
+                break;
+              case 'eq':
+                doEquals();
+                break;
+              case 'dot':
+                inputDot();
+                break;
+              case 'lparen':
+                inputParen(true);
+                break;
+              case 'rparen':
+                inputParen(false);
+                break;
+              case 'add':
+                inputOp('+');
+                break;
+              case 'sub':
+                inputOp('-');
+                break;
+              case 'mul':
+                inputOp('×');
+                break;
+              case 'div':
+                inputOp('÷');
+                break;
+              case 'pow':
+                insert('^');
+                break;
+              case 'root':
+                var beforeR = expr.slice(0, cursor);
+                if(beforeR === '' || /[+\-×÷^(ˣ√]$/.test(beforeR)) break;
+                insert('ˣ√');
+                break;
+              case 'sq':
+                insert('^2');
+                break;
+              case 'cube':
+                insert('^3');
+                break;
+              case 'inv':
+                insert('^(-1)');
+                break;
+              case 'fact':
+                inputPostfix('!');
+                break;
+              case 'pct':
+                inputPostfix('%');
+                break;
+              case 'frac':
+                if(errorState || evaluated) resetEntry();
+                var beforeF = expr.slice(0, cursor);
+                if(beforeF === '' || /[+\-×÷^(]$/.test(beforeF)) insertAt('1/');
+                else insertAt('/');
+                render();
+                break;
+              case 'cursorLeft':
+                moveCursor(-1);
+                break;
+              case 'cursorRight':
+                moveCursor(1);
+                break;
+              case 'abs':
+                insert('Abs(');
+                break;
+              case 'int':
+                insert('Int(');
+                break;
+              case 'rnd':
+                insert('Rnd(');
+                break;
+              case 'expe':
+                insert('e^(');
+                break;
+              case 'euler':
+                insert('e');
+                break;
+              case 'sqrt':
+                insert('√(');
+                break;
+              case 'cbrt':
+                insert('∛(');
+                break;
+              case 'log':
+                insert('log(');
+                break;
+              case 'ln':
+                insert('ln(');
+                break;
+              case 'exp10':
+                insert('10^(');
+                break;
+              case 'sin':
+                insert('sin(');
+                break;
+              case 'cos':
+                insert('cos(');
+                break;
+              case 'tan':
+                insert('tan(');
+                break;
+              case 'asin':
+                insert('sin⁻¹(');
+                break;
+              case 'acos':
+                insert('cos⁻¹(');
+                break;
+              case 'atan':
+                insert('tan⁻¹(');
+                break;
+              case 'pi':
+                insert('π');
+                break;
+              case 'constE':
+                insert('e');
+                break;
+              case 'exp':
+                insert('×10^(');
+                break;
+              case 'ans':
+                insert('Ans');
+                break;
+              default:
+                if(/^[0-9]$/.test(action)) inputDigit(action);
+            }
+            if(action !== 'shift' && !/^cursor/.test(action)){
+              shiftOn = false;
+              render();
+            }
+          }
+
+          // 长按触发 SHIFT 功能（单次触发）
+          var shiftBtns = document.querySelectorAll('#casioKeys button[data-shift]');
+          for(var si = 0; si < shiftBtns.length; si++){
+            (function(btn){
+              btn.addEventListener('pointerdown', function(){
+                lpTimer = setTimeout(function(){
+                  btn._lpUntil = Date.now() + 300;
+                  press(btn.getAttribute('data-shift'));
+                }, 500);
+              });
+              function clearLp(){
+                if(lpTimer){ clearTimeout(lpTimer); lpTimer = null; }
+              }
+              btn.addEventListener('pointerup', clearLp);
+              btn.addEventListener('pointerleave', clearLp);
+              btn.addEventListener('pointercancel', clearLp);
+            })(shiftBtns[si]);
+          }
+
+          // 长按连发（600ms 启动，之后每 150ms 重复）
+          var REPEAT_DELAY = 600;
+          var REPEAT_INTERVAL = 150;
+          var autorepeatKeys = ['cursorLeft','cursorRight','0','1','2','3','4','5','6','7','8','9','dot','add','sub','mul','div'];
+          for(var ri = 0; ri < autorepeatKeys.length; ri++){
+            var abtn = document.querySelector('#casioKeys button[data-key="'+autorepeatKeys[ri]+'"]');
+            if(!abtn) continue;
+            (function(btn){
+              var repeatTimer = null;
+              var repeatStart = null;
+              btn.addEventListener('pointerdown', function(){
+                btn._pressed = true;
+                repeatStart = setTimeout(function(){
+                  btn._lpUntil = Date.now() + 300;
+                  var action = btn.getAttribute('data-key');
+                  if(shiftOn && btn.getAttribute('data-shift')) action = btn.getAttribute('data-shift');
+                  press(action);
+                  repeatTimer = setInterval(function(){
+                    action = btn.getAttribute('data-key');
+                    if(shiftOn && btn.getAttribute('data-shift')) action = btn.getAttribute('data-shift');
+                    press(action);
+                  }, REPEAT_INTERVAL);
+                }, REPEAT_DELAY);
+              });
+              function stopRepeat(){
+                btn._pressed = false;
+                if(repeatStart){ clearTimeout(repeatStart); repeatStart = null; }
+                if(repeatTimer){ clearInterval(repeatTimer); repeatTimer = null; btn._lpUntil = Date.now() + 300; }
+              }
+              btn.addEventListener('pointerup', stopRepeat);
+              btn.addEventListener('pointerleave', stopRepeat);
+              btn.addEventListener('pointercancel', stopRepeat);
+            })(abtn);
+          }
+
+          root.addEventListener('click', function(e){
+            var btn = e.target.closest ? e.target.closest('button[data-key]') : null;
+            if(!btn || !root.contains(btn)) return;
+            if(btn._lpUntil && Date.now() < btn._lpUntil){
+              btn._lpUntil = 0;
+              if(btn.blur) btn.blur();
+              return;
+            }
+            var action = btn.getAttribute('data-key');
+            if(shiftOn && btn.getAttribute('data-shift')){
+              action = btn.getAttribute('data-shift');
+            }
+            press(action);
+            if(btn.blur) btn.blur();
+          });
+
+          root.addEventListener('mousedown', function(e){
+            if(e.target.closest && e.target.closest('button')) e.preventDefault();
+          });
+
+          document.addEventListener('keydown', function(e){
+            if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+            var map = {
+              '0':'0','1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9',
+              '.':'dot','+':'add','-':'sub','*':'mul','×':'mul','/':'div','÷':'div','^':'pow',
+              '(':'lparen',')':'rparen','!':'fact','%':'pct',
+              'Enter':'eq','=':'eq','Backspace':'del','Escape':'ac',
+              'ArrowLeft':'cursorLeft','ArrowRight':'cursorRight'
+            };
+            var action = map[e.key];
+            if(!action) return;
+            e.preventDefault();
+            press(action);
+          });
+
+          render();
+        })();
+        </script>
+
+    </div>
+
+      <footer class="post-footer">
+
+
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/09/28/periodic-table/" rel="prev" title="化学元素周期表">
+      <i class="fa fa-chevron-left"></i> 化学元素周期表
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2026/10/17/molecular-viewer/" rel="next" title="在线分子查看器">
+      在线分子查看器 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+        
+      </footer>
+
+  </article>
+
+
+
+          </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+
+
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zpc</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+
+
+
+
+<div class="copyright">
+
+  &copy;
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zpc</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+</body>
+</html>
