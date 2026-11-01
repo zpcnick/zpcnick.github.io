@@ -2612,7 +2612,7 @@ embed {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.14);
   color: #fff;
-  font-size: 1.0625rem;
+  font-size: 1rem;
   font-weight: 600;
   line-height: 1;
   text-shadow: none;
@@ -2958,5 +2958,47 @@ embed {
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
+  }
+}
+
+/* 返回顶部：改为右下角清晰的圆形悬浮按钮 */
+.back-to-top {
+  right: 28px;
+  left: auto;
+  bottom: -100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2c7a7b, #38a89d);
+  color: #fff;
+  opacity: 1;
+  box-shadow: 0 8px 20px rgba(20, 60, 60, 0.28);
+  transition: bottom 0.3s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  z-index: 1300;
+}
+.back-to-top i {
+  color: #fff;
+  font-size: 16px;
+}
+.back-to-top.back-to-top-on {
+  bottom: 28px;
+}
+.back-to-top:hover {
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(20, 60, 60, 0.36);
+}
+@media (max-width: 767px) {
+  .back-to-top {
+    right: 16px;
+    width: 42px;
+    height: 42px;
+  }
+  .back-to-top.back-to-top-on {
+    bottom: 20px;
   }
 }
