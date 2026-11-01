@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zpcnick.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="用纯 Canvas 手写三维点云，直观展示 s、p、d 原子轨道的立体形状，并用三维网格积分比较不同形状轨道之间的重叠积分，看看形状不同的轨道究竟能不能有效重叠。">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="原子轨道三维形状与重叠">
+  <meta property="og:url" content="https://zpcnick.github.io/2026/11/01/atomic-orbitals/">
+  <meta property="og:site_name" content="ZPC&#39;s homepage">
+  <meta property="og:description" content="用纯 Canvas 手写三维点云，直观展示 s、p、d 原子轨道的立体形状，并用三维网格积分比较不同形状轨道之间的重叠积分，看看形状不同的轨道究竟能不能有效重叠。">
+  <meta property="og:locale">
+  <meta property="article:published_time" content="2026-11-01T02:00:00.000Z">
+  <meta property="article:modified_time" content="2026-11-01T02:00:00.000Z">
+  <meta property="article:author" content="zpc">
+  <meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zpcnick.github.io/2026/11/01/atomic-orbitals/">
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'ch'
+  };
+</script>
+
+  <title>原子轨道三维形状与重叠 | ZPC's homepage</title>
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">ZPC's homepage</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+        </ul>
+</nav>
+
+
+
+</div>
+    </header>
+
+
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+
+          <div class="content post posts-expand">
+
+
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="ch">
+    <link itemprop="mainEntityOfPage" href="https://zpcnick.github.io/2026/11/01/atomic-orbitals/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zpc">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/WPOrganization">
+      <meta itemprop="name" content="ZPC's homepage">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          原子轨道三维形状与重叠
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-11-01 10:00:00" itemprop="dateCreated datePublished" datetime="2026-11-01T10:00:00+08:00">2026-11-01</time>
+            </span>
+
+        </div>
+      </header>
+
+
+
+    <div class="post-body" itemprop="articleBody">
+
+        <p>原子轨道不是电子运动的“跑道”，而是电子出现概率的空间分布。课本上画的“哑铃形”“四瓣形”，其实是把波函数的<strong>角度部分</strong>按等半径画出来的轮廓；正负两种颜色代表波函数的<strong>相位符号</strong>，不是电荷。</p>
+        <p>这篇文章做了两件事：先用纯 <code>Canvas</code> 把 s、p、d 三类轨道的三维点云画出来，可以拖着旋转；再用三维网格数值积分算一算<strong>两个轨道之间的重叠积分</strong>，直观回答“形状不同的轨道到底能不能有效重叠”。</p>
+
+        <h2 id="shapes"><a href="#shapes" class="headerlink" title="三种轨道的立体形状"></a>一、三种轨道的立体形状</h2>
+
+        <div class="orb-app">
+          <div class="orb-toolbar">
+            <span class="orb-title">原子轨道 3D 查看器</span>
+            <div class="orb-tools">
+              <label class="orb-chk"><input type="checkbox" id="orb-auto" checked><span>自动旋转</span></label>
+              <button class="orb-btn" id="orb-reset" type="button">重置视角</button>
+            </div>
+          </div>
+
+          <div class="orb-tabs" id="orb-tabs" role="tablist" aria-label="选择轨道类型">
+            <button class="orb-tab" type="button" data-kind="s" title="s 轨道">s</button>
+            <button class="orb-tab" type="button" data-kind="px" title="p_x 轨道">p<sub>x</sub></button>
+            <button class="orb-tab" type="button" data-kind="py" title="p_y 轨道">p<sub>y</sub></button>
+            <button class="orb-tab is-active" type="button" data-kind="pz" title="p_z 轨道">p<sub>z</sub></button>
+            <button class="orb-tab" type="button" data-kind="dxy" title="d_xy 轨道">d<sub>xy</sub></button>
+            <button class="orb-tab" type="button" data-kind="dxz" title="d_xz 轨道">d<sub>xz</sub></button>
+            <button class="orb-tab" type="button" data-kind="dyz" title="d_yz 轨道">d<sub>yz</sub></button>
+            <button class="orb-tab" type="button" data-kind="dx2y2" title="d_x2-y2 轨道">d<sub>x²−y²</sub></button>
+            <button class="orb-tab" type="button" data-kind="dz2" title="d_z2 轨道">d<sub>z²</sub></button>
+          </div>
+
+          <div class="orb-stage">
+            <canvas id="orb-canvas" aria-label="原子轨道三维点云"></canvas>
+            <div class="orb-hint">拖拽旋转 · 滚轮缩放</div>
+            <div class="orb-legend">
+              <span><i class="orb-swatch pos"></i>正相位（+）</span>
+              <span><i class="orb-swatch neg"></i>负相位（−）</span>
+            </div>
+          </div>
+
+          <div class="orb-info" id="orb-info">
+            <div class="orb-info-head">
+              <span class="orb-info-name" id="orb-name">p<sub>z</sub> 轨道</span>
+              <span class="orb-info-tag" id="orb-tag">σ / π</span>
+            </div>
+            <dl class="orb-fields">
+              <div><dt>角量子数</dt><dd id="orb-l">l = 1</dd></div>
+              <div><dt>节面</dt><dd id="orb-nodes">1 个节面</dd></div>
+              <div><dt>可形成键型</dt><dd id="orb-bond">σ（轴向）/ π（侧向）</dd></div>
+            </dl>
+            <p class="orb-desc" id="orb-desc">两瓣沿 z 轴反向伸出，中间通过原子核的 xy 平面是节面；两瓣相位相反。</p>
+          </div>
+        </div>
+
+        <p class="orb-note">点云把角度部分按 <code>r ∝ |Y(θ, φ)|</code> 放大成轮廓，方便观察形状；它<strong>不等比</strong>表示真实的电子云密度。拖动旋转可以看到 p 轨道的两个瓣、d 轨道的四瓣或“两瓣 + 环”在空间中的真实取向。</p>
+
+        <ul class="orb-family">
+          <li><strong>s 轨道</strong>：球对称，没有角节面，从任何方向看都一样，只按距离衰减。正因为各向同性，它<strong>只能形成 σ 型重叠</strong>。</li>
+          <li><strong>p 轨道</strong>：三个相互垂直的哑铃形，各有 1 个通过原子核的节面，两瓣相位相反。沿轴头碰头是 σ，肩并肩是 π。</li>
+          <li><strong>d 轨道</strong>：共有 5 个取向。d<sub>xy</sub>、d<sub>xz</sub>、d<sub>yz</sub>、d<sub>x²−y²</sub> 是四瓣形，有 2 个节面；d<sub>z²</sub> 是“沿轴两瓣 + 腰部圆环”，节面是锥面。d 可以参与 σ、π，也可以面对面形成 δ。</li>
+        </ul>
+
+        <h2 id="rules"><a href="#rules" class="headerlink" title="形状不同，还能重叠吗？"></a>二、形状不同，还能重叠吗？</h2>
+
+        <p>先明确“重叠”是什么意思。两个原子轨道 ψ<sub>A</sub>、ψ<sub>B</sub> 的重叠程度用重叠积分衡量：</p>
+
+        <p class="orb-formula">S = ∭ ψ<sub>A</sub>(r) ψ<sub>B</sub>(r) dV</p>
+
+        <p>S 的绝对值越大，两个轨道在空间里的“有效交叠”越多，成键时能获得的能量降低也通常越明显。要让 S 不为零且足够大，需要同时满足四件事：</p>
+
+        <ol class="orb-rules">
+          <li><strong>能量相近</strong>：能量差太大，混合很弱。本文固定两个轨道，只讨论形状与几何。</li>
+          <li><strong>空间接近</strong>：距离越远，波函数乘积越小，S 迅速衰减。</li>
+          <li><strong>相位匹配</strong>：同号区域相对，叠加增强（成键）；异号相对，叠加抵消（反键）。把相位翻过来，S 只变号，大小不变。</li>
+          <li><strong>对称性匹配</strong>：以键轴为转轴，两个轨道必须具有<strong>相同的旋转对称性</strong>——σ 对 σ、π 对 π、δ 对 δ。σ 与 δ 之间是严格正交的，无论靠得多近，S 都恒等于 0。</li>
+        </ol>
+
+        <p>所以答案不是“形状一样才能重叠”。s 是球形、p 是哑铃、d 是四瓣，<strong>形状完全不同，照样可以形成有效的 σ 重叠</strong>，只要沿键轴方向的对称性一致、距离合适、相位对齐。真正“判死刑”的是<strong>对称性错配</strong>，例如把 p<sub>z</sub>（σ）和 p<sub>x</sub>（π）放在同一根键轴上，或让 s 去正对一个躺在垂直平面里的 d<sub>xy</sub>。</p>
+
+        <h2 id="lab"><a href="#lab" class="headerlink" title="重叠实验室：数值验证"></a>三、重叠实验室：数值验证</h2>
+
+        <p>下面选一对轨道、拖动键长，程序会实时把两个轨道画在同一个场景里，并用 56³ 的对称网格做三维数值积分，给出 |S|。为了让比较聚焦在<strong>角度形状</strong>上，三类轨道统一使用相同的径向衰减函数（因此数值是形状演示用的参考值，不是某个具体分子的精确量化结果）。</p>
+
+        <div class="orb-lab">
+          <div class="lab-presets" id="lab-presets" aria-label="选择轨道组合"></div>
+
+          <div class="lab-main">
+            <div class="lab-stage">
+              <canvas id="lab-canvas" aria-label="两个原子轨道的重叠演示"></canvas>
+              <div class="lab-hint">拖拽旋转 · 滚轮缩放</div>
+            </div>
+
+            <aside class="lab-result">
+              <div class="lab-value"><span id="lab-pct">—</span><small>%</small></div>
+              <div class="lab-bar"><i id="lab-bar"></i></div>
+              <div class="lab-verdict" id="lab-verdict">请选择一对轨道</div>
+              <div class="lab-meta">
+                <span>对称类型：<b id="lab-mode">—</b></span>
+                <span>键长 d：<b id="lab-dval">2.20 a₀</b></span>
+              </div>
+              <p class="lab-note" id="lab-note">重叠积分已归一化，S ≤ 1；图中两个轨道朝向对方的瓣取同号，因此有效组合的 S 为正，这里统一显示绝对值。</p>
+              <label class="lab-range">
+                <span>调节键长</span>
+                <input type="range" id="lab-dist" min="2" max="3.4" step="0.05" value="2.2">
+              </label>
+            </aside>
+          </div>
+
+          <p class="lab-tip">提示：观察两个点云接触面的<strong>颜色</strong>。同色相对（橙对橙、青对青）是相位匹配、可以成键；如果图形交错但颜色相反，说明是反键组合；如果某一对轨道无论怎么调距离都接近 0，那多半是对称性禁戒。</p>
+        </div>
+
+        <h3 class="orb-subtitle">同一键长（d = 2.2 a₀）下的参考结果</h3>
+        <div class="orb-table-wrap">
+          <table class="orb-table" id="orb-table">
+            <thead>
+              <tr><th>轨道组合</th><th>对称类型</th><th>|S|</th><th>判定</th></tr>
+            </thead>
+            <tbody id="orb-table-body">
+              <tr><td colspan="4" class="orb-loading">正在计算参考值…</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>从表里可以读出三条规律：</p>
+        <ul class="orb-findings">
+          <li><strong>σ 最大</strong>：s–s、s–p<sub>z</sub>、p<sub>z</sub>–p<sub>z</sub>、s–d<sub>z²</sub>、p<sub>z</sub>–d<sub>z²</sub> 都是头碰头，重叠积分明显更大。注意这里 s–p、s–d 的“形状”完全不同，却属于有效重叠。</li>
+          <li><strong>π 次之</strong>：p<sub>x</sub>–p<sub>x</sub>、p<sub>x</sub>–d<sub>xz</sub> 肩并肩，S 约为 σ 的一半上下。</li>
+          <li><strong>δ 最小</strong>：d<sub>xy</sub>–d<sub>xy</sub> 这类四瓣面对面，S 很小，但确实不为零。</li>
+          <li><strong>禁戒恒为 0</strong>：p<sub>z</sub>–p<sub>x</sub>、p<sub>x</sub>–p<sub>y</sub>、s–d<sub>xy</sub>、s–d<sub>x²−y²</sub>、p<sub>x</sub>–d<sub>yz</sub> 的数值是精确的 0，不是“很小”。这是对称性带来的严格结论，不是距离不够近。</li>
+        </ul>
+
+        <h2 id="summary"><a href="#summary" class="headerlink" title="结论与课堂提示"></a>四、结论与课堂提示</h2>
+
+        <p><strong>结论</strong>：不同形状的轨道完全可以有效重叠，s–p、s–d、p–d 都有对应的成键实例。决定重叠强弱的是四件事——能量相近、距离合适、相位匹配、以及<strong>沿键轴方向对称性一致</strong>。形状相同只是“同族之间”的常见情形，并不是必要条件；而对称性错配（σ↔π、σ↔δ、π↔δ）则会使 S 严格为零。</p>
+
+        <div class="orb-mnemonic">
+          <p>形状不同不要紧，轴相对称要相同；</p>
+          <p>头碰头 σ 最强，肩并肩 π 次之；</p>
+          <p>四瓣侧向 δ 最弱，σ–δ 正交必为零。</p>
+        </div>
+
+        <p><strong>课堂演示建议</strong>：先让学生猜“s 和 p 形状不同，能不能重叠？”，再用查看器转一圈，最后在实验室里选 s–p<sub>z</sub> 与 p<sub>z</sub>–p<sub>x</sub> 各看一次。前者 S 随距离变化、始终有效；后者无论把键长拉到多近都接近 0，<strong>“对称性禁戒”</strong>这一抽象概念会一下子变得可见。</p>
+
+        <style>
+        /* 原子轨道查看器（局部作用域） */
+        .orb-app,
+        .orb-lab{
+          max-width:780px;
+          margin:24px auto;
+          padding:18px;
+          background:#fff;
+          border:1px solid #d7e8e3;
+          border-radius:14px;
+          box-shadow:0 6px 24px rgba(44,122,123,0.12);
+          font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+          color:#1f3b3c;
+        }
+        .orb-app *,
+        .orb-lab *{ box-sizing:border-box; }
+        .orb-toolbar{
+          display:flex;
+          align-items:center;
+          flex-wrap:wrap;
+          gap:10px;
+          margin-bottom:12px;
+        }
+        .orb-title{ font-size:15px; font-weight:700; color:#2c7a7b; }
+        .orb-tools{ margin-left:auto; display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+        .orb-chk{
+          display:inline-flex; align-items:center; gap:4px;
+          font-size:12px; color:#4a6b6c; cursor:pointer; user-select:none;
+        }
+        .orb-chk input{ margin:0; accent-color:#2c7a7b; cursor:pointer; }
+        .orb-btn{
+          padding:5px 10px;
+          font-size:12px;
+          line-height:1.5;
+          color:#2c7a7b;
+          background:#f2f8f7;
+          border:1px solid #cfe5e1;
+          border-radius:7px;
+          cursor:pointer;
+          transition:background .15s ease, border-color .15s ease;
+        }
+        .orb-btn:hover{ background:#e6f2f0; border-color:#b9dbd6; }
+        .orb-tabs{
+          display:flex; flex-wrap:wrap; gap:6px;
+          margin-bottom:12px;
+        }
+        .orb-tab{
+          padding:5px 11px;
+          font-size:13px;
+          line-height:1.5;
+          font-family:inherit;
+          color:#3c5c5d;
+          background:#f6faf9;
+          border:1px solid #d9e9e6;
+          border-radius:7px;
+          cursor:pointer;
+          transition:all .15s ease;
+        }
+        .orb-tab:hover{ background:#eaf4f2; }
+        .orb-tab.is-active{
+          color:#fff;
+          background:#2c7a7b;
+          border-color:#2c7a7b;
+          box-shadow:0 2px 8px rgba(44,122,123,0.28);
+        }
+        .orb-stage{
+          position:relative;
+          height:360px;
+          border-radius:12px;
+          overflow:hidden;
+          background:#f7fbfa;
+          border:1px solid #e1eeeb;
+        }
+        .orb-stage canvas,
+        .lab-stage canvas{
+          display:block;
+          width:100%;
+          height:100%;
+          touch-action:none;
+          cursor:grab;
+        }
+        .orb-stage canvas:active,
+        .lab-stage canvas:active{ cursor:grabbing; }
+        .orb-hint,
+        .lab-hint{
+          position:absolute;
+          left:10px;
+          bottom:8px;
+          padding:2px 7px;
+          font-size:11px;
+          color:#6d8a8b;
+          background:rgba(255,255,255,0.72);
+          border-radius:5px;
+          pointer-events:none;
+        }
+        .orb-legend{
+          position:absolute;
+          right:10px;
+          top:8px;
+          display:flex;
+          gap:12px;
+          font-size:11px;
+          color:#4a6b6c;
+          background:rgba(255,255,255,0.72);
+          padding:3px 8px;
+          border-radius:5px;
+          pointer-events:none;
+        }
+        .orb-legend span{ display:inline-flex; align-items:center; gap:4px; }
+        .orb-swatch{
+          display:inline-block;
+          width:8px; height:8px;
+          border-radius:50%;
+        }
+        .orb-swatch.pos{ background:#ef9256; }
+        .orb-swatch.neg{ background:#2c7a7b; }
+        .orb-info{
+          margin-top:14px;
+          padding:12px 14px;
+          background:#f7fbfa;
+          border:1px solid #e1eeeb;
+          border-radius:10px;
+        }
+        .orb-info-head{
+          display:flex;
+          align-items:baseline;
+          gap:10px;
+          flex-wrap:wrap;
+        }
+        .orb-info-name{ font-size:14px; font-weight:700; color:#1f3b3c; }
+        .orb-info-tag{
+          padding:1px 7px;
+          font-size:11px;
+          color:#b7682b;
+          background:#fdf0e6;
+          border-radius:4px;
+        }
+        .orb-fields{
+          display:grid;
+          grid-template-columns:repeat(3, minmax(0,1fr));
+          gap:8px 14px;
+          margin:10px 0 0;
+          padding:0;
+        }
+        .orb-fields > div{ min-width:0; }
+        .orb-fields dt{ margin:0; font-size:11px; color:#7b9495; }
+        .orb-fields dd{ margin:2px 0 0; font-size:12.5px; color:#2f5051; }
+        .orb-desc{
+          margin:10px 0 0;
+          font-size:12.5px;
+          line-height:1.7;
+          color:#527273;
+        }
+        .orb-note,
+        .orb-formula,
+        .orb-mnemonic{
+          font-size:12.5px !important;
+          line-height:1.8 !important;
+          color:#5a7a7b;
+        }
+        .orb-formula{
+          text-align:center;
+          font-size:16px !important;
+          color:#2c7a7b !important;
+          margin:14px 0 !important;
+        }
+        .orb-family{
+          margin:6px 0 0;
+          padding-left:1.2em;
+        }
+        .orb-family li{ margin:8px 0; line-height:1.8; }
+        .orb-rules li{ margin:8px 0; line-height:1.8; }
+        .orb-findings li{ margin:7px 0; line-height:1.8; }
+        .orb-subtitle{
+          margin:22px 0 10px;
+          font-size:14px;
+          color:#2c7a7b;
+          font-weight:700;
+        }
+        .orb-table-wrap{ overflow-x:auto; }
+        .orb-table{
+          width:100%;
+          min-width:520px;
+          border-collapse:collapse;
+          font-size:12.5px;
+          background:#fff;
+          border:1px solid #dfedea;
+          border-radius:10px;
+        }
+        .orb-table th,
+        .orb-table td{
+          padding:7px 10px;
+          border-bottom:1px solid #edf4f2;
+          text-align:left;
+          white-space:nowrap;
+        }
+        .orb-table th{
+          background:#f2f8f7;
+          color:#48696a;
+          font-weight:600;
+        }
+        .orb-table tbody tr:last-child td{ border-bottom:none; }
+        .orb-badge{
+          display:inline-block;
+          padding:1px 7px;
+          border-radius:4px;
+          font-size:11px;
+        }
+        .orb-badge.strong{ color:#1d6b4b; background:#e4f5ec; }
+        .orb-badge.ok{ color:#2c7a7b; background:#e6f2f0; }
+        .orb-badge.weak{ color:#9a6a1f; background:#fbf2e0; }
+        .orb-badge.zero{ color:#a1453f; background:#faeae8; }
+        .orb-loading{ color:#8aa3a4; text-align:center !important; }
+
+        /* 重叠实验室 */
+        .lab-presets{
+          display:grid;
+          grid-template-columns:repeat(2, minmax(0,1fr));
+          gap:6px 10px;
+          margin-bottom:12px;
+        }
+        .lab-group-title{
+          grid-column:1 / -1;
+          margin:6px 0 0;
+          font-size:11.5px;
+          color:#7b9495;
+        }
+        .lab-chip{
+          display:block;
+          width:100%;
+          padding:6px 9px;
+          font-size:12.5px;
+          line-height:1.5;
+          font-family:inherit;
+          text-align:left;
+          color:#3c5c5d;
+          background:#f6faf9;
+          border:1px solid #d9e9e6;
+          border-radius:7px;
+          cursor:pointer;
+          transition:all .15s ease;
+        }
+        .lab-chip:hover{ background:#eaf4f2; }
+        .lab-chip.is-active{
+          color:#fff;
+          background:#2c7a7b;
+          border-color:#2c7a7b;
+          box-shadow:0 2px 8px rgba(44,122,123,0.26);
+        }
+        .lab-chip small{ display:block; font-size:10.5px; opacity:.72; }
+        .lab-main{
+          display:grid;
+          grid-template-columns:minmax(0,1.45fr) minmax(220px,.9fr);
+          gap:12px;
+          align-items:stretch;
+        }
+        .lab-stage{
+          position:relative;
+          min-height:300px;
+          height:100%;
+          border-radius:12px;
+          overflow:hidden;
+          background:#f7fbfa;
+          border:1px solid #e1eeeb;
+        }
+        .lab-result{
+          display:flex;
+          flex-direction:column;
+          padding:12px 14px;
+          background:#f7fbfa;
+          border:1px solid #e1eeeb;
+          border-radius:10px;
+        }
+        .lab-value{
+          font-size:30px;
+          font-weight:700;
+          line-height:1.1;
+          color:#2c7a7b;
+          font-variant-numeric:tabular-nums;
+        }
+        .lab-value small{ font-size:12px; font-weight:400; color:#7b9495; margin-left:1px; }
+        .lab-bar{
+          height:7px;
+          margin:9px 0 11px;
+          background:#e6f2f0;
+          border-radius:4px;
+          overflow:hidden;
+        }
+        .lab-bar i{
+          display:block;
+          height:100%;
+          width:0;
+          border-radius:4px;
+          background:linear-gradient(90deg,#7cc0b8,#2c7a7b);
+          transition:width .25s ease;
+        }
+        .lab-verdict{
+          font-size:13px;
+          font-weight:700;
+          color:#2c7a7b;
+        }
+        .lab-verdict.is-zero{ color:#a1453f; }
+        .lab-verdict.is-weak{ color:#9a6a1f; }
+        .lab-meta{
+          display:flex;
+          flex-direction:column;
+          gap:3px;
+          margin-top:8px;
+          font-size:11.5px;
+          color:#7b9495;
+        }
+        .lab-meta b{ color:#3c5c5d; font-weight:600; }
+        .lab-note{
+          margin:10px 0 0 !important;
+          font-size:11.5px !important;
+          line-height:1.7 !important;
+          color:#7b9495 !important;
+        }
+        .lab-range{
+          display:flex;
+          flex-direction:column;
+          gap:4px;
+          margin-top:auto;
+          padding-top:12px;
+          font-size:11.5px;
+          color:#7b9495;
+        }
+        .lab-range input{ width:100%; accent-color:#2c7a7b; }
+        .lab-tip{
+          margin:10px 0 0 !important;
+          font-size:12px !important;
+          line-height:1.75 !important;
+          color:#6d8a8b !important;
+        }
+        .orb-mnemonic{
+          margin:14px 0 !important;
+          padding:12px 16px;
+          border-left:3px solid #7cc0b8;
+          background:#f4faf8;
+          border-radius:0 8px 8px 0;
+        }
+        .orb-mnemonic p{ margin:0 !important; }
+        @media (max-width:720px){
+          .orb-app, .orb-lab{ padding:12px; margin:16px auto; }
+          .orb-stage{ height:300px; }
+          .orb-fields{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+          .lab-presets{ grid-template-columns:1fr; }
+          .lab-main{ grid-template-columns:1fr; }
+          .lab-stage{ min-height:260px; }
+          .orb-legend{ flex-direction:column; gap:2px; }
+        }
+        </style>
+
+        <script>
+        (function(){
+          'use strict';
+
+          /* ================= 轨道数学：角度部分 + 统一径向衰减 ================= */
+          var ALPHA = 0.6;                              // 径向高斯衰减系数
+          var PSI_N = 1 / Math.sqrt(Math.sqrt(Math.PI) / (4 * Math.pow(2 * ALPHA, 1.5)));
+
+          // 实球谐函数的角度最大值（用于把点云轮廓归一化到同一半径）
+          var YMAX = {
+            s: 0.28209479,
+            px: 0.48860251, py: 0.48860251, pz: 0.48860251,
+            dz2: 0.63078115,
+            dxz: 0.54554472, dyz: 0.54554472,
+            dx2y2: 0.54627421, dxy: 0.54627421
+          };
+
+          function ang(kind, x, y, z){
+            var r2 = x*x + y*y + z*z;
+            if (r2 < 1e-12) return 0;
+            var r = Math.sqrt(r2);
+            var ct = z / r;
+            var st = Math.sqrt(Math.max(0, 1 - ct * ct));
+            var cp = 1, sp = 0;
+            if (st > 1e-9){ cp = x / (r * st); sp = y / (r * st); }
+            var s2 = st * st;
+            switch (kind){
+              case 's':    return 0.28209479;
+              case 'pz':   return 0.48860251 * ct;
+              case 'px':   return 0.48860251 * st * cp;
+              case 'py':   return 0.48860251 * st * sp;
+              case 'dz2':  return 0.31539157 * (3 * ct * ct - 1);
+              case 'dxz':  return 1.09254843 * st * ct * cp;
+              case 'dyz':  return 1.09254843 * st * ct * sp;
+              case 'dx2y2':return 0.54627421 * s2 * (cp * cp - sp * sp);
+              case 'dxy':  return 0.54627421 * s2 * (2 * cp * sp);
+            }
+            return 0;
+          }
+
+          function psi(kind, cx, cy, cz, x, y, z, phase){
+            var dx = x - cx, dy = y - cy, dz = z - cz;
+            var r2 = dx*dx + dy*dy + dz*dz;
+            return PSI_N * Math.exp(-ALPHA * r2) * ang(kind, dx, dy, dz) * phase;
+          }
+
+          /* 三维数值积分：对称网格，使禁戒组合的积分严格抵消为 0 */
+          function overlapS(a, b, d, pa, pb, N){
+            N = N || 56;
+            var margin = 4.0;
+            var L = d / 2 + margin;
+            var h = 2 * L / N;
+            var half = (N - 1) / 2;
+            var sum = 0;
+            for (var i = 0; i < N; i++){
+              var x = (i - half) * h;
+              for (var j = 0; j < N; j++){
+                var y = (j - half) * h;
+                for (var k = 0; k < N; k++){
+                  var z = (k - half) * h;
+                  sum += psi(a, 0, 0, 0, x, y, z, pa) * psi(b, 0, 0, d, x, y, z, pb);
+                }
+              }
+            }
+            return sum * h * h * h;
+          }
+
+          /* ================= 三维点云采样 ================= */
+          var shapeCache = {};
+          function sampleOrbital(kind, nT, nP){
+            var key = kind + '|' + nT + '|' + nP;
+            if (shapeCache[key]) return shapeCache[key];
+            var pts = [];
+            var n = Math.round(nT * nP * 0.8);
+            var ym = YMAX[kind];
+
+            /* 确定性的伪随机球面采样：方向均匀打散，点云不会出现规则环纹 */
+            var seed = 2166136261;
+            for (var c = 0; c < kind.length; c++){
+              seed = ((seed ^ kind.charCodeAt(c)) * 16777619) >>> 0;
+            }
+            function rnd(){
+              seed = (1664525 * seed + 1013904223) >>> 0;
+              return seed / 4294967296;
+            }
+
+            for (var i = 0; i < n; i++){
+              var yy = 1 - 2 * rnd();
+              var rad = Math.sqrt(Math.max(0, 1 - yy * yy));
+              var ph = 2 * Math.PI * rnd();
+              var dx = rad * Math.cos(ph), dy = rad * Math.sin(ph), dz = yy;
+
+              if (kind === 's'){
+                pts.push([dx, dy, dz, 1]);
+                continue;
+              }
+              var v = ang(kind, dx, dy, dz);
+              var mag = Math.abs(v);
+              if (mag < ym * 0.08) continue;          // 跳过节面附近的极小半径
+              var r = mag / ym;
+              pts.push([r * dx, r * dy, r * dz, v >= 0 ? 1 : -1]);
+            }
+            shapeCache[key] = pts;
+            return pts;
+          }
+
+          /* ================= 通用三维点云场景 ================= */
+          function createScene(canvas, opts){
+            opts = opts || {};
+            var ctx = canvas.getContext('2d');
+            var W = 0, H = 0, DPR = 1;
+            var yaw = opts.yaw === undefined ? -0.55 : opts.yaw;
+            var pitch = opts.pitch === undefined ? 0.32 : opts.pitch;
+            var zoom = 1;
+            var auto = opts.auto !== false;
+            var dragging = false;
+            var raf = 0;
+            var lastT = 0;
+            var items = [];
+            var focus = [0, 0, 0];
+            var viewR = opts.viewR || 1.6;
+            var density = opts.density || 40;
+            var total = 0;
+
+            var dep = null, spx = null, spy = null, ssz = null, scol = null, sidx = null, cap = 0;
+
+            function ensureSize(n){
+              if (n <= cap) return;
+              cap = n;
+              dep = new Float32Array(n);
+              spx = new Float32Array(n);
+              spy = new Float32Array(n);
+              ssz = new Float32Array(n);
+              scol = new Uint8Array(n);
+              sidx = new Uint16Array(n);
+            }
+
+            function setItems(newItems, newFocus, newViewR){
+              items = newItems;
+              focus = newFocus || [0, 0, 0];
+              viewR = newViewR || viewR;
+              total = 0;
+              for (var i = 0; i < items.length; i++){
+                items[i].pts = sampleOrbital(items[i].kind, density, density * 2);
+                total += items[i].pts.length;
+              }
+              ensureSize(total);
+              draw();
+            }
+
+            function rotation(){
+              return {
+                cy: Math.cos(yaw), sy: Math.sin(yaw),
+                cp: Math.cos(pitch), sp: Math.sin(pitch)
+              };
+            }
+
+            function projectPoint(wx, wy, wz, R, cx, cy0, scale, cam){
+              var dx = wx - focus[0], dy = wy - focus[1], dz = wz - focus[2];
+              var x1 = dx * R.cy + dz * R.sy;
+              var z1 = -dx * R.sy + dz * R.cy;
+              var y2 = dy * R.cp - z1 * R.sp;
+              var z2 = dy * R.sp + z1 * R.cp;
+              var f = cam / (cam - z2);
+              return {
+                x: cx + x1 * scale * f,
+                y: cy0 - y2 * scale * f,
+                z: z2,
+                f: f
+              };
+            }
+
+            function draw(){
+              if (!W || !H) return;
+              ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+              var bg = ctx.createRadialGradient(W / 2, H * 0.42, 8, W / 2, H * 0.5, Math.max(W, H) * 0.78);
+              bg.addColorStop(0, '#ffffff');
+              bg.addColorStop(1, '#eef6f4');
+              ctx.fillStyle = bg;
+              ctx.fillRect(0, 0, W, H);
+
+              var R = rotation();
+              var cx = W / 2, cy0 = H * 0.52;
+              var scale = Math.min(W, H) * 0.42 / viewR * zoom;
+              var cam = 6 * viewR;
+
+              // 坐标轴 / 键轴
+              if (opts.showAxes){
+                drawAxes(R, cx, cy0, scale, cam);
+              }
+              var n = 0;
+              for (var i = 0; i < items.length; i++){
+                var orb = items[i];
+                var pts = orb.pts;
+                for (var p = 0; p < pts.length; p++){
+                  var q = pts[p];
+                  var pr = projectPoint(
+                    q[0] + orb.center[0], q[1] + orb.center[1], q[2] + orb.center[2],
+                    R, cx, cy0, scale, cam
+                  );
+                  dep[n] = pr.z;
+                  spx[n] = pr.x;
+                  spy[n] = pr.y;
+                  ssz[n] = 2.2 * pr.f;
+                  scol[n] = (q[3] * (orb.phase || 1)) > 0 ? 1 : 0;
+                  n++;
+                }
+              }
+
+              if (n > 0){
+                for (var ii = 0; ii < n; ii++) sidx[ii] = ii;
+                var view = sidx.subarray(0, n);
+                view.sort(function(a, b){ return dep[a] - dep[b]; });
+
+                var colPos = 'rgba(239,146,86,0.56)';
+                var colNeg = 'rgba(44,122,123,0.56)';
+                for (var k = 0; k < n; k++){
+                  var id = view[k];
+                  var s = ssz[id];
+                  if (s < 0.9) s = 0.9;
+                  ctx.fillStyle = scol[id] ? colPos : colNeg;
+                  ctx.fillRect(spx[id] - s / 2, spy[id] - s / 2, s, s);
+                }
+              }
+
+              // 键轴画在点云之上，避免被密集点云遮住
+              if (opts.bondAxis){
+                drawBondAxis(R, cx, cy0, scale, cam);
+              }
+
+              // 原子核与标签
+              for (var m = 0; m < items.length; m++){
+                var o = items[m];
+                var prc = projectPoint(o.center[0], o.center[1], o.center[2], R, cx, cy0, scale, cam);
+                ctx.beginPath();
+                ctx.arc(prc.x, prc.y, 3.2, 0, Math.PI * 2);
+                ctx.fillStyle = '#fff';
+                ctx.fill();
+                ctx.lineWidth = 1.2;
+                ctx.strokeStyle = 'rgba(31,59,60,0.55)';
+                ctx.stroke();
+                if (o.label){
+                  ctx.font = '600 12px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif';
+                  ctx.fillStyle = '#1f3b3c';
+                  ctx.textAlign = 'left';
+                  ctx.textBaseline = 'middle';
+                  ctx.fillText(o.label, prc.x + 6, prc.y - 7);
+                }
+              }
+            }
+
+            function drawAxes(R, cx, cy0, scale, cam){
+              var L = 1.55;
+              var axes = [
+                { v: [L, 0, 0], c: 'rgba(198,72,63,0.55)', t: 'x' },
+                { v: [0, L, 0], c: 'rgba(78,145,96,0.55)', t: 'y' },
+                { v: [0, 0, L], c: 'rgba(66,110,170,0.55)', t: 'z' }
+              ];
+              ctx.lineWidth = 1;
+              for (var i = 0; i < axes.length; i++){
+                var a = axes[i];
+                var p0 = projectPoint(0, 0, 0, R, cx, cy0, scale, cam);
+                var p1 = projectPoint(a.v[0], a.v[1], a.v[2], R, cx, cy0, scale, cam);
+                ctx.beginPath();
+                ctx.moveTo(p0.x, p0.y);
+                ctx.lineTo(p1.x, p1.y);
+                ctx.strokeStyle = a.c;
+                ctx.stroke();
+                ctx.font = '11px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif';
+                ctx.fillStyle = a.c;
+                ctx.fillText(a.t, p1.x + 3, p1.y - 3);
+              }
+            }
+
+            function drawBondAxis(R, cx, cy0, scale, cam){
+              var d = opts.getDistance ? opts.getDistance() : 0;
+              var p0 = projectPoint(0, 0, -0.55, R, cx, cy0, scale, cam);
+              var p1 = projectPoint(0, 0, d + 0.55, R, cx, cy0, scale, cam);
+              ctx.save();
+              ctx.setLineDash([5, 4]);
+              ctx.lineWidth = 1.2;
+              ctx.strokeStyle = 'rgba(31,59,60,0.46)';
+              ctx.beginPath();
+              ctx.moveTo(p0.x, p0.y);
+              ctx.lineTo(p1.x, p1.y);
+              ctx.stroke();
+              ctx.restore();
+
+              var mid = projectPoint(0, 0, d / 2, R, cx, cy0, scale, cam);
+              ctx.font = '11px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif';
+              ctx.fillStyle = 'rgba(31,59,60,0.62)';
+              ctx.textAlign = 'center';
+              ctx.fillText('d', mid.x + 14, mid.y - 6);
+              ctx.textAlign = 'left';
+            }
+
+            function resize(){
+              var cw = canvas.clientWidth || 320;
+              var ch = canvas.clientHeight || 300;
+              DPR = window.devicePixelRatio || 1;
+              W = Math.max(80, cw);
+              H = Math.max(80, ch);
+              canvas.width = Math.round(W * DPR);
+              canvas.height = Math.round(H * DPR);
+              draw();
+            }
+
+            var rafId = 0;
+            function scheduleResize(){
+              if (rafId) cancelAnimationFrame(rafId);
+              rafId = requestAnimationFrame(function(){ rafId = 0; resize(); });
+            }
+
+            var running = false;
+            function loop(t){
+              raf = requestAnimationFrame(loop);
+              if (!auto || dragging) return;
+              if (t - lastT < 33) return;
+              lastT = t;
+              yaw += 0.006;
+              draw();
+            }
+            function startLoop(){
+              if (running) return;
+              running = true;
+              raf = requestAnimationFrame(loop);
+            }
+            function stopLoop(){
+              running = false;
+              if (raf) cancelAnimationFrame(raf);
+              raf = 0;
+            }
+
+            var lastX = 0, lastY = 0;
+            canvas.addEventListener('pointerdown', function(e){
+              dragging = true;
+              lastX = e.clientX;
+              lastY = e.clientY;
+              if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+            });
+            canvas.addEventListener('pointermove', function(e){
+              if (!dragging) return;
+              yaw += (e.clientX - lastX) * 0.008;
+              pitch += (e.clientY - lastY) * 0.008;
+              pitch = Math.max(-1.45, Math.min(1.45, pitch));
+              lastX = e.clientX;
+              lastY = e.clientY;
+              draw();
+            });
+            function endDrag(e){
+              dragging = false;
+              if (canvas.releasePointerCapture && e.pointerId !== undefined){
+                try { canvas.releasePointerCapture(e.pointerId); } catch (err) {}
+              }
+            }
+            canvas.addEventListener('pointerup', endDrag);
+            canvas.addEventListener('pointercancel', endDrag);
+            canvas.addEventListener('wheel', function(e){
+              e.preventDefault();
+              zoom *= e.deltaY > 0 ? 0.9 : 1.1;
+              zoom = Math.max(0.6, Math.min(2.6, zoom));
+              draw();
+            }, { passive: false });
+
+            window.addEventListener('resize', scheduleResize);
+            if (window.ResizeObserver){
+              new ResizeObserver(scheduleResize).observe(canvas.parentNode);
+            }
+
+            resize();
+            startLoop();
+
+            return {
+              setItems: setItems,
+              setAuto: function(v){ auto = !!v; },
+              reset: function(){ yaw = opts.yaw === undefined ? -0.55 : opts.yaw; pitch = opts.pitch === undefined ? 0.32 : opts.pitch; zoom = 1; draw(); },
+              redraw: draw,
+              refresh: resize
+            };
+          }
+
+          /* ================= 查看器 ================= */
+          var ORB_INFO = {
+            s: {
+              name: 's 轨道', tag: 'σ 型', l: 'l = 0', nodes: '0 个角节面',
+              bond: '只能形成 σ',
+              desc: '球对称，各向同性，电子云密度只与离核距离有关。转一圈没有方向差异，因此只能沿键轴形成 σ 重叠。'
+            },
+            px: {
+              name: 'p<sub>x</sub> 轨道', tag: 'σ / π', l: 'l = 1', nodes: '1 个节面（yz 平面）',
+              bond: 'σ（沿 x 轴）/ π（侧向）',
+              desc: '两瓣沿 x 轴反向伸出，yz 平面是节面，两瓣相位相反。沿 x 轴头碰头为 σ，与另一 p_x 肩并肩为 π。'
+            },
+            py: {
+              name: 'p<sub>y</sub> 轨道', tag: 'σ / π', l: 'l = 1', nodes: '1 个节面（xz 平面）',
+              bond: 'σ（沿 y 轴）/ π（侧向）',
+              desc: '两瓣沿 y 轴反向伸出，xz 平面是节面。与 p_x、p_z 互相垂直，构成三个独立的 p 轨道。'
+            },
+            pz: {
+              name: 'p<sub>z</sub> 轨道', tag: 'σ / π', l: 'l = 1', nodes: '1 个节面（xy 平面）',
+              bond: 'σ（沿 z 轴）/ π（侧向）',
+              desc: '两瓣沿 z 轴反向伸出，中间通过原子核的 xy 平面是节面；两瓣相位相反。沿轴看是 σ，侧向看是 π。'
+            },
+            dxy: {
+              name: 'd<sub>xy</sub> 轨道', tag: 'δ / π', l: 'l = 2', nodes: '2 个节面（xz、yz 平面）',
+              bond: 'δ（面对面）/ π（侧向）',
+              desc: '四瓣位于 x、y 轴之间的对角区域，符号交替，形似四叶草。与另一个 d_xy 面对面可形成 δ 重叠。'
+            },
+            dxz: {
+              name: 'd<sub>xz</sub> 轨道', tag: 'π / δ', l: 'l = 2', nodes: '2 个节面（xy、yz 平面）',
+              bond: 'π（垂直于键轴）/ δ（面对面）',
+              desc: '四瓣位于 xz 平面内的四个象限，符号交替。与 p_x 肩并肩时形成 π 重叠。'
+            },
+            dyz: {
+              name: 'd<sub>yz</sub> 轨道', tag: 'π / δ', l: 'l = 2', nodes: '2 个节面（xy、xz 平面）',
+              bond: 'π（垂直于键轴）/ δ（面对面）',
+              desc: '四瓣位于 yz 平面内的四个象限，符号交替，与 d_xz 相差 90°。'
+            },
+            dx2y2: {
+              name: 'd<sub>x²−y²</sub> 轨道', tag: 'σ / δ', l: 'l = 2', nodes: '2 个对角节面（x = ±y）',
+              bond: 'σ（沿瓣轴）/ δ（侧向）',
+              desc: '四瓣沿 x、y 轴正向伸出，节面是两个 45° 对角平面。沿瓣轴接近时是 σ 对称，垂直于瓣轴时是 δ 对称。'
+            },
+            dz2: {
+              name: 'd<sub>z²</sub> 轨道', tag: 'σ', l: 'l = 2', nodes: '2 个锥形节面（θ ≈ 54.7°、125.3°）',
+              bond: 'σ（沿 z 轴）',
+              desc: '沿 z 轴有两个同号大瓣，腰部有一个反号圆环，节面是锥面而不是平面，是 5 个 d 轨道中最特殊的一个。'
+            }
+          };
+
+          var viewer = createScene(document.getElementById('orb-canvas'), {
+            viewR: 1.58,
+            density: 68,
+            auto: true,
+            showAxes: true,
+            yaw: -0.62,
+            pitch: 0.34
+          });
+
+          var currentKind = 'pz';
+          var infoEls = {
+            name: document.getElementById('orb-name'),
+            tag: document.getElementById('orb-tag'),
+            l: document.getElementById('orb-l'),
+            nodes: document.getElementById('orb-nodes'),
+            bond: document.getElementById('orb-bond'),
+            desc: document.getElementById('orb-desc')
+          };
+
+          function showKind(kind){
+            currentKind = kind;
+            var info = ORB_INFO[kind];
+            infoEls.name.innerHTML = info.name;
+            infoEls.tag.textContent = info.tag;
+            infoEls.l.textContent = info.l;
+            infoEls.nodes.textContent = info.nodes;
+            infoEls.bond.textContent = info.bond;
+            infoEls.desc.textContent = info.desc;
+            viewer.setItems(
+              [{ kind: kind, center: [0, 0, 0], phase: 1 }],
+              [0, 0, 0],
+              1.58
+            );
+          }
+
+          var tabs = document.getElementById('orb-tabs');
+          tabs.addEventListener('click', function(e){
+            var btn = e.target.closest ? e.target.closest('.orb-tab') : null;
+            if (!btn) return;
+            var kind = btn.getAttribute('data-kind');
+            if (!kind || kind === currentKind) return;
+            var old = tabs.querySelector('.orb-tab.is-active');
+            if (old) old.classList.remove('is-active');
+            btn.classList.add('is-active');
+            showKind(kind);
+          });
+
+          document.getElementById('orb-auto').addEventListener('change', function(e){
+            viewer.setAuto(e.target.checked);
+          });
+          document.getElementById('orb-reset').addEventListener('click', function(){
+            viewer.reset();
+          });
+
+          showKind('pz');
+
+          /* ================= 重叠实验室 ================= */
+          var PRESETS = [
+            { id:'ss',      a:'s',    b:'s',     pa:1,  pb:1,  label:'s — s',            mode:'σ',        group:'can',   note:'球形对球形，无方向性，只要距离合适就能有效重叠。' },
+            { id:'spz',     a:'s',    b:'pz',    pa:1,  pb:-1, label:'s — p<sub>z</sub>', mode:'σ',        group:'can',   note:'形状完全不同，但 p 的一瓣正对 s，沿键轴形成 σ 重叠。' },
+            { id:'pzpz',    a:'pz',   b:'pz',    pa:1,  pb:-1, label:'p<sub>z</sub> — p<sub>z</sub>', mode:'σ（头碰头）', group:'can', note:'两个 p 轨道沿键轴头碰头，是典型的 σ 重叠，通常最强。' },
+            { id:'sdz2',    a:'s',    b:'dz2',   pa:1,  pb:1,  label:'s — d<sub>z²</sub>', mode:'σ',        group:'can',   note:'d_z² 沿键轴的一端正对 s，球与四瓣/两瓣组合也能有效重叠。' },
+            { id:'pzdz2',   a:'pz',   b:'dz2',   pa:1,  pb:1,  label:'p<sub>z</sub> — d<sub>z²</sub>', mode:'σ', group:'can', note:'p 的瓣与 d_z² 的轴向瓣同号相对，可形成 σ。' },
+            { id:'pxpx',    a:'px',   b:'px',    pa:1,  pb:1,  label:'p<sub>x</sub> — p<sub>x</sub>', mode:'π（肩并肩）', group:'can', note:'两个 p 平行并列、相位相同，形成 π 重叠，强度小于 σ。' },
+            { id:'pxdxz',   a:'px',   b:'dxz',   pa:1,  pb:-1, label:'p<sub>x</sub> — d<sub>xz</sub>', mode:'π', group:'can', note:'两个垂直于键轴的瓣肩并肩，π 重叠，属于“不同形状也能成键”的例子。' },
+            { id:'dxyxy',   a:'dxy',  b:'dxy',   pa:1,  pb:1,  label:'d<sub>xy</sub> — d<sub>xy</sub>', mode:'δ（面对面）', group:'can', note:'四瓣面对面形成 δ 重叠，空间匹配要求高，数值通常很小，但确实不为零。' },
+            { id:'pzpx',    a:'pz',   b:'px',    pa:1,  pb:1,  label:'p<sub>z</sub> — p<sub>x</sub>', mode:'σ ⊥ π', group:'cannot', note:'一个 σ 型、一个 π 型，绕键轴旋转对称性不同，积分为严格 0。' },
+            { id:'pxpy',    a:'px',   b:'py',    pa:1,  pb:1,  label:'p<sub>x</sub> — p<sub>y</sub>', mode:'π ⊥ π', group:'cannot', note:'两个 π 轨道取向相差 90°，正负贡献成对抵消，积分为 0。' },
+            { id:'sdxy',    a:'s',    b:'dxy',   pa:1,  pb:1,  label:'s — d<sub>xy</sub>', mode:'σ ⊥ δ', group:'cannot', note:'s 是 σ 对称，d_xy 是 δ 对称，二者正交，无论多近都为 0。' },
+            { id:'sdx2y2',  a:'s',    b:'dx2y2', pa:1,  pb:1,  label:'s — d<sub>x²−y²</sub>', mode:'σ ⊥ δ', group:'cannot', note:'四瓣都躺在垂直于键轴的平面内，绕键轴 90° 旋转使 d 变号而 s 不变，积分抵消为 0。' },
+            { id:'pxdyz',   a:'px',   b:'dyz',   pa:1,  pb:1,  label:'p<sub>x</sub> — d<sub>yz</sub>', mode:'π ⊥ δ', group:'cannot', note:'对称性不匹配，重叠积分为 0。' }
+          ];
+
+          var labDistance = 2.2;
+          var currentPreset = PRESETS[0];
+          var resultCache = {};
+
+          var lab = createScene(document.getElementById('lab-canvas'), {
+            viewR: 2.7,
+            density: 52,
+            auto: false,
+            showAxes: false,
+            bondAxis: true,
+            getDistance: function(){ return labDistance; },
+            yaw: -0.6,
+            pitch: 0.30
+          });
+
+          var labDistance = 2.2;
+          var currentPreset = PRESETS[0];
+          var resultCache = {};
+
+          function verdictOf(pct){
+            if (pct < 2) return { key: 'zero', text: '基本不能重叠（对称性禁戒）' };
+            if (pct < 10) return { key: 'weak', text: '弱重叠（δ 或距离过远）' };
+            if (pct < 25) return { key: 'ok', text: '有效重叠' };
+            return { key: 'strong', text: '强重叠' };
+          }
+
+          function renderPresets(){
+            var box = document.getElementById('lab-presets');
+            var html = '';
+            ['can','cannot'].forEach(function(g){
+              html += '<div class="lab-group-title">' + (g === 'can' ? '可以重叠（同对称性）' : '对称性禁戒（S = 0）') + '</div>';
+              PRESETS.forEach(function(p){
+                if (p.group !== g) return;
+                html += '<button class="lab-chip" type="button" data-id="' + p.id + '">' +
+                          p.label + '<small>' + p.mode + '</small></button>';
+              });
+            });
+            box.innerHTML = html;
+            box.addEventListener('click', function(e){
+              var btn = e.target.closest ? e.target.closest('.lab-chip') : null;
+              if (!btn) return;
+              var id = btn.getAttribute('data-id');
+              var preset = PRESETS.filter(function(p){ return p.id === id; })[0];
+              if (!preset) return;
+              selectPreset(preset);
+            });
+          }
+
+          function selectPreset(preset){
+            currentPreset = preset;
+            var chips = document.querySelectorAll('.lab-chip');
+            for (var i = 0; i < chips.length; i++){
+              chips[i].classList.toggle('is-active', chips[i].getAttribute('data-id') === preset.id);
+            }
+            updateLabScene();
+            computeCurrent();
+          }
+
+          function updateLabScene(){
+            lab.setItems([
+              { kind: currentPreset.a, center: [0, 0, 0], phase: currentPreset.pa, label: 'A' },
+              { kind: currentPreset.b, center: [0, 0, labDistance], phase: currentPreset.pb, label: 'B' }
+            ], [0, 0, labDistance / 2], labDistance / 2 + 1.65);
+          }
+
+          function computeCurrent(){
+            var key = currentPreset.id + '|' + labDistance;
+            var S = resultCache[key];
+            if (S === undefined){
+              S = overlapS(currentPreset.a, currentPreset.b, labDistance, currentPreset.pa, currentPreset.pb, 56);
+              resultCache[key] = S;
+            }
+            showResult(Math.abs(S) * 100);
+          }
+
+          function showResult(pct){
+            var valEl = document.getElementById('lab-pct');
+            var barEl = document.getElementById('lab-bar');
+            var verdictEl = document.getElementById('lab-verdict');
+            var modeEl = document.getElementById('lab-mode');
+            var noteEl = document.getElementById('lab-note');
+
+            valEl.textContent = pct < 0.05 ? '0.0' : pct.toFixed(1);
+            var width = Math.min(100, pct / 40 * 100);
+            barEl.style.width = width + '%';
+            var v = verdictOf(pct);
+            verdictEl.textContent = v.text;
+            verdictEl.className = 'lab-verdict' + (v.key === 'zero' ? ' is-zero' : v.key === 'weak' ? ' is-weak' : '');
+            modeEl.innerHTML = currentPreset.mode;
+            noteEl.textContent = currentPreset.note +
+              (pct < 2 ? ' 数值来自对称网格积分，抵消后严格为 0（显示为 0.0%）。' : '');
+          }
+
+          var distEl = document.getElementById('lab-dist');
+          var dvalEl = document.getElementById('lab-dval');
+          var timer = 0;
+          distEl.addEventListener('input', function(){
+            labDistance = parseFloat(distEl.value);
+            dvalEl.textContent = labDistance.toFixed(2) + ' a₀';
+            updateLabScene();
+            clearTimeout(timer);
+            timer = setTimeout(computeCurrent, 120);
+          });
+
+          // 参考表：固定 d = 2.2 a₀ 一次算完
+          function buildTable(){
+            var body = document.getElementById('orb-table-body');
+            var rows = '';
+            PRESETS.forEach(function(p){
+              var S = overlapS(p.a, p.b, 2.2, p.pa, p.pb, 56);
+              var pct = Math.abs(S) * 100;
+              var v = verdictOf(pct);
+              var cls = v.key === 'zero' ? 'zero' : v.key === 'weak' ? 'weak' : v.key === 'strong' ? 'strong' : 'ok';
+              rows += '<tr><td>' + p.label + '</td><td>' + p.mode + '</td><td>' +
+                      (pct < 0.05 ? '0.0' : pct.toFixed(1)) + '%</td><td>' +
+                      '<span class="orb-badge ' + cls + '">' + v.text + '</span></td></tr>';
+            });
+            body.innerHTML = rows;
+          }
+
+          renderPresets();
+          selectPreset(PRESETS[0]);
+          setTimeout(buildTable, 60);
+        })();
+        </script>
+
+        <hr>
+        <p>从“轨道形状”到“能否重叠”，整条链路都在浏览器里完成，没有任何后端。你可以把查看器里的 p 轨道转一转，再回到实验室里换几组轨道，看看哪些组合的 S 随距离单调衰减，哪些无论怎么拉近都停在 0——后者就是对称性在“说不”。</p>
+
+    </div>
+
+
+
+
+
+  </article>
+
+
+
+          </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+
+
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#shapes"><span class="nav-number">1.</span> <span class="nav-text">三种轨道的立体形状</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rules"><span class="nav-number">2.</span> <span class="nav-text">形状不同，还能重叠吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lab"><span class="nav-number">3.</span> <span class="nav-text">重叠实验室：数值验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#summary"><span class="nav-number">4.</span> <span class="nav-text">结论与课堂提示</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zpc</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+
+
+
+
+<div class="copyright">
+
+  &copy;
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zpc</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+</body>
+</html>
