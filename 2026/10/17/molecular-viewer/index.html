@@ -1008,7 +1008,12 @@ H   0.629   0.629  -0.629
               if(Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
               if(drag.moved){
                 yaw += dx * 0.011;
-                pitch = clamp(pitch + dy * 0.011, -1.45, 1.45);
+                pitch += dy * 0.011;
+                // 归一化到 [-π, π]，允许完整翻转且避免长时间旋转后数值累积过大
+                if(pitch > Math.PI) pitch -= Math.PI * 2;
+                else if(pitch < -Math.PI) pitch += Math.PI * 2;
+                if(yaw > Math.PI) yaw -= Math.PI * 2;
+                else if(yaw < -Math.PI) yaw += Math.PI * 2;
                 drag.x = e.clientX;
                 drag.y = e.clientY;
                 render();
