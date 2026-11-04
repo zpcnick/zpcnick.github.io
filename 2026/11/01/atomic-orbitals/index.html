@@ -211,7 +211,7 @@
 
           <div class="orb-stage">
             <canvas id="orb-canvas" aria-label="原子轨道三维点云"></canvas>
-            <div class="orb-hint">拖拽旋转 · 滚轮缩放</div>
+            <div class="orb-hint">拖拽旋转（俯仰 ±88°）· 滚轮缩放</div>
             <div class="orb-legend">
               <span><i class="orb-swatch pos"></i>正相位（+）</span>
               <span><i class="orb-swatch neg"></i>负相位（−）</span>
@@ -271,10 +271,12 @@
             <label class="orb-chk lab-auto-chk"><input type="checkbox" id="lab-auto" checked><span>自动旋转</span></label>
           </div>
 
+          <p class="lab-mode-note" id="lab-mode-note">成键/反键只对绕键轴对称性相同、能量相近的组合有意义。</p>
+
           <div class="lab-main">
             <div class="lab-stage">
               <canvas id="lab-canvas" aria-label="两个原子轨道的重叠演示"></canvas>
-              <div class="lab-hint">拖拽旋转 · 滚轮缩放</div>
+              <div class="lab-hint">拖拽旋转（俯仰 ±88°）· 滚轮缩放</div>
               <div class="orb-legend">
                 <span><i class="orb-swatch pos"></i>正相位（+）</span>
                 <span><i class="orb-swatch neg"></i>负相位（−）</span>
@@ -288,6 +290,7 @@
               <div class="lab-meta">
                 <span>对称类型：<b id="lab-mode">—</b></span>
                 <span>键长 d：<b id="lab-dval">2.20 a₀</b></span>
+                <span>等值面阈值：<b title="演示用的统一径向衰减单位，不是具体分子的电子密度阈值">|ψ| = 0.05</b></span>
               </div>
               <p class="lab-note" id="lab-note">重叠积分已归一化，S ≤ 1；图中两个轨道朝向对方的瓣取同号，因此有效组合的 S 为正，这里统一显示绝对值。</p>
               <label class="lab-range">
@@ -297,7 +300,7 @@
             </aside>
           </div>
 
-          <p class="lab-tip">提示：等值面按相位着色（橙 = 正，青 = 负）。「成键轨道」下，能有效重叠的组合会融合成一整块——重叠区同号相加，电子云在两核之间鼓起；切成「反键轨道」则中间出现节面、两团被推开。禁戒组合的“成键”面不会搭桥，只会局部一瓣鼓、一瓣瘪，总量严格抵消——这正是 S = 0 的几何含义。</p>
+          <p class="lab-tip">提示：等值面按相位着色（橙 = 正，青 = 负）。「成键轨道」下，能有效重叠的组合会融合成一整块——重叠区同号相加，电子云在两核之间鼓起；切成「反键轨道」则中间出现节面、两团被推开。禁戒组合的“成键”面不会搭桥，只会局部一瓣鼓、一瓣瘪，总量严格抵消——这正是 S = 0 的几何含义。<strong>注意：成键/反键只对绕键轴对称性相同（σ↔σ、π↔π、δ↔δ）且能量相近的组合有意义；</strong>禁戒组合仍可切换 ψ<sub>A</sub>±ψ<sub>B</sub> 看相位叠加，但那只是示意图，不存在真正的成键或反键轨道。</p>
         </div>
 
         <h3 class="orb-subtitle">同一键长（d = 2.2 a₀）下的参考结果</h3>
@@ -609,6 +612,13 @@
           box-shadow:0 2px 8px rgba(44,122,123,0.28);
         }
         .lab-auto-chk{ margin-left:auto; }
+        .lab-mode-note{
+          margin:-6px 0 12px;
+          font-size:11.5px;
+          line-height:1.7;
+          color:#7b9495;
+        }
+        .lab-mode-note.is-warn{ color:#a1453f; }
         .lab-main{
           display:grid;
           grid-template-columns:minmax(0,1.45fr) minmax(220px,.9fr);
@@ -1223,7 +1233,7 @@
               if (!dragging) return;
               yaw += (e.clientX - lastX) * 0.008;
               pitch += (e.clientY - lastY) * 0.008;
-              pitch = Math.max(-1.45, Math.min(1.45, pitch));
+              pitch = Math.max(-1.55, Math.min(1.55, pitch));
               lastX = e.clientX;
               lastY = e.clientY;
               draw();
@@ -1260,7 +1270,7 @@
             };
           }
 
-          /* ================= 等值面三维场景（三角形网格 + 双面光照） ================= */
+          /* ================= 等值面三维场景（三角形网格 + z 缓冲逐像素光栅化） ================= */
           function createSurfaceScene(canvas, opts){
             opts = opts || {};
             var ctx = canvas.getContext('2d');
@@ -1278,24 +1288,25 @@
             var nuclei = [];
 
             var capV = 0, capT = 0;
-            var spx = null, spy = null;
+            var spx = null, spy = null, spd = null;
             var vnx = null, vny = null, vnz = null;
-            var tord = null, tcode = null, tcnt = null, tpos = null;
-            var bgGrad = null;
+            var vdiff = null;
+            var Wd = 0, Hd = 0;
+            var imgData = null, bgData = null, zbuf = null;
 
-            /* 64 级明暗调色板 × 2 相位，避免每帧拼接颜色字符串 */
-            var PAL = [[], []];
+            /* 64 级明暗调色板 × 2 相位，直接存 RGB 分量，供逐像素光栅化写入 */
+            var PALQ = new Uint8Array(2 * 64 * 3);
             (function buildPal(){
               var bases = [[44,122,123], [239,146,86]];   // [负相位, 正相位]
+              var k = 0;
               for (var s = 0; s < 2; s++){
                 for (var qq = 0; qq < 64; qq++){
                   var diff = qq / 63;
                   var sh = 0.36 + 0.62 * diff;
                   var hl = Math.pow(diff, 8) * 0.22;
-                  var rr = Math.min(255, bases[s][0] * sh + 255 * hl) | 0;
-                  var gg = Math.min(255, bases[s][1] * sh + 255 * hl) | 0;
-                  var bb = Math.min(255, bases[s][2] * sh + 255 * hl) | 0;
-                  PAL[s].push('rgb(' + rr + ',' + gg + ',' + bb + ')');
+                  PALQ[k++] = Math.min(255, bases[s][0] * sh + 255 * hl) | 0;
+                  PALQ[k++] = Math.min(255, bases[s][1] * sh + 255 * hl) | 0;
+                  PALQ[k++] = Math.min(255, bases[s][2] * sh + 255 * hl) | 0;
                 }
               }
             })();
@@ -1308,16 +1319,11 @@
             function ensureCap(nv, nt){
               if (nv > capV){
                 capV = nv;
-                spx = new Float32Array(nv); spy = new Float32Array(nv);
+                spx = new Float32Array(nv); spy = new Float32Array(nv); spd = new Float32Array(nv);
                 vnx = new Float32Array(nv); vny = new Float32Array(nv); vnz = new Float32Array(nv);
+                vdiff = new Float32Array(nv);
               }
-              if (nt > capT){
-                capT = nt;
-                tord = new Uint32Array(nt);
-                tcode = new Uint16Array(nt);
-                tcnt = new Int32Array(129);
-                tpos = new Int32Array(129);
-              }
+              capT = nt;
             }
 
             function setMesh(m, newFocus, newViewR, newNuclei){
@@ -1347,16 +1353,18 @@
             }
 
             function draw(){
-              if (!W || !H) return;
-              ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-
-              ctx.fillStyle = bgGrad;
-              ctx.fillRect(0, 0, W, H);
+              if (!W || !H || !imgData) return;
 
               var R = rotation();
               var cx = W / 2, cy0 = H * 0.52;
               var scale = Math.min(W, H) * 0.42 / viewR * zoom;
               var cam = 6 * viewR;
+
+              /* 背景铺底，随后等值面逐像素写入同一缓冲：
+                 用真正的 z 缓冲做遮挡，避免画家算法分面与接缝 */
+              var data = imgData.data;
+              data.set(bgData);
+              var dpr = DPR;
 
               if (mesh && mesh.tri > 0){
                 var pos = mesh.pos, nm = mesh.nrm, ph = mesh.ph;
@@ -1373,93 +1381,137 @@
                   var f = cam / (cam - z2);
                   spx[i] = cx + x1 * scale * f;
                   spy[i] = cy0 - y2 * scale * f;
+                  spd[i] = z2;
                   var nx0 = nm[i*3], ny0 = nm[i*3+1], nz0 = nm[i*3+2];
                   var nx1 = nx0 * cyw + nz0 * syw;
                   var nz1 = -nx0 * syw + nz0 * cyw;
                   vnx[i] = nx1;
                   vny[i] = ny0 * cp - nz1 * sp;
                   vnz[i] = ny0 * sp + nz1 * cp;
+                  /* 顶点亮度：只在顶点算一次，三角形内线性插值，得到平滑的漫反射渐变 */
+                  var vd = vnx[i] * LIGHT[0] + vny[i] * LIGHT[1] + vnz[i] * LIGHT[2];
+                  vdiff[i] = vd < 0 ? 0 : vd;
                 }
 
-                /* 每个三角形只算一次色号：高位是朝向（1=正面），低 7 位 = 相位*64+明暗 */
-                var LX = LIGHT[0], LY = LIGHT[1], LZ = LIGHT[2];
+                zbuf.fill(-9e9);
+                var pal = PALQ;
+
                 for (t = 0; t < nt; t++){
                   var a = t * 3, b = a + 1, c = a + 2;
-                  var nx2 = vnx[a] + vnx[b] + vnx[c];
-                  var ny2 = vny[a] + vny[b] + vny[c];
-                  var nz2 = vnz[a] + vnz[b] + vnz[c];
-                  var facing = nz2 >= 0;                 // 外法向朝向观察者 = 正面
-                  var nl = Math.sqrt(nx2*nx2 + ny2*ny2 + nz2*nz2);
-                  if (nl < 1e-9){ nx2 = 0; ny2 = 0; nz2 = 1; }
-                  else {
-                    nx2 /= nl; ny2 /= nl; nz2 /= nl;
-                    if (!facing){ nx2 = -nx2; ny2 = -ny2; nz2 = -nz2; }   // 双面光照
-                  }
-                  var diff = nx2 * LX + ny2 * LY + nz2 * LZ;
-                  if (diff < 0) diff = 0;
-                  tcode[t] = (facing ? 128 : 0) | (ph[t] << 6) | ((diff * 63) | 0);
-                }
+                  /* 背面剔除：闭合等值面只需画朝向观察者的那一面，像素量直接减半 */
+                  if (vnz[a] + vnz[b] + vnz[c] < 0) continue;
 
-                /* 背面层 → 正面层两遍：每层内按色号计数排序，同色三角形并成一条路径一次填完。
-                   相比逐三角形 fill，路径数从数千降到 128，帧耗时约降 3 倍；
-                   同色路径内相邻三角形共用边缘，抗锯齿接缝也一并消失。 */
-                for (var pass = 0; pass < 2; pass++){
-                  var wantFront = pass === 1;
-                  var count = 0;
-                  for (i = 0; i < 128; i++) tcnt[i] = 0;
-                  for (t = 0; t < nt; t++){
-                    var cd = tcode[t];
-                    if ((cd >= 128) !== wantFront) continue;
-                    tcnt[cd & 127]++;
-                    count++;
+                  var x0 = spx[a] * dpr, y0 = spy[a] * dpr, z0 = spd[a];
+                  var xb = spx[b] * dpr, yb = spy[b] * dpr, zb2 = spd[b];
+                  var xc = spx[c] * dpr, yc = spy[c] * dpr, zc = spd[c];
+                  var d0 = vdiff[a], d1 = vdiff[b], d2 = vdiff[c];
+                  var area = (xb - x0) * (yc - y0) - (xc - x0) * (yb - y0);
+                  if (area < 0){   // 统一成正面积，重心坐标才好判断
+                    var sw;
+                    sw = xb; xb = xc; xc = sw;
+                    sw = yb; yb = yc; yc = sw;
+                    sw = zb2; zb2 = zc; zc = sw;
+                    sw = d1; d1 = d2; d2 = sw;
+                    area = -area;
                   }
-                  if (!count) continue;
-                  var acc = 0;
-                  for (i = 0; i < 128; i++){ tpos[i] = acc; acc += tcnt[i]; tcnt[i] = acc; }
-                  tpos[128] = acc;
-                  for (t = 0; t < nt; t++){
-                    var cd2 = tcode[t];
-                    if ((cd2 >= 128) !== wantFront) continue;
-                    var ck = cd2 & 127;
-                    tord[--tcnt[ck]] = t;
-                  }
-                  for (var cc = 0; cc < 128; cc++){
-                    var s0 = tpos[cc], s1 = tpos[cc + 1];
-                    if (s1 <= s0) continue;
-                    /* 计数排序后 tord 是倒序存放的，这里按起点读回即可（同色内部顺序无关） */
-                    var col = PAL[cc >> 6][cc & 63];
-                    ctx.beginPath();
-                    for (var k = s0; k < s1; k++){
-                      var tti = tord[k], a3 = tti * 3;
-                      ctx.moveTo(spx[a3], spy[a3]);
-                      ctx.lineTo(spx[a3 + 1], spy[a3 + 1]);
-                      ctx.lineTo(spx[a3 + 2], spy[a3 + 2]);
+                  if (area < 0.02) continue;
+
+                  var minx = Math.floor(Math.min(x0, xb, xc));
+                  var maxx = Math.ceil(Math.max(x0, xb, xc));
+                  var miny = Math.floor(Math.min(y0, yb, yc));
+                  var maxy = Math.ceil(Math.max(y0, yb, yc));
+                  if (minx < 0) minx = 0;
+                  if (miny < 0) miny = 0;
+                  if (maxx >= Wd) maxx = Wd - 1;
+                  if (maxy >= Hd) maxy = Hd - 1;
+
+                  var phaseIdx = (ph[t] ? 64 : 0) * 3;
+                  var px, py, l0, l1, l2, dep, idx, diff, q, ci, di;
+                  for (py = miny; py <= maxy; py++){
+                    var fy2 = py + 0.5;
+                    for (px = minx; px <= maxx; px++){
+                      var fx2 = px + 0.5;
+                      l0 = ((xb - fx2) * (yc - fy2) - (xc - fx2) * (yb - fy2)) / area;
+                      if (l0 < 0 || l0 > 1) continue;
+                      l1 = ((xc - fx2) * (y0 - fy2) - (x0 - fx2) * (yc - fy2)) / area;
+                      if (l1 < 0 || l1 > 1) continue;
+                      l2 = 1 - l0 - l1;
+                      if (l2 < 0) continue;
+
+                      dep = l0 * z0 + l1 * zb2 + l2 * zc;
+                      idx = py * Wd + px;
+                      if (dep < zbuf[idx]) continue;   // 被更近的表面挡住
+                      zbuf[idx] = dep;
+
+                      diff = l0 * d0 + l1 * d1 + l2 * d2;
+                      q = (diff * 63) | 0;
+                      if (q < 0) q = 0; else if (q > 63) q = 63;
+                      ci = phaseIdx + q * 3;
+                      di = idx * 4;
+                      data[di] = pal[ci];
+                      data[di + 1] = pal[ci + 1];
+                      data[di + 2] = pal[ci + 2];
                     }
-                    ctx.fillStyle = col;
-                    ctx.fill();
-                    ctx.strokeStyle = col;      // 同色描边，消除相邻三角形抗锯齿接缝
-                    ctx.lineWidth = 0.6;
-                    ctx.stroke();
                   }
                 }
               }
 
-              // 键轴画在等值面之上
-              if (opts.bondAxis){
-                var d = opts.getDistance ? opts.getDistance() : 0;
-                var p0 = projectPoint(0, 0, -0.55, R, cx, cy0, scale, cam);
-                var p1 = projectPoint(0, 0, d + 0.55, R, cx, cy0, scale, cam);
-                ctx.save();
-                ctx.setLineDash([5, 4]);
-                ctx.lineWidth = 1.2;
-                ctx.strokeStyle = 'rgba(31,59,60,0.46)';
-                ctx.beginPath();
-                ctx.moveTo(p0.x, p0.y);
-                ctx.lineTo(p1.x, p1.y);
-                ctx.stroke();
-                ctx.restore();
+              /* 轮廓抗锯齿：轮廓外的背景像素与相邻表面颜色轻度混合，
+                 缓解低 DPR 屏幕上逐像素光栅化的阶梯边 */
+              if (mesh && mesh.tri > 0){
+                var pxx, pyy, iidx, nbi, cnt2, rr2, gg2, bb2, aa2;
+                for (pyy = 1; pyy < Hd - 1; pyy++){
+                  for (pxx = 1; pxx < Wd - 1; pxx++){
+                    iidx = pyy * Wd + pxx;
+                    if (zbuf[iidx] > -1e8) continue;   // 本身是表面像素
+                    cnt2 = 0; rr2 = 0; gg2 = 0; bb2 = 0;
+                    nbi = iidx - 1;      if (zbuf[nbi] > -1e8){ cnt2++; rr2 += data[nbi*4]; gg2 += data[nbi*4+1]; bb2 += data[nbi*4+2]; }
+                    nbi = iidx + 1;      if (zbuf[nbi] > -1e8){ cnt2++; rr2 += data[nbi*4]; gg2 += data[nbi*4+1]; bb2 += data[nbi*4+2]; }
+                    nbi = iidx - Wd;     if (zbuf[nbi] > -1e8){ cnt2++; rr2 += data[nbi*4]; gg2 += data[nbi*4+1]; bb2 += data[nbi*4+2]; }
+                    nbi = iidx + Wd;     if (zbuf[nbi] > -1e8){ cnt2++; rr2 += data[nbi*4]; gg2 += data[nbi*4+1]; bb2 += data[nbi*4+2]; }
+                    if (!cnt2) continue;
+                    aa2 = cnt2 * 0.22;
+                    var di3 = iidx * 4;
+                    data[di3]     = data[di3]     * (1 - aa2) + rr2 / cnt2 * aa2;
+                    data[di3 + 1] = data[di3 + 1] * (1 - aa2) + gg2 / cnt2 * aa2;
+                    data[di3 + 2] = data[di3 + 2] * (1 - aa2) + bb2 / cnt2 * aa2;
+                  }
+                }
+              }
 
-                var mid = projectPoint(0, 0, d / 2, R, cx, cy0, scale, cam);
+              /* 键轴虚线也写进像素缓冲，并逐点做深度测试：
+                 被等值面挡住的部分不会浮到表面前方 */
+              if (opts.bondAxis){
+                var dax = opts.getDistance ? opts.getDistance() : 0;
+                var p0 = projectPoint(0, 0, -0.55, R, cx, cy0, scale, cam);
+                var p1 = projectPoint(0, 0, dax + 0.55, R, cx, cy0, scale, cam);
+                var ax0 = p0.x * dpr, ay0 = p0.y * dpr;
+                var ax1 = p1.x * dpr, ay1 = p1.y * dpr;
+                var segLen = Math.sqrt((ax1-ax0)*(ax1-ax0) + (ay1-ay0)*(ay1-ay0));
+                var steps = Math.ceil(segLen);
+                if (steps < 1) steps = 1;
+                for (var si = 0; si <= steps; si++){
+                  var tt = si / steps;
+                  if (((tt * segLen / dpr) % 9) >= 5) continue;   // 5px 实线 + 4px 空隙
+                  var sx = ax0 + (ax1 - ax0) * tt, sy = ay0 + (ay1 - ay0) * tt;
+                  var ix = sx | 0, iy = sy | 0;
+                  if (ix < 0 || iy < 0 || ix >= Wd || iy >= Hd) continue;
+                  var ii = iy * Wd + ix;
+                  if (p0.z + (p1.z - p0.z) * tt < zbuf[ii]) continue;
+                  var di2 = ii * 4;
+                  data[di2]     = 31 * 0.46 + data[di2] * 0.54;
+                  data[di2 + 1] = 59 * 0.46 + data[di2 + 1] * 0.54;
+                  data[di2 + 2] = 60 * 0.46 + data[di2 + 2] * 0.54;
+                }
+              }
+
+              ctx.putImageData(imgData, 0, 0);
+
+              /* 以下为注释层（键长文字、原子核标签），浮在表面之上 */
+              ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+              if (opts.bondAxis){
+                var dm = opts.getDistance ? opts.getDistance() : 0;
+                var mid = projectPoint(0, 0, dm / 2, R, cx, cy0, scale, cam);
                 ctx.font = '11px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif';
                 ctx.fillStyle = 'rgba(31,59,60,0.62)';
                 ctx.textAlign = 'center';
@@ -1467,10 +1519,17 @@
                 ctx.textAlign = 'left';
               }
 
-              // 原子核与标签
+              // 原子核与标签：被等值面挡住时降低不透明度，避免“浮在球前面”的错觉
               for (var m = 0; m < nuclei.length; m++){
                 var o = nuclei[m];
                 var prc = projectPoint(o.c[0], o.c[1], o.c[2], R, cx, cy0, scale, cam);
+                var npx = prc.x * DPR | 0, npy = prc.y * DPR | 0;
+                var behind = false;
+                if (npx >= 0 && npx < Wd && npy >= 0 && npy < Hd){
+                  behind = zbuf[npy * Wd + npx] > prc.z + 0.05;
+                }
+                ctx.save();
+                if (behind) ctx.globalAlpha = 0.38;   // 核点被表面挡住时变淡；标签本身保持可读
                 ctx.beginPath();
                 ctx.arc(prc.x, prc.y, 3.2, 0, Math.PI * 2);
                 ctx.fillStyle = '#fff';
@@ -1478,6 +1537,7 @@
                 ctx.lineWidth = 1.2;
                 ctx.strokeStyle = 'rgba(31,59,60,0.55)';
                 ctx.stroke();
+                ctx.restore();
                 if (o.label){
                   ctx.font = '600 12px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif';
                   ctx.textAlign = 'left';
@@ -1488,6 +1548,7 @@
                   ctx.fillStyle = '#1f3b3c';
                   ctx.fillText(o.label, prc.x + 6, prc.y - 7);
                 }
+                ctx.restore();
               }
             }
 
@@ -1499,9 +1560,17 @@
               H = Math.max(80, ch);
               canvas.width = Math.round(W * DPR);
               canvas.height = Math.round(H * DPR);
-              bgGrad = ctx.createRadialGradient(W / 2, H * 0.42, 8, W / 2, H * 0.5, Math.max(W, H) * 0.78);
-              bgGrad.addColorStop(0, '#ffffff');
-              bgGrad.addColorStop(1, '#eef6f4');
+              Wd = canvas.width; Hd = canvas.height;
+              imgData = ctx.createImageData(Wd, Hd);
+              zbuf = new Float32Array(Wd * Hd);
+              /* 背景只画一次，抓成像素快照；每帧直接拷回缓冲，省去重复渐变填充 */
+              ctx.setTransform(1, 0, 0, 1, 0, 0);
+              var g = ctx.createRadialGradient(Wd / 2, Hd * 0.42, 8 * DPR, Wd / 2, Hd * 0.5, Math.max(Wd, Hd) * 0.78);
+              g.addColorStop(0, '#ffffff');
+              g.addColorStop(1, '#eef6f4');
+              ctx.fillStyle = g;
+              ctx.fillRect(0, 0, Wd, Hd);
+              bgData = ctx.getImageData(0, 0, Wd, Hd).data;
               draw();
             }
 
@@ -1544,7 +1613,7 @@
               if (!dragging) return;
               yaw += (e.clientX - lastX) * 0.008;
               pitch += (e.clientY - lastY) * 0.008;
-              pitch = Math.max(-1.45, Math.min(1.45, pitch));
+              pitch = Math.max(-1.55, Math.min(1.55, pitch));
               lastX = e.clientX;
               lastY = e.clientY;
               draw();
@@ -1764,6 +1833,27 @@
               btns[i].classList.toggle('is-active', btns[i].getAttribute('data-mode') === mode);
             }
             updateLabScene();
+            updateModeNote();
+          }
+
+          /* 模式说明随组合与显示模式变化：禁戒组合不再暗示“有真正的成键/反键轨道” */
+          function updateModeNote(){
+            var el = document.getElementById('lab-mode-note');
+            if (!el) return;
+            var p = currentPreset, m = labViewMode;
+            if (p.group === 'cannot'){
+              el.className = 'lab-mode-note is-warn';
+              el.textContent = '该组合的对称性不匹配（' + p.mode + '），S 严格为 0：这里的「成键 / 反键」只表示 ψA±ψB 的相位叠加，并不存在真实的成键或反键轨道。';
+            } else if (m === 'ao'){
+              el.className = 'lab-mode-note';
+              el.textContent = '分别显示两个原子轨道，便于对照融合前的形状；成键 / 反键只在对称性匹配（σ↔σ、π↔π、δ↔δ）且能量相近的组合中有意义。';
+            } else if (m === 'bond'){
+              el.className = 'lab-mode-note';
+              el.textContent = '同号相对、叠加增强：画面是 ψA+ψB 的等值面；真正的成键还要求对称性匹配且能量相近。';
+            } else {
+              el.className = 'lab-mode-note';
+              el.textContent = '相位相反、两核之间出现节面：画面是 ψA−ψB 的等值面，同样只对对称性匹配、能量相近的组合作有意义。';
+            }
           }
 
           document.getElementById('lab-modes').addEventListener('click', function(e){
@@ -1812,6 +1902,7 @@
             }
             updateLabScene();
             computeCurrent();
+            updateModeNote();
           }
 
           function computeCurrent(){
