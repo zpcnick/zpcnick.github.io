@@ -988,6 +988,7 @@
             var total = 0;
 
             var dep = null, spx = null, spy = null, ssz = null, scol = null, sidx = null, cap = 0;
+            var bgGrad = null;
 
             function ensureSize(n){
               if (n <= cap) return;
@@ -1039,10 +1040,7 @@
               if (!W || !H) return;
               ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 
-              var bg = ctx.createRadialGradient(W / 2, H * 0.42, 8, W / 2, H * 0.5, Math.max(W, H) * 0.78);
-              bg.addColorStop(0, '#ffffff');
-              bg.addColorStop(1, '#eef6f4');
-              ctx.fillStyle = bg;
+              ctx.fillStyle = bgGrad;
               ctx.fillRect(0, 0, W, H);
 
               var R = rotation();
@@ -1055,20 +1053,27 @@
                 drawAxes(R, cx, cy0, scale, cam);
               }
               var n = 0;
+              /* 逐点内联投影：每帧数千个点，省掉 projectPoint 的对象分配可显著减少 GC */
+              var cyw = R.cy, syw = R.sy, cp = R.cp, spn = R.sp;
+              var fx = focus[0], fy = focus[1], fz = focus[2];
               for (var i = 0; i < items.length; i++){
                 var orb = items[i];
                 var pts = orb.pts;
+                var ox = orb.center[0] - fx, oy = orb.center[1] - fy, oz = orb.center[2] - fz;
+                var op = orb.phase || 1;
                 for (var p = 0; p < pts.length; p++){
                   var q = pts[p];
-                  var pr = projectPoint(
-                    q[0] + orb.center[0], q[1] + orb.center[1], q[2] + orb.center[2],
-                    R, cx, cy0, scale, cam
-                  );
-                  dep[n] = pr.z;
-                  spx[n] = pr.x;
-                  spy[n] = pr.y;
-                  ssz[n] = 2.2 * pr.f;
-                  scol[n] = (q[3] * (orb.phase || 1)) > 0 ? 1 : 0;
+                  var dx = q[0] + ox, dy = q[1] + oy, dz = q[2] + oz;
+                  var x1 = dx * cyw + dz * syw;
+                  var z1 = -dx * syw + dz * cyw;
+                  var y2 = dy * cp - z1 * spn;
+                  var z2 = dy * spn + z1 * cp;
+                  var f = cam / (cam - z2);
+                  dep[n] = z2;
+                  spx[n] = cx + x1 * scale * f;
+                  spy[n] = cy0 - y2 * scale * f;
+                  ssz[n] = 2.2 * f;
+                  scol[n] = (q[3] * op) > 0 ? 1 : 0;
                   n++;
                 }
               }
@@ -1163,11 +1168,14 @@
             function resize(){
               var cw = canvas.clientWidth || 320;
               var ch = canvas.clientHeight || 300;
-              DPR = window.devicePixelRatio || 1;
+              DPR = Math.min(window.devicePixelRatio || 1, 1.6);   // 高 DPI 屏限制像素密度，避免填充开销翻倍
               W = Math.max(80, cw);
               H = Math.max(80, ch);
               canvas.width = Math.round(W * DPR);
               canvas.height = Math.round(H * DPR);
+              bgGrad = ctx.createRadialGradient(W / 2, H * 0.42, 8, W / 2, H * 0.5, Math.max(W, H) * 0.78);
+              bgGrad.addColorStop(0, '#ffffff');
+              bgGrad.addColorStop(1, '#eef6f4');
               draw();
             }
 
@@ -1178,9 +1186,16 @@
             }
 
             var running = false;
+            /* 画布滚出视口时停止重绘，避免在阅读正文时白白占用主线程 */
+            var visible = true;
+            if (window.IntersectionObserver){
+              new IntersectionObserver(function(entries){
+                visible = entries[0].isIntersecting;
+              }, { threshold: 0.05 }).observe(canvas);
+            }
             function loop(t){
               raf = requestAnimationFrame(loop);
-              if (!auto || dragging) return;
+              if (!auto || dragging || !visible) return;
               if (t - lastT < 33) return;
               lastT = t;
               yaw += 0.006;
@@ -1263,9 +1278,10 @@
             var nuclei = [];
 
             var capV = 0, capT = 0;
-            var spx = null, spy = null, spd = null;
+            var spx = null, spy = null;
             var vnx = null, vny = null, vnz = null;
-            var tdep = null, tord = null;
+            var tord = null, tcode = null, tcnt = null, tpos = null;
+            var bgGrad = null;
 
             /* 64 级明暗调色板 × 2 相位，避免每帧拼接颜色字符串 */
             var PAL = [[], []];
@@ -1292,13 +1308,15 @@
             function ensureCap(nv, nt){
               if (nv > capV){
                 capV = nv;
-                spx = new Float32Array(nv); spy = new Float32Array(nv); spd = new Float32Array(nv);
+                spx = new Float32Array(nv); spy = new Float32Array(nv);
                 vnx = new Float32Array(nv); vny = new Float32Array(nv); vnz = new Float32Array(nv);
               }
               if (nt > capT){
                 capT = nt;
-                tdep = new Float32Array(nt);
                 tord = new Uint32Array(nt);
+                tcode = new Uint16Array(nt);
+                tcnt = new Int32Array(129);
+                tpos = new Int32Array(129);
               }
             }
 
@@ -1332,10 +1350,7 @@
               if (!W || !H) return;
               ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 
-              var bg = ctx.createRadialGradient(W / 2, H * 0.42, 8, W / 2, H * 0.5, Math.max(W, H) * 0.78);
-              bg.addColorStop(0, '#ffffff');
-              bg.addColorStop(1, '#eef6f4');
-              ctx.fillStyle = bg;
+              ctx.fillStyle = bgGrad;
               ctx.fillRect(0, 0, W, H);
 
               var R = rotation();
@@ -1358,7 +1373,6 @@
                   var f = cam / (cam - z2);
                   spx[i] = cx + x1 * scale * f;
                   spy[i] = cy0 - y2 * scale * f;
-                  spd[i] = z2;
                   var nx0 = nm[i*3], ny0 = nm[i*3+1], nz0 = nm[i*3+2];
                   var nx1 = nx0 * cyw + nz0 * syw;
                   var nz1 = -nx0 * syw + nz0 * cyw;
@@ -1366,37 +1380,67 @@
                   vny[i] = ny0 * cp - nz1 * sp;
                   vnz[i] = ny0 * sp + nz1 * cp;
                 }
-                for (t = 0; t < nt; t++){
-                  tdep[t] = (spd[t*3] + spd[t*3+1] + spd[t*3+2]) / 3;
-                  tord[t] = t;
-                }
-                tord.subarray(0, nt).sort(function(a, b){ return tdep[a] - tdep[b]; });
 
+                /* 每个三角形只算一次色号：高位是朝向（1=正面），低 7 位 = 相位*64+明暗 */
                 var LX = LIGHT[0], LY = LIGHT[1], LZ = LIGHT[2];
-                for (var k = 0; k < nt; k++){
-                  t = tord[k];
+                for (t = 0; t < nt; t++){
                   var a = t * 3, b = a + 1, c = a + 2;
                   var nx2 = vnx[a] + vnx[b] + vnx[c];
                   var ny2 = vny[a] + vny[b] + vny[c];
                   var nz2 = vnz[a] + vnz[b] + vnz[c];
+                  var facing = nz2 >= 0;                 // 外法向朝向观察者 = 正面
                   var nl = Math.sqrt(nx2*nx2 + ny2*ny2 + nz2*nz2);
                   if (nl < 1e-9){ nx2 = 0; ny2 = 0; nz2 = 1; }
-                  else { nx2 /= nl; ny2 /= nl; nz2 /= nl; }
-                  if (nz2 < 0){ nx2 = -nx2; ny2 = -ny2; nz2 = -nz2; }   // 双面光照
+                  else {
+                    nx2 /= nl; ny2 /= nl; nz2 /= nl;
+                    if (!facing){ nx2 = -nx2; ny2 = -ny2; nz2 = -nz2; }   // 双面光照
+                  }
                   var diff = nx2 * LX + ny2 * LY + nz2 * LZ;
                   if (diff < 0) diff = 0;
-                  var col = PAL[ph[t]][(diff * 63) | 0];
-                  ctx.fillStyle = col;
-                  ctx.beginPath();
-                  ctx.moveTo(spx[a], spy[a]);
-                  ctx.lineTo(spx[b], spy[b]);
-                  ctx.lineTo(spx[c], spy[c]);
-                  ctx.closePath();
-                  ctx.fill();
-                  // 同色细描边，遮住相邻三角形抗锯齿产生的接缝
-                  ctx.strokeStyle = col;
-                  ctx.lineWidth = 0.6;
-                  ctx.stroke();
+                  tcode[t] = (facing ? 128 : 0) | (ph[t] << 6) | ((diff * 63) | 0);
+                }
+
+                /* 背面层 → 正面层两遍：每层内按色号计数排序，同色三角形并成一条路径一次填完。
+                   相比逐三角形 fill，路径数从数千降到 128，帧耗时约降 3 倍；
+                   同色路径内相邻三角形共用边缘，抗锯齿接缝也一并消失。 */
+                for (var pass = 0; pass < 2; pass++){
+                  var wantFront = pass === 1;
+                  var count = 0;
+                  for (i = 0; i < 128; i++) tcnt[i] = 0;
+                  for (t = 0; t < nt; t++){
+                    var cd = tcode[t];
+                    if ((cd >= 128) !== wantFront) continue;
+                    tcnt[cd & 127]++;
+                    count++;
+                  }
+                  if (!count) continue;
+                  var acc = 0;
+                  for (i = 0; i < 128; i++){ tpos[i] = acc; acc += tcnt[i]; tcnt[i] = acc; }
+                  tpos[128] = acc;
+                  for (t = 0; t < nt; t++){
+                    var cd2 = tcode[t];
+                    if ((cd2 >= 128) !== wantFront) continue;
+                    var ck = cd2 & 127;
+                    tord[--tcnt[ck]] = t;
+                  }
+                  for (var cc = 0; cc < 128; cc++){
+                    var s0 = tpos[cc], s1 = tpos[cc + 1];
+                    if (s1 <= s0) continue;
+                    /* 计数排序后 tord 是倒序存放的，这里按起点读回即可（同色内部顺序无关） */
+                    var col = PAL[cc >> 6][cc & 63];
+                    ctx.beginPath();
+                    for (var k = s0; k < s1; k++){
+                      var tti = tord[k], a3 = tti * 3;
+                      ctx.moveTo(spx[a3], spy[a3]);
+                      ctx.lineTo(spx[a3 + 1], spy[a3 + 1]);
+                      ctx.lineTo(spx[a3 + 2], spy[a3 + 2]);
+                    }
+                    ctx.fillStyle = col;
+                    ctx.fill();
+                    ctx.strokeStyle = col;      // 同色描边，消除相邻三角形抗锯齿接缝
+                    ctx.lineWidth = 0.6;
+                    ctx.stroke();
+                  }
                 }
               }
 
@@ -1450,11 +1494,14 @@
             function resize(){
               var cw = canvas.clientWidth || 320;
               var ch = canvas.clientHeight || 300;
-              DPR = window.devicePixelRatio || 1;
+              DPR = Math.min(window.devicePixelRatio || 1, 1.6);   // 高 DPI 屏限制像素密度，避免填充开销翻倍
               W = Math.max(80, cw);
               H = Math.max(80, ch);
               canvas.width = Math.round(W * DPR);
               canvas.height = Math.round(H * DPR);
+              bgGrad = ctx.createRadialGradient(W / 2, H * 0.42, 8, W / 2, H * 0.5, Math.max(W, H) * 0.78);
+              bgGrad.addColorStop(0, '#ffffff');
+              bgGrad.addColorStop(1, '#eef6f4');
               draw();
             }
 
@@ -1465,9 +1512,16 @@
             }
 
             var running = false;
+            /* 画布滚出视口时停止重绘，避免在阅读正文时白白占用主线程 */
+            var visible = true;
+            if (window.IntersectionObserver){
+              new IntersectionObserver(function(entries){
+                visible = entries[0].isIntersecting;
+              }, { threshold: 0.05 }).observe(canvas);
+            }
             function loop(t){
               raf = requestAnimationFrame(loop);
-              if (!auto || dragging) return;
+              if (!auto || dragging || !visible) return;
               if (t - lastT < 33) return;
               lastT = t;
               yaw += 0.005;
@@ -1578,7 +1632,7 @@
 
           var viewer = createScene(document.getElementById('orb-canvas'), {
             viewR: 1.58,
-            density: 68,
+            density: 58,
             auto: true,
             showAxes: true,
             yaw: -0.62,
@@ -1663,26 +1717,38 @@
             pitch: 0.30
           });
 
-          /* 按当前模式重建等值面网格 */
-          var MESH_H = 0.15, MESH_ISO = 0.05, MESH_R = 3.15;
-          function updateLabScene(){
-            var p = currentPreset, d = labDistance;
+          /* 等值面网格：静止时用细网格保证轮廓平滑，拖动滑块时降一档保证跟手 */
+          var MESH_H_FINE = 0.24, MESH_H_FAST = 0.40, MESH_ISO = 0.05, MESH_R = 2.75;
+          var meshFine = true;
+          var meshCache = {};
+
+          function buildMesh(p, d, h){
             var mesh;
             if (labViewMode === 'ao'){
-              var n = Math.round(2 * MESH_R / MESH_H);
-              var m1 = marchField(n, n, n, -MESH_R, -MESH_R, -MESH_R, MESH_H,
+              var n = Math.round(2 * MESH_R / h);
+              var m1 = marchField(n, n, n, -MESH_R, -MESH_R, -MESH_R, h,
                 function(x, y, z){ return psi(p.a, 0, 0, 0, x, y, z, p.pa); }, MESH_ISO);
-              var m2 = marchField(n, n, n, -MESH_R, -MESH_R, d - MESH_R, MESH_H,
+              var m2 = marchField(n, n, n, -MESH_R, -MESH_R, d - MESH_R, h,
                 function(x, y, z){ return psi(p.b, 0, 0, d, x, y, z, p.pb); }, MESH_ISO);
-              mesh = mergeMeshes([m1, m2]);
-            } else {
-              var sgn = labViewMode === 'bond' ? 1 : -1;
-              var nx2 = Math.round(2 * MESH_R / MESH_H);
-              var nz2 = Math.ceil((d + 2 * MESH_R) / MESH_H);
-              mesh = marchField(nx2, nx2, nz2, -MESH_R, -MESH_R, -MESH_R, MESH_H,
-                function(x, y, z){
-                  return psi(p.a, 0, 0, 0, x, y, z, p.pa) + sgn * psi(p.b, 0, 0, d, x, y, z, p.pb);
-                }, MESH_ISO);
+              return mergeMeshes([m1, m2]);
+            }
+            var sgn = labViewMode === 'bond' ? 1 : -1;
+            var nx2 = Math.round(2 * MESH_R / h);
+            var nz2 = Math.ceil((d + 2 * MESH_R) / h);
+            return marchField(nx2, nx2, nz2, -MESH_R, -MESH_R, -MESH_R, h,
+              function(x, y, z){
+                return psi(p.a, 0, 0, 0, x, y, z, p.pa) + sgn * psi(p.b, 0, 0, d, x, y, z, p.pb);
+              }, MESH_ISO);
+          }
+
+          function updateLabScene(){
+            var p = currentPreset, d = labDistance;
+            var key = p.id + '|' + labViewMode + '|' + d.toFixed(2) + '|' + (meshFine ? 'f' : 'c');
+            var mesh = meshCache[key];
+            if (!mesh){
+              mesh = buildMesh(p, d, meshFine ? MESH_H_FINE : MESH_H_FAST);
+              meshCache[key] = mesh;
+              if (Object.keys(meshCache).length > 24) meshCache = {};   // 简单上限，避免缓存无限增长
             }
             labSurf.setMesh(mesh, [0, 0, d / 2], d / 2 + 2.5, [
               { c: [0, 0, 0], label: 'A' },
@@ -1783,31 +1849,60 @@
           distEl.addEventListener('input', function(){
             labDistance = parseFloat(distEl.value);
             dvalEl.textContent = labDistance.toFixed(2) + ' a₀';
+            meshFine = false;                 // 拖动中先用粗网格重建，保证跟手
             clearTimeout(meshTimer);
-            meshTimer = setTimeout(updateLabScene, 60);   // 网格重建较重，拖动时防抖
+            meshTimer = setTimeout(updateLabScene, 16);
             clearTimeout(timer);
-            timer = setTimeout(computeCurrent, 120);
+            timer = setTimeout(computeCurrent, 140);
           });
+          function settleLab(){
+            if (meshFine) return;             // 松手（或键盘改值）后补一次细网格
+            meshFine = true;
+            clearTimeout(meshTimer);
+            clearTimeout(timer);
+            updateLabScene();
+            computeCurrent();
+          }
+          distEl.addEventListener('change', settleLab);
+          distEl.addEventListener('pointerup', settleLab);
+          distEl.addEventListener('pointercancel', settleLab);
 
-          // 参考表：固定 d = 2.2 a₀ 一次算完
+          // 参考表：固定 d = 2.2 a₀。13 组积分串行算完会阻塞上百毫秒，改为每帧只算一行
           function buildTable(){
             var body = document.getElementById('orb-table-body');
             var rows = '';
-            PRESETS.forEach(function(p){
-              var S = overlapS(p.a, p.b, 2.2, p.pa, p.pb, 56);
-              var pct = Math.abs(S) * 100;
-              var v = verdictOf(pct);
-              var cls = v.key === 'zero' ? 'zero' : v.key === 'weak' ? 'weak' : v.key === 'strong' ? 'strong' : 'ok';
-              rows += '<tr><td>' + p.label + '</td><td>' + p.mode + '</td><td>' +
-                      (pct < 0.05 ? '0.0' : pct.toFixed(1)) + '%</td><td>' +
-                      '<span class="orb-badge ' + cls + '">' + v.text + '</span></td></tr>';
-            });
-            body.innerHTML = rows;
+            var i = 0;
+            function step(){
+              if (i < PRESETS.length){
+                var p = PRESETS[i++];
+                var S = overlapS(p.a, p.b, 2.2, p.pa, p.pb, 56);
+                var pct = Math.abs(S) * 100;
+                var v = verdictOf(pct);
+                var cls = v.key === 'zero' ? 'zero' : v.key === 'weak' ? 'weak' : v.key === 'strong' ? 'strong' : 'ok';
+                rows += '<tr><td>' + p.label + '</td><td>' + p.mode + '</td><td>' +
+                        (pct < 0.05 ? '0.0' : pct.toFixed(1)) + '%</td><td>' +
+                        '<span class="orb-badge ' + cls + '">' + v.text + '</span></td></tr>';
+                body.innerHTML = rows;
+              }
+              if (i < PRESETS.length) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
           }
 
           renderPresets();
           selectPreset(PRESETS[0]);
-          setTimeout(buildTable, 60);
+          /* 参考表滚到附近再算，首屏不做无用功 */
+          var tableBody = document.getElementById('orb-table-body');
+          if (window.IntersectionObserver){
+            var tableBuilt = false;
+            new IntersectionObserver(function(es){
+              if (tableBuilt || !es[0].isIntersecting) return;
+              tableBuilt = true;
+              buildTable();
+            }, { rootMargin: '200px' }).observe(tableBody);
+          } else {
+            setTimeout(buildTable, 60);
+          }
         })();
         </script>
 
