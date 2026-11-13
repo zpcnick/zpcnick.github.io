@@ -270,7 +270,7 @@
             <label class="orb-chk lab-auto-chk"><input type="checkbox" id="lab-auto" checked><span>自动旋转</span></label>
           </div>
 
-          <p class="lab-mode-note" id="lab-mode-note">成键/反键只对绕键轴对称性相同、能量相近的组合有意义。</p>
+          <p class="lab-mode-note" id="lab-mode-note">成键/反键要求对称性匹配、能量相近。</p>
 
           <div class="lab-main">
             <div class="lab-stage">
@@ -291,7 +291,7 @@
                 <span>键长 d：<b id="lab-dval">2.20 a₀</b></span>
                 <span>等值面阈值：<b title="演示用的统一径向衰减单位，不是具体分子的电子密度阈值">|ψ| = 0.05</b></span>
               </div>
-              <p class="lab-note" id="lab-note">重叠积分已归一化，S ≤ 1；图中两个轨道朝向对方的瓣取同号，因此有效组合的 S 为正，这里统一显示绝对值。</p>
+              <p class="lab-note" id="lab-note">显示 |S|；相向瓣取同号。</p>
               <label class="lab-range">
                 <span>调节键长</span>
                 <input type="range" id="lab-dist" min="2" max="3.4" step="0.05" value="2.2">
@@ -314,17 +314,17 @@
           </table>
         </div>
 
-        <p>从表里可以读出三条规律：</p>
+        <p>主要规律：</p>
         <ul class="orb-findings">
-          <li><strong>σ 最大</strong>：s–s、s–p<sub>z</sub>、p<sub>z</sub>–p<sub>z</sub>、s–d<sub>z²</sub>、p<sub>z</sub>–d<sub>z²</sub> 都是头碰头，重叠积分明显更大。注意这里 s–p、s–d 的“形状”完全不同，却属于有效重叠。</li>
-          <li><strong>π 次之</strong>：p<sub>x</sub>–p<sub>x</sub>、p<sub>x</sub>–d<sub>xz</sub> 肩并肩，S 约为 σ 的一半上下。</li>
-          <li><strong>δ 最小</strong>：d<sub>xy</sub>–d<sub>xy</sub> 这类四瓣面对面，S 很小，但确实不为零。</li>
-          <li><strong>禁戒恒为 0</strong>：p<sub>z</sub>–p<sub>x</sub>、p<sub>x</sub>–p<sub>y</sub>、s–d<sub>xy</sub>、s–d<sub>x²−y²</sub>、p<sub>x</sub>–d<sub>yz</sub> 的数值是精确的 0，不是“很小”。这是对称性带来的严格结论，不是距离不够近。</li>
+          <li><strong>σ 最强</strong>：头碰头组合重叠较大，s–p、s–d 等形状不同的组合也适用。</li>
+          <li><strong>π 次之</strong>：肩并肩组合的重叠通常弱于 σ。</li>
+          <li><strong>δ 最弱</strong>：四瓣面对面时 S 很小，但不为零。</li>
+          <li><strong>禁戒恒为 0</strong>：对称性错配的组合严格正交，与距离无关。</li>
         </ul>
 
         <h2 id="summary"><a href="#summary" class="headerlink" title="结论与课堂提示"></a>四、结论与课堂提示</h2>
 
-        <p><strong>结论</strong>：不同形状的轨道完全可以有效重叠，s–p、s–d、p–d 都有对应的成键实例。决定重叠强弱的是四件事——能量相近、距离合适、相位匹配、以及<strong>沿键轴方向对称性一致</strong>。形状相同只是“同族之间”的常见情形，并不是必要条件；而对称性错配（σ↔π、σ↔δ、π↔δ）则会使 S 严格为零。</p>
+        <p><strong>结论</strong>：不同形状的轨道也能有效重叠。重叠强弱取决于能量、距离、相位和键轴对称性；对称性错配（σ↔π、σ↔δ、π↔δ）时，S 严格为 0。</p>
 
         <div class="orb-mnemonic">
           <p>形状不同不要紧，轴相对称要相同；</p>
@@ -332,7 +332,7 @@
           <p>四瓣侧向 δ 最弱，σ–δ 正交必为零。</p>
         </div>
 
-        <p><strong>课堂演示建议</strong>：先让学生猜“s 和 p 形状不同，能不能重叠？”，再用查看器转一圈，最后在实验室里选 s–p<sub>z</sub> 与 p<sub>z</sub>–p<sub>x</sub> 各看一次。前者 S 随距离变化、始终有效；后者无论把键长拉到多近都接近 0，<strong>“对称性禁戒”</strong>这一抽象概念会一下子变得可见。</p>
+        <p><strong>课堂演示</strong>：比较 s–p<sub>z</sub>（可有效重叠）与 p<sub>z</sub>–p<sub>x</sub>（对称性禁戒），再拖动键长，观察前者 S 变化、后者始终为 0。</p>
 
         <style>
         /* 原子轨道查看器（局部作用域） */
@@ -1654,47 +1654,47 @@
             s: {
               name: 's 轨道', tag: 'σ 型', l: 'l = 0', nodes: '0 个角节面',
               bond: '只能形成 σ',
-              desc: '球对称，各向同性，电子云密度只与离核距离有关。转一圈没有方向差异，因此只能沿键轴形成 σ 重叠。'
+              desc: '球对称、无方向性，只能形成 σ 重叠。'
             },
             px: {
               name: 'p<sub>x</sub> 轨道', tag: 'σ / π', l: 'l = 1', nodes: '1 个节面（yz 平面）',
               bond: 'σ（沿 x 轴）/ π（侧向）',
-              desc: '两瓣沿 x 轴反向伸出，yz 平面是节面，两瓣相位相反。沿 x 轴头碰头为 σ，与另一 p_x 肩并肩为 π。'
+              desc: '两瓣沿 x 轴反向伸出，yz 平面为节面；轴向为 σ，侧向为 π。'
             },
             py: {
               name: 'p<sub>y</sub> 轨道', tag: 'σ / π', l: 'l = 1', nodes: '1 个节面（xz 平面）',
               bond: 'σ（沿 y 轴）/ π（侧向）',
-              desc: '两瓣沿 y 轴反向伸出，xz 平面是节面。与 p_x、p_z 互相垂直，构成三个独立的 p 轨道。'
+              desc: '两瓣沿 y 轴反向伸出，xz 平面为节面。'
             },
             pz: {
               name: 'p<sub>z</sub> 轨道', tag: 'σ / π', l: 'l = 1', nodes: '1 个节面（xy 平面）',
               bond: 'σ（沿 z 轴）/ π（侧向）',
-              desc: '两瓣沿 z 轴反向伸出，中间通过原子核的 xy 平面是节面；两瓣相位相反。沿轴看是 σ，侧向看是 π。'
+              desc: '两瓣沿 z 轴反向伸出，xy 平面为节面；轴向为 σ，侧向为 π。'
             },
             dxy: {
               name: 'd<sub>xy</sub> 轨道', tag: 'δ / π', l: 'l = 2', nodes: '2 个节面（xz、yz 平面）',
               bond: 'δ（面对面）/ π（侧向）',
-              desc: '四瓣位于 x、y 轴之间的对角区域，符号交替，形似四叶草。与另一个 d_xy 面对面可形成 δ 重叠。'
+              desc: '四瓣位于 xy 平面的对角区域，符号交替；面对面可形成 δ 重叠。'
             },
             dxz: {
               name: 'd<sub>xz</sub> 轨道', tag: 'π / δ', l: 'l = 2', nodes: '2 个节面（xy、yz 平面）',
               bond: 'π（垂直于键轴）/ δ（面对面）',
-              desc: '四瓣位于 xz 平面内的四个象限，符号交替。与 p_x 肩并肩时形成 π 重叠。'
+              desc: '四瓣位于 xz 平面，符号交替；侧向可形成 π 重叠。'
             },
             dyz: {
               name: 'd<sub>yz</sub> 轨道', tag: 'π / δ', l: 'l = 2', nodes: '2 个节面（xy、xz 平面）',
               bond: 'π（垂直于键轴）/ δ（面对面）',
-              desc: '四瓣位于 yz 平面内的四个象限，符号交替，与 d_xz 相差 90°。'
+              desc: '四瓣位于 yz 平面，符号交替，与 d_xz 取向相差 90°。'
             },
             dx2y2: {
               name: 'd<sub>x²−y²</sub> 轨道', tag: 'σ / δ', l: 'l = 2', nodes: '2 个对角节面（x = ±y）',
               bond: 'σ（沿瓣轴）/ δ（侧向）',
-              desc: '四瓣沿 x、y 轴正向伸出，节面是两个 45° 对角平面。沿瓣轴接近时是 σ 对称，垂直于瓣轴时是 δ 对称。'
+              desc: '四瓣沿 x、y 轴伸出，节面为两个对角平面；可形成 σ 或 δ 重叠。'
             },
             dz2: {
               name: 'd<sub>z²</sub> 轨道', tag: 'σ', l: 'l = 2', nodes: '2 个锥形节面（θ ≈ 54.7°、125.3°）',
               bond: 'σ（沿 z 轴）',
-              desc: '沿 z 轴有两个同号大瓣，腰部有一个反号圆环，节面是锥面而不是平面，是 5 个 d 轨道中最特殊的一个。'
+              desc: '沿 z 轴两个同号大瓣，腰部一个反号圆环，节面为锥面。'
             }
           };
 
@@ -1756,19 +1756,19 @@
 
           /* ================= 重叠实验室 ================= */
           var PRESETS = [
-            { id:'ss',      a:'s',    b:'s',     pa:1,  pb:1,  label:'s — s',            mode:'σ',        group:'can',   note:'球形对球形，无方向性，只要距离合适就能有效重叠。' },
-            { id:'spz',     a:'s',    b:'pz',    pa:1,  pb:-1, label:'s — p<sub>z</sub>', mode:'σ',        group:'can',   note:'形状完全不同，但 p 的一瓣正对 s，沿键轴形成 σ 重叠。' },
-            { id:'pzpz',    a:'pz',   b:'pz',    pa:1,  pb:-1, label:'p<sub>z</sub> — p<sub>z</sub>', mode:'σ（头碰头）', group:'can', note:'两个 p 轨道沿键轴头碰头，是典型的 σ 重叠，通常最强。' },
-            { id:'sdz2',    a:'s',    b:'dz2',   pa:1,  pb:1,  label:'s — d<sub>z²</sub>', mode:'σ',        group:'can',   note:'d_z² 沿键轴的一端正对 s，球与四瓣/两瓣组合也能有效重叠。' },
-            { id:'pzdz2',   a:'pz',   b:'dz2',   pa:1,  pb:1,  label:'p<sub>z</sub> — d<sub>z²</sub>', mode:'σ', group:'can', note:'p 的瓣与 d_z² 的轴向瓣同号相对，可形成 σ。' },
-            { id:'pxpx',    a:'px',   b:'px',    pa:1,  pb:1,  label:'p<sub>x</sub> — p<sub>x</sub>', mode:'π（肩并肩）', group:'can', note:'两个 p 平行并列、相位相同，形成 π 重叠，强度小于 σ。' },
-            { id:'pxdxz',   a:'px',   b:'dxz',   pa:1,  pb:-1, label:'p<sub>x</sub> — d<sub>xz</sub>', mode:'π', group:'can', note:'两个垂直于键轴的瓣肩并肩，π 重叠，属于“不同形状也能成键”的例子。' },
-            { id:'dxyxy',   a:'dxy',  b:'dxy',   pa:1,  pb:1,  label:'d<sub>xy</sub> — d<sub>xy</sub>', mode:'δ（面对面）', group:'can', note:'四瓣面对面形成 δ 重叠，空间匹配要求高，数值通常很小，但确实不为零。' },
-            { id:'pzpx',    a:'pz',   b:'px',    pa:1,  pb:1,  label:'p<sub>z</sub> — p<sub>x</sub>', mode:'σ ⊥ π', group:'cannot', note:'一个 σ 型、一个 π 型，绕键轴旋转对称性不同，积分为严格 0。' },
-            { id:'pxpy',    a:'px',   b:'py',    pa:1,  pb:1,  label:'p<sub>x</sub> — p<sub>y</sub>', mode:'π ⊥ π', group:'cannot', note:'两个 π 轨道取向相差 90°，正负贡献成对抵消，积分为 0。' },
-            { id:'sdxy',    a:'s',    b:'dxy',   pa:1,  pb:1,  label:'s — d<sub>xy</sub>', mode:'σ ⊥ δ', group:'cannot', note:'s 是 σ 对称，d_xy 是 δ 对称，二者正交，无论多近都为 0。' },
-            { id:'sdx2y2',  a:'s',    b:'dx2y2', pa:1,  pb:1,  label:'s — d<sub>x²−y²</sub>', mode:'σ ⊥ δ', group:'cannot', note:'四瓣都躺在垂直于键轴的平面内，绕键轴 90° 旋转使 d 变号而 s 不变，积分抵消为 0。' },
-            { id:'pxdyz',   a:'px',   b:'dyz',   pa:1,  pb:1,  label:'p<sub>x</sub> — d<sub>yz</sub>', mode:'π ⊥ δ', group:'cannot', note:'对称性不匹配，重叠积分为 0。' }
+            { id:'ss',      a:'s',    b:'s',     pa:1,  pb:1,  label:'s — s',            mode:'σ',        group:'can',   note:'球形轨道无方向性，距离合适即可重叠。' },
+            { id:'spz',     a:'s',    b:'pz',    pa:1,  pb:-1, label:'s — p<sub>z</sub>', mode:'σ',        group:'can',   note:'p 的一瓣正对 s，形成 σ 重叠。' },
+            { id:'pzpz',    a:'pz',   b:'pz',    pa:1,  pb:-1, label:'p<sub>z</sub> — p<sub>z</sub>', mode:'σ（头碰头）', group:'can', note:'沿键轴头碰头，形成较强的 σ 重叠。' },
+            { id:'sdz2',    a:'s',    b:'dz2',   pa:1,  pb:1,  label:'s — d<sub>z²</sub>', mode:'σ',        group:'can',   note:'d_z² 的轴向瓣正对 s，形成 σ 重叠。' },
+            { id:'pzdz2',   a:'pz',   b:'dz2',   pa:1,  pb:1,  label:'p<sub>z</sub> — d<sub>z²</sub>', mode:'σ', group:'can', note:'p 与 d_z² 的轴向瓣同号相对，形成 σ 重叠。' },
+            { id:'pxpx',    a:'px',   b:'px',    pa:1,  pb:1,  label:'p<sub>x</sub> — p<sub>x</sub>', mode:'π（肩并肩）', group:'can', note:'侧向肩并肩，形成 π 重叠。' },
+            { id:'pxdxz',   a:'px',   b:'dxz',   pa:1,  pb:-1, label:'p<sub>x</sub> — d<sub>xz</sub>', mode:'π', group:'can', note:'p 与 d 的侧向瓣形成 π 重叠。' },
+            { id:'dxyxy',   a:'dxy',  b:'dxy',   pa:1,  pb:1,  label:'d<sub>xy</sub> — d<sub>xy</sub>', mode:'δ（面对面）', group:'can', note:'四瓣面对面形成较弱的 δ 重叠。' },
+            { id:'pzpx',    a:'pz',   b:'px',    pa:1,  pb:1,  label:'p<sub>z</sub> — p<sub>x</sub>', mode:'σ ⊥ π', group:'cannot', note:'σ 与 π 对称性错配，S = 0。' },
+            { id:'pxpy',    a:'px',   b:'py',    pa:1,  pb:1,  label:'p<sub>x</sub> — p<sub>y</sub>', mode:'π ⊥ π', group:'cannot', note:'两个 π 轨道互相垂直，正负贡献抵消。' },
+            { id:'sdxy',    a:'s',    b:'dxy',   pa:1,  pb:1,  label:'s — d<sub>xy</sub>', mode:'σ ⊥ δ', group:'cannot', note:'σ 与 δ 正交，S = 0。' },
+            { id:'sdx2y2',  a:'s',    b:'dx2y2', pa:1,  pb:1,  label:'s — d<sub>x²−y²</sub>', mode:'σ ⊥ δ', group:'cannot', note:'绕键轴旋转时 d 变号而 s 不变，积分抵消。' },
+            { id:'pxdyz',   a:'px',   b:'dyz',   pa:1,  pb:1,  label:'p<sub>x</sub> — d<sub>yz</sub>', mode:'π ⊥ δ', group:'cannot', note:'π 与 δ 对称性错配，S = 0。' }
           ];
 
           var labDistance = 2.2;
@@ -1842,16 +1842,16 @@
             var p = currentPreset, m = labViewMode;
             if (p.group === 'cannot'){
               el.className = 'lab-mode-note is-warn';
-              el.textContent = '该组合的对称性不匹配（' + p.mode + '），S 严格为 0：这里的「成键 / 反键」只表示 ψA±ψB 的相位叠加，并不存在真实的成键或反键轨道。';
+              el.textContent = '对称性不匹配（' + p.mode + '），S = 0；此处仅展示相位叠加，不代表真实成键/反键轨道。';
             } else if (m === 'ao'){
               el.className = 'lab-mode-note';
-              el.textContent = '分别显示两个原子轨道，便于对照融合前的形状；成键 / 反键只在对称性匹配（σ↔σ、π↔π、δ↔δ）且能量相近的组合中有意义。';
+              el.textContent = '分别显示两个原子轨道；成键/反键要求对称性匹配、能量相近。';
             } else if (m === 'bond'){
               el.className = 'lab-mode-note';
-              el.textContent = '同号相对、叠加增强：画面是 ψA+ψB 的等值面；真正的成键还要求对称性匹配且能量相近。';
+              el.textContent = 'ψA+ψB：同号区域融合；真实成键还要求对称性匹配、能量相近。';
             } else {
               el.className = 'lab-mode-note';
-              el.textContent = '相位相反、两核之间出现节面：画面是 ψA−ψB 的等值面，同样只对对称性匹配、能量相近的组合作有意义。';
+              el.textContent = 'ψA−ψB：两核间出现节面；仅适用于对称性匹配、能量相近的组合。';
             }
           }
 
@@ -1929,7 +1929,7 @@
             verdictEl.className = 'lab-verdict' + (v.key === 'zero' ? ' is-zero' : v.key === 'weak' ? ' is-weak' : '');
             modeEl.innerHTML = currentPreset.mode;
             noteEl.textContent = currentPreset.note +
-              (pct < 2 ? ' 数值来自对称网格积分，抵消后严格为 0（显示为 0.0%）。' : '');
+              (pct < 2 ? ' 对称抵消，S = 0。' : '');
           }
 
           var distEl = document.getElementById('lab-dist');
