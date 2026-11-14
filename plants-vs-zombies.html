@@ -209,8 +209,8 @@
     touch-action: none;
   }
   #gameCanvas { display: block; width: 100%; height: 100%; cursor: default; touch-action: none; }
-  .board-wrap:fullscreen { display: flex; align-items: center; justify-content: center; background: #142e27; aspect-ratio: auto; }
-  .board-wrap:fullscreen #gameCanvas { width: 100%; height: 100%; object-fit: contain; }
+  .game-card:fullscreen { width: 100%; height: 100%; overflow: auto; border: 0; border-radius: 0; background: var(--paper); }
+  .game-card:fullscreen .board-wrap { flex: 0 0 auto; }
   .overlay {
     position: absolute;
     inset: 0;
@@ -364,7 +364,7 @@
     </div>
   </header>
 
-  <section class="game-card" aria-label="植物大战僵尸游戏">
+  <section class="game-card" id="gameCard" aria-label="植物大战僵尸游戏">
     <div class="hud">
       <div class="hud-group">
         <div class="hud-item">
@@ -409,6 +409,10 @@
         <span class="key-hint">4</span><canvas width="100" height="110" data-icon="wallnut"></canvas>
         <span class="seed-name">坚果墙</span><span class="seed-cost">50</span><span class="cooldown-mask"></span>
       </button>
+      <button class="seed-card" type="button" data-plant="cherry" disabled>
+        <span class="key-hint">5</span><canvas width="100" height="110" data-icon="cherry"></canvas>
+        <span class="seed-name">樱桃炸弹</span><span class="seed-cost">150</span><span class="cooldown-mask"></span>
+      </button>
       <button class="tool-button" id="shovelBtn" type="button" disabled aria-pressed="false" title="铲除植物（S）">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15.5 2.5 6 6-3 3-6-6 3-3zm-4.5 4.5 6 6-8.2 8.2c-.8.8-2 .8-2.8 0l-2.2-2.2c-.8-.8-.8-2 0-2.8L11 7zm-3.1 8.1-1.3 1.3 2 2 1.3-1.3-2-2zM3 21h18v2H3z"/></svg>
         铲除
@@ -435,7 +439,7 @@
     </div>
 
     <div class="game-footer">
-      <div class="tips"><b>操作</b> 点击植物卡片，再点击草坪种植 · 点击阳光收集 · 数字键 1–4 选植物 · 空格暂停</div>
+      <div class="tips"><b>操作</b> 点击植物卡片，再点击草坪种植 · 点击阳光收集 · 数字键 1–5 选植物 · 空格暂停</div>
       <div class="best">最佳纪录 <strong id="bestValue">尚未出战</strong></div>
     </div>
   </section>
@@ -454,7 +458,8 @@
     sunflower: { name: '向日葵', cost: 50, hp: 170, cooldown: 5 },
     peashooter: { name: '豌豆射手', cost: 100, hp: 190, cooldown: 6 },
     snowpea: { name: '寒冰射手', cost: 175, hp: 190, cooldown: 8 },
-    wallnut: { name: '坚果墙', cost: 50, hp: 1050, cooldown: 12 }
+    wallnut: { name: '坚果墙', cost: 50, hp: 1600, cooldown: 12 },
+    cherry: { name: '樱桃炸弹', cost: 150, hp: 1, cooldown: 18 }
   };
   const ZOMBIES = {
     normal: { hp: 160, speed: 14, color: '#82957a' },
@@ -470,10 +475,10 @@
   function freshState(mode = 'ready') {
     return {
       mode, sun: 150, wave: 0, kills: 0, waveKills: 0, planted: 0,
-      plants: [], zombies: [], bullets: [], suns: [], particles: [], floaters: [],
+      plants: [], zombies: [], bullets: [], suns: [], particles: [], floaters: [], explosions: [],
       mowers: Array.from({ length: ROWS }, (_, row) => ({ row, x: 62, used: false, active: false })),
       selected: null, hover: null, spawned: 0, spawnTimer: 8,
-      skySunTimer: 3, cooldowns: { sunflower: 0, peashooter: 0, snowpea: 0, wallnut: 0 },
+      skySunTimer: 3, cooldowns: { sunflower: 0, peashooter: 0, snowpea: 0, wallnut: 0, cherry: 0 },
       intermission: false, intermissionTimer: 0, elapsed: 0
     };
   }
@@ -637,6 +642,19 @@
         p.timer = 9;
         burst(p.x, p.y - 35, '#f7ce4d', 6, 35);
       }
+      if (p.type === 'cherry' && p.timer <= 0) {
+        for (const z of state.zombies) {
+          if (!z.dead && Math.abs(z.row - p.row) <= 1 && Math.abs(z.x - p.x) <= CW * 1.5) {
+            z.hp -= 800;
+            if (z.hp <= 0) killZombie(z);
+          }
+        }
+        state.explosions.push({ x: p.x, y: p.y - 25, life: .45, maxLife: .45 });
+        burst(p.x, p.y - 25, '#ffb23f', 30, 210);
+        burst(p.x, p.y - 25, '#d94a36', 18, 135);
+        floater(p.x, p.y - 72, '轰！', '#fff1a8');
+        p.hp = 0;
+      }
       if ((p.type === 'peashooter' || p.type === 'snowpea') && p.timer <= 0) {
         const hasTarget = state.zombies.some(z => !z.dead && z.row === p.row && z.x > p.x && z.x < W + 55);
         if (hasTarget) {
@@ -668,7 +686,7 @@
       z.phase += dt * 5;
       let target = null;
       for (const p of state.plants) {
-        if (p.row === z.row && p.hp > 0 && z.x > p.x - 18 && z.x < p.x + 58) {
+        if (p.type !== 'cherry' && p.row === z.row && p.hp > 0 && z.x > p.x - 18 && z.x < p.x + 58) {
           if (!target || p.x > target.x) target = p;
         }
       }
@@ -726,6 +744,8 @@
       p.vx *= .985;
     }
     state.particles = state.particles.filter(p => p.life > 0);
+    for (const explosion of state.explosions) explosion.life -= dt;
+    state.explosions = state.explosions.filter(explosion => explosion.life > 0);
     for (const f of state.floaters) { f.life -= dt; f.y -= 32 * dt; }
     state.floaters = state.floaters.filter(f => f.life > 0);
 
@@ -901,6 +921,25 @@
           c.beginPath(); c.moveTo(x,y-5); c.lineTo(x+3,y); c.lineTo(x,y+5); c.lineTo(x-3,y); c.closePath(); c.fill();
         }
       }
+    } else if (p.type === 'cherry') {
+      const pulse = p.timer > 0 ? 1 + Math.sin(t * 22) * .055 : 1;
+      c.scale(pulse, pulse);
+      c.fillStyle = 'rgba(70,48,28,.2)';
+      c.beginPath(); c.ellipse(0, 29, 31, 8, 0, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = '#397541'; c.lineWidth = 5;
+      c.beginPath(); c.moveTo(-13, -15); c.quadraticCurveTo(-12, -42, 4, -50); c.moveTo(16, -12); c.quadraticCurveTo(18, -37, 4, -50); c.stroke();
+      c.fillStyle = '#55a04d'; c.beginPath(); c.ellipse(13, -46, 14, 6, -.25, 0, Math.PI * 2); c.fill();
+      for (const [x, y, r] of [[-15, 2, 23], [17, 6, 24]]) {
+        const red = c.createRadialGradient(x - 7, y - 9, 2, x, y, r);
+        red.addColorStop(0, '#ff8a6a'); red.addColorStop(.45, '#df493c'); red.addColorStop(1, '#a92e30');
+        c.fillStyle = red; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill();
+        c.fillStyle = '#fff1c7';
+        c.beginPath(); c.ellipse(x - 7, y - 5, 4, 6, -.25, 0, Math.PI * 2); c.ellipse(x + 7, y - 5, 4, 6, .25, 0, Math.PI * 2); c.fill();
+        c.fillStyle = '#3b2c28';
+        c.beginPath(); c.arc(x - 6, y - 4, 2, 0, Math.PI * 2); c.arc(x + 6, y - 4, 2, 0, Math.PI * 2); c.fill();
+        c.strokeStyle = '#642b29'; c.lineWidth = 2;
+        c.beginPath(); c.moveTo(x - 12, y - 13); c.lineTo(x - 3, y - 10); c.moveTo(x + 12, y - 13); c.lineTo(x + 3, y - 10); c.stroke();
+      }
     } else if (p.type === 'wallnut') {
       const ratio = Math.max(0, p.hp / p.maxHp);
       c.fillStyle = 'rgba(42,75,31,.2)'; c.beginPath(); c.ellipse(0, 31, 29, 8, 0, 0, Math.PI * 2); c.fill();
@@ -1047,6 +1086,18 @@
     const sortedZombies = [...state.zombies].sort((a,b) => a.y - b.y);
     for (const z of sortedZombies) drawZombie(z,t);
     for (const s of state.suns) drawSun(s,t);
+    for (const explosion of state.explosions) {
+      const progress = 1 - explosion.life / explosion.maxLife;
+      const radius = 32 + progress * 125;
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, explosion.life / explosion.maxLife) * .72;
+      ctx.fillStyle = '#ffb13b';
+      ctx.beginPath(); ctx.arc(explosion.x, explosion.y, radius, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = Math.max(0, explosion.life / explosion.maxLife);
+      ctx.strokeStyle = '#fff0a0'; ctx.lineWidth = 9 * (1 - progress) + 2;
+      ctx.beginPath(); ctx.arc(explosion.x, explosion.y, radius * .82, 0, Math.PI * 2); ctx.stroke();
+      ctx.restore();
+    }
     for (const p of state.particles) {
       ctx.globalAlpha = Math.max(0,p.life/p.maxLife);
       ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
@@ -1140,7 +1191,7 @@
     state.plants.push({
       type, row: cell.row, col: cell.col,
       x: GX + cell.col * CW + CW / 2, y: GY + cell.row * CH + 70,
-      hp: def.hp, maxHp: def.hp, timer: type === 'sunflower' ? 4 : .35,
+      hp: def.hp, maxHp: def.hp, timer: type === 'sunflower' ? 4 : type === 'cherry' ? .75 : .35,
       flash: 0, phase: Math.random() * 6.28
     });
     state.planted++;
@@ -1159,13 +1210,13 @@
   $('fullBtn').addEventListener('click', async () => {
     try {
       if (document.fullscreenElement) await document.exitFullscreen();
-      else if ($('boardWrap').requestFullscreen) await $('boardWrap').requestFullscreen();
+      else if ($('gameCard').requestFullscreen) await $('gameCard').requestFullscreen();
       else toast('当前浏览器不支持全屏');
     } catch (_) { toast('暂时无法进入全屏'); }
   });
   document.addEventListener('keydown', event => {
     if (event.code === 'Space') { event.preventDefault(); togglePause(); }
-    if (event.key >= '1' && event.key <= '4') selectPlant(cards[Number(event.key)-1].dataset.plant);
+    if (event.key >= '1' && event.key <= '5') selectPlant(cards[Number(event.key)-1].dataset.plant);
     if (event.key.toLowerCase() === 's' && state.mode === 'playing') setSelected(state.selected === 'shovel' ? null : 'shovel');
     if (event.key === 'Escape') setSelected(null);
   });
