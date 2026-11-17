@@ -216,13 +216,11 @@
               <div class="mcp-vp-label mcp-vp-super">超胞</div>
             </div>
             <div class="mcp-legend" id="mcp-legend">
-              <span><i class="mcp-swatch" id="mcp-sw1"></i><b id="mcp-lb1">A 层原子</b></span>
-              <span id="mcp-leg2"><i class="mcp-swatch" id="mcp-sw2"></i><b id="mcp-lb2">B 层原子</b></span>
-              <span id="mcp-leg3"><i class="mcp-swatch" id="mcp-sw3"></i><b id="mcp-lb3">C 层原子</b></span>
+              <!-- 图例由 JS 动态生成 -->
             </div>
           </div>
 
-          <p class="mcp-stage-note" id="mcp-stage-note">左边单胞、右边 2×2×2 超胞（面心立方 fcc）；超胞转到 [111] 方向观察，按密置层着色。</p>
+          <p class="mcp-stage-note" id="mcp-stage-note">左边 fcc 单胞（顶点灰 + 面心金），右边 2×2×2 超胞（A/B/C 三层着色），初始方向与单胞一致。</p>
 
           <div class="mcp-info" id="mcp-info">
             <div class="mcp-info-head">
@@ -519,15 +517,18 @@
           right:10px;
           top:8px;
           display:flex;
-          gap:12px;
+          gap:10px;
+          flex-wrap:wrap;
+          max-width:72%;
           font-size:11px;
           color:#4a6b6c;
-          background:rgba(255,255,255,0.74);
-          padding:3px 8px;
+          background:rgba(255,255,255,0.78);
+          padding:4px 10px;
           border-radius:5px;
           pointer-events:none;
+          box-shadow:0 1px 3px rgba(0,0,0,0.06);
         }
-        .mcp-legend span{ display:inline-flex; align-items:center; gap:4px; }
+        .mcp-legend > span{ display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
         .mcp-legend b{ font-weight:500; }
         .mcp-swatch{
           display:inline-block;
@@ -795,8 +796,10 @@
           .mcp-fields{ grid-template-columns:repeat(2, minmax(0,1fr)); }
           .mcp-calc-grid{ grid-template-columns:1fr; }
           .mcp-seq-compare{ grid-template-columns:1fr; }
-          .mcp-legend{ flex-direction:column; gap:2px; }
-          .mcp-bar-row{ grid-template-columns:82px minmax(0,1fr) 48px; }
+          .mcp-legend{ flex-wrap:wrap; max-width:calc(100% - 20px); right:10px; gap:8px 10px; }
+          .mcp-bar-row{ grid-template-columns:72px 1fr 44px; gap:6px; }
+          .mcp-bar-label{ font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+          .mcp-bar-value{ font-size:11.5px; }
         }
         </style>
 
@@ -921,44 +924,41 @@
           /* ---- 面心立方 fcc ---- */
           var FCC_A = 2 * Math.sqrt(2);
           var PURPLE = '#8a6fb0';
+          var FCC_CORNER = '#6a7c82';      /* 单胞顶点：与 A/B/C 不共用 */
+          var FCC_FACE = '#c48a4c';        /* 单胞面心：与 A/B/C 不共用 */
           var fccLayerColors = [TEAL, ORANGE, PURPLE];
 
-          /* fcc 单胞：标准立方视图，顶点 teal + 面心 orange */
+          /* fcc 单胞：标准立方视图，顶点 slate grey + 面心 warm gold */
           var fccUnit = makeCubeModel(FCC_A, [
-            { x: FCC_A / 2, y: FCC_A / 2, z: 0, c: ORANGE },
-            { x: FCC_A / 2, y: FCC_A / 2, z: FCC_A, c: ORANGE },
-            { x: FCC_A / 2, y: 0, z: FCC_A / 2, c: ORANGE },
-            { x: FCC_A / 2, y: FCC_A, z: FCC_A / 2, c: ORANGE },
-            { x: 0, y: FCC_A / 2, z: FCC_A / 2, c: ORANGE },
-            { x: FCC_A, y: FCC_A / 2, z: FCC_A / 2, c: ORANGE }
+            { x: FCC_A / 2, y: FCC_A / 2, z: 0, c: FCC_FACE },
+            { x: FCC_A / 2, y: FCC_A / 2, z: FCC_A, c: FCC_FACE },
+            { x: FCC_A / 2, y: 0, z: FCC_A / 2, c: FCC_FACE },
+            { x: FCC_A / 2, y: FCC_A, z: FCC_A / 2, c: FCC_FACE },
+            { x: 0, y: FCC_A / 2, z: FCC_A / 2, c: FCC_FACE },
+            { x: FCC_A, y: FCC_A / 2, z: FCC_A / 2, c: FCC_FACE }
           ]);
+          /* 覆盖顶点原子颜色（makeCubeModel 默认 TEAL，换成 FCC_CORNER） */
+          fccUnit.atoms.forEach(function(a){
+            if (a.c === TEAL) a.c = FCC_CORNER;
+          });
 
-          /* fcc 超胞：2×2×2，转到 [111] 方向并按密置层着色 */
-          function fccPoint(x, y, z){
-            return {
-              x: (x - y) / Math.SQRT2,
-              y: (x + y - 2 * z) / Math.sqrt(6),
-              z: (x + y + z) / Math.sqrt(3)
-            };
-          }
+          /* fcc 超胞：2×2×2 平铺，初始方向与单胞一致 */
           var fccSuperAtoms = [];
           for (var fi = 0; fi <= 4; fi++){
             for (var fj = 0; fj <= 4; fj++){
               for (var fk = 0; fk <= 4; fk++){
                 if (((fi + fj + fk) & 1) !== 0) continue;
                 var fLayer = (fi + fj + fk) / 2;
-                var fp = fccPoint(
-                  fi * FCC_A / 2, fj * FCC_A / 2, fk * FCC_A / 2
-                );
-                fp.c = fccLayerColors[fLayer % 3];
-                fccSuperAtoms.push(fp);
+                fccSuperAtoms.push({
+                  x: fi * FCC_A / 2,
+                  y: fj * FCC_A / 2,
+                  z: fk * FCC_A / 2,
+                  c: fccLayerColors[fLayer % 3]
+                });
               }
             }
           }
-          var fccSuperEdges = cubeEdges(FCC_A * 2).map(function(e){
-            return [fccPoint(e[0].x, e[0].y, e[0].z), fccPoint(e[1].x, e[1].y, e[1].z)];
-          });
-          var fccSuper = finalize({ atoms: fccSuperAtoms, edges: fccSuperEdges });
+          var fccSuper = finalize({ atoms: fccSuperAtoms, edges: cubeEdges(FCC_A * 2) });
 
           /* ---- 六方最密 hcp ---- */
           var HCP_H = 2 * Math.sqrt(2 / 3);
@@ -1068,8 +1068,8 @@
               seq: 'ABCABC',
               metals: 'Cu、Ag、Au、Al',
               radius: 'r = √2a / 4',
-              desc: '单胞为面心立方；2×2×2 超胞转到 [111] 方向，按密置层着色后可以清楚看到 ABCABC 的重复周期。',
-              note: '左：fcc 单胞（顶点 + 面心）；右：2×2×2 超胞沿 [111] 着色，可见 ABCABC。'
+              desc: '单胞为面心立方（顶点灰 + 面心金）；2×2×2 超胞与单胞同朝向，按 [111] 密置层着色后可以清楚看到 ABCABC 的重复周期。',
+              note: '左：fcc 单胞（顶点灰 + 面心金）；右：2×2×2 超胞，着色沿 [111] 密置层分层，可见 ABCABC。'
             },
             hcp: {
               name: '六方最密堆积 hcp',
@@ -1089,7 +1089,7 @@
           var LEGEND = {
             sc: [[TEAL, '原子']],
             bcc: [[TEAL, '顶点原子'], [ORANGE, '体心原子']],
-            fcc: [[TEAL, '顶点 / A 层'], [ORANGE, '面心 / B 层'], [PURPLE, 'C 层']],
+            fcc: [[FCC_CORNER, '单胞顶点'], [FCC_FACE, '单胞面心'], [TEAL, 'A 层'], [ORANGE, 'B 层'], [PURPLE, 'C 层']],
             hcp: [[TEAL, 'A 层原子'], [ORANGE, 'B 层原子']]
           };
 
@@ -1268,14 +1268,7 @@
           var descEl = document.getElementById('mcp-desc');
           var stageNoteEl = document.getElementById('mcp-stage-note');
           var effBarEl = document.getElementById('mcp-effbar');
-          var leg2El = document.getElementById('mcp-leg2');
-          var leg3El = document.getElementById('mcp-leg3');
-          var sw1El = document.getElementById('mcp-sw1');
-          var sw2El = document.getElementById('mcp-sw2');
-          var sw3El = document.getElementById('mcp-sw3');
-          var lb1El = document.getElementById('mcp-lb1');
-          var lb2El = document.getElementById('mcp-lb2');
-          var lb3El = document.getElementById('mcp-lb3');
+          var legendEl = document.getElementById('mcp-legend');
 
           function setKind(kind){
             if (!MODELS[kind]) return;
@@ -1300,22 +1293,9 @@
             effBarEl.style.width = d.effVal + '%';
 
             var leg = LEGEND[kind];
-            sw1El.style.background = leg[0][0];
-            lb1El.textContent = leg[0][1];
-            if (leg[1]){
-              leg2El.style.display = '';
-              sw2El.style.background = leg[1][0];
-              lb2El.textContent = leg[1][1];
-            } else {
-              leg2El.style.display = 'none';
-            }
-            if (leg[2]){
-              leg3El.style.display = '';
-              sw3El.style.background = leg[2][0];
-              lb3El.textContent = leg[2][1];
-            } else {
-              leg3El.style.display = 'none';
-            }
+            legendEl.innerHTML = leg.map(function(item){
+              return '<span><i class="mcp-swatch" style="background:' + item[0] + '"></i><b>' + item[1] + '</b></span>';
+            }).join('');
 
             state.need = true;
           }
