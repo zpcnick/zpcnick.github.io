@@ -345,7 +345,7 @@
           <li><strong>按配位数从小到大演示</strong>：先点 ZnS（4 配位），再 NaCl（6 配位），最后 CsCl（8 配位）。让学生数每个阳离子周围最近的阴离子个数，再对应半径比区间。</li>
           <li><strong>突出钙钛矿的八面体</strong>：把自动旋转关掉，拖动视角让 Ti—O 八面体正对屏幕——6 个 O 围成的形状一眼就能看出来，旁边还有 12 配位的 Ca。</li>
           <li><strong>萤石和反萤石</strong>：把 CaF₂ 的颜色反过来（把阳离子换成橙色），就是 Na₂O 的结构，阳离子填进全部四面体空隙。</li>
-          <li><strong>金红石的四方变形</strong>：和 NaCl 对比，TiO₂ 的 c 轴比 a 轴短，O 不再是正八面体配位而是略压扁的。</li>
+          <li><strong>金红石的四方变形</strong>：和 NaCl 对比，TiO₂ 的 c 轴只有 a 轴的 ~64%，O 也不在四旋转轴上而是错开一个 4f 参数 x≈0.305 的位置——Ti 的八面体配位因此被压扁了。</li>
         </ol>
 
         <h2 id="common"><a href="#common" class="headerlink" title="常见误区"></a>五、几个常见误区</h2>
@@ -428,6 +428,9 @@
             border-radius:10px;
             border:1px solid #dbe8e7;
             overflow:hidden;
+            touch-action:none;
+            user-select:none;
+            -webkit-user-select:none;
           }
           .mcp-stage canvas{ display:block; width:100%; height:100%; }
           .mcp-hint{
@@ -729,19 +732,19 @@
             models.caf2 = finalize(makeCubeModel(A, atoms));
           })();
 
-          /* 5. TiO₂ 金红石型 — P4₂/mnm, a=b=4, c≈2.85 */
+          /* 5. TiO₂ 金红石型 — P4₂/mnm, a=b=4, c≈2.58, x≈0.305 */
           (function(){
-            var C = 2.85;
+            var C = 2.58;          /* c/a ≈ 0.645，贴近真实金红石 */
+            var x = 0.305;         /* O 的 Wyckoff 4f 参数 */
             var atoms = [];
-            /* Ti⁴⁺：两个 */
-            atoms.push({x:0, y:0, z:0, c: TEAL, t:'Ti'});
-            atoms.push({x:A/2, y:A/2, z:C/2, c: TEAL, t:'Ti'});
-            /* O²⁻：四个，z ≈ 0.3 取 0.3 */
-            var z1 = 0.3 * C;
-            atoms.push({x:0, y:0, z:z1, c: ORANGE, t:'O'});
-            atoms.push({x:0, y:0, z:C - z1, c: ORANGE, t:'O'});
-            atoms.push({x:A/2, y:A/2, z:z1 + C/2, c: ORANGE, t:'O'});
-            atoms.push({x:A/2, y:A/2, z:C/2 - z1, c: ORANGE, t:'O'});
+            /* Ti⁴⁺：Wyckoff 2a — (0,0,0) 和 (1/2,1/2,1/2) */
+            atoms.push({x:0,         y:0,         z:0,       c: TEAL,   t:'Ti'});
+            atoms.push({x:A/2,       y:A/2,       z:C/2,     c: TEAL,   t:'Ti'});
+            /* O²⁻：Wyckoff 4f — 四个位置，不在 4 次轴上 */
+            atoms.push({x: x*A,      y: x*A,      z:0,       c: ORANGE, t:'O'});
+            atoms.push({x:(1-x)*A,   y:(1-x)*A,   z:0,       c: ORANGE, t:'O'});
+            atoms.push({x:(0.5-x)*A, y:(0.5+x)*A, z:C/2,     c: ORANGE, t:'O'});
+            atoms.push({x:(0.5+x)*A, y:(0.5-x)*A, z:C/2,     c: ORANGE, t:'O'});
             models.tio2 = finalize(makeTetragonalModel(A, C, atoms));
           })();
 
@@ -839,8 +842,8 @@
               formula: '2',
               crystal: '四方 P4₂/mnm',
               examples: 'TiO₂、SnO₂、PbO₂',
-              desc: 'Ti⁴⁺ 在简单四方格子的 (0,0,0) 和 (1/2,1/2,1/2) 位置；O²⁻ 4 个，沿 c 轴方向排布。Ti 的配位数是 6（八面体），O 的配位数是 3。c 轴比 a 轴短一些。',
-              note: 'Ti⁴⁺ 在两个等效位置，O²⁻ 共 4 个，c ≈ 0.71a。'
+              desc: 'Ti⁴⁺ 在简单四方格子的 2a 位置 (0,0,0) 和 (1/2,1/2,1/2)；O²⁻ 在 Wyckoff 4f 位置，x ≈ 0.305，分布在 z=0 和 z=c/2 两层但不在四旋转轴上。Ti 的配位数是 6（八面体），O 的配位数是 3。c/a ≈ 0.645，比 a 轴明显短。',
+              note: 'Ti⁴⁺ 在 2a，O²⁻ 在 4f (x≈0.305)，共 6 原子；c ≈ 0.64a。'
             },
             perovskite: {
               name: 'CaTiO₃ 钙钛矿型',
@@ -1046,8 +1049,9 @@
               state.yaw = 0.7; state.pitch = 0.35; state.zoom = 1; state.need = true;
             });
 
-            /* mouse drag */
+            /* mouse/touch drag */
             stage.addEventListener('pointerdown', function(e){
+              e.preventDefault();
               state.dragging = true;
               state.lastX = e.clientX;
               state.lastY = e.clientY;
@@ -1055,6 +1059,7 @@
             });
             stage.addEventListener('pointermove', function(e){
               if (!state.dragging) return;
+              e.preventDefault();
               var dx = e.clientX - state.lastX;
               var dy = e.clientY - state.lastY;
               state.lastX = e.clientX;
