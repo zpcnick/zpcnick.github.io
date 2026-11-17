@@ -758,25 +758,6 @@
                 }
               }
             }
-            /* 计算 Ti—O 键（PBC 最小镜像，阈值 2.0 ≈ Ti—O 键长） */
-            var bonds = [];
-            var tiList = atoms.filter(function(a){ return a.t === 'Ti'; });
-            var oList  = atoms.filter(function(a){ return a.t === 'O';  });
-            tiList.forEach(function(ti){
-              oList.forEach(function(o){
-                var best = { d: 1e9 };
-                for (var ni = -1; ni <= 1; ni++)
-                for (var nj = -1; nj <= 1; nj++)
-                for (var nk = -1; nk <= 1; nk++){
-                  var px = o.x + ni*A, py = o.y + nj*A, pz = o.z + nk*C;
-                  var d = Math.sqrt((px-ti.x)*(px-ti.x) + (py-ti.y)*(py-ti.y) + (pz-ti.z)*(pz-ti.z));
-                  if (d < best.d){ best.d = d; best.x = px; best.y = py; best.z = pz; }
-                }
-                if (best.d < 2.0){
-                  bonds.push({ x1:ti.x, y1:ti.y, z1:ti.z, x2:best.x, y2:best.y, z2:best.z });
-                }
-              });
-            });
             /* 超胞轮廓：1a × 1b × 2c */
             var aS = na*A, bS = nb*A, cS = nc*C;
             var c000={x:0,y:0,z:0},  c100={x:aS,y:0,z:0},   c010={x:0,y:bS,z:0}, c110={x:aS,y:bS,z:0};
@@ -787,7 +768,6 @@
               [c000,c001],[c100,c101],[c110,c111],[c010,c011]
             ];
             var tio2model = finalize({ atoms: atoms, edges: edges, lattice: { a: aS, b: bS, c: cS } });
-            tio2model.bonds = bonds;
             models.tio2 = tio2model;
           })();
 
@@ -1002,23 +982,6 @@
                 ctx.beginPath();
                 ctx.moveTo(a.x, a.y);
                 ctx.lineTo(b.x, b.y);
-                ctx.stroke();
-              });
-              ctx.restore();
-            }
-
-            /* 画化学键（球棍模型，键在球下层，端点被球遮住） */
-            if (model.bonds){
-              ctx.save();
-              ctx.lineCap = 'round';
-              model.bonds.forEach(function(b){
-                var p1 = project({x:b.x1, y:b.y1, z:b.z1});
-                var p2 = project({x:b.x2, y:b.y2, z:b.z2});
-                ctx.strokeStyle = 'rgba(158,168,168,0.85)';
-                ctx.lineWidth = Math.max(2, R * scale * 0.32);
-                ctx.beginPath();
-                ctx.moveTo(p1.x, p1.y);
-                ctx.lineTo(p2.x, p2.y);
                 ctx.stroke();
               });
               ctx.restore();
