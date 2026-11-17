@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zpcnick.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="用可旋转三维模型展示 7 种常见化合物晶体结构：NaCl 岩盐、CsCl、ZnS 闪锌矿、CaF₂ 萤石、TiO₂ 金红石、CaTiO₃ 钙钛矿、MgAl₂O₄ 尖晶石。">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="常见化合物晶体结构">
+  <meta property="og:url" content="https://zpcnick.github.io/2026/11/22/ionic-crystal-structures/">
+  <meta property="og:site_name" content="ZPC&#39;s homepage">
+  <meta property="og:description" content="用可旋转三维模型展示 7 种常见化合物晶体结构：NaCl 岩盐、CsCl、ZnS 闪锌矿、CaF₂ 萤石、TiO₂ 金红石、CaTiO₃ 钙钛矿、MgAl₂O₄ 尖晶石。">
+  <meta property="og:locale">
+  <meta property="article:published_time" content="2026-11-22T02:00:00.000Z">
+  <meta property="article:modified_time" content="2026-11-22T02:00:00.000Z">
+  <meta property="article:author" content="zpc">
+  <meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zpcnick.github.io/2026/11/22/ionic-crystal-structures/">
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'ch'
+  };
+</script>
+
+  <title>常见化合物晶体结构 | ZPC's homepage</title>
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">ZPC's homepage</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+        </ul>
+</nav>
+
+
+
+</div>
+    </header>
+
+
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+
+          <div class="content post posts-expand">
+
+
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="ch">
+    <link itemprop="mainEntityOfPage" href="https://zpcnick.github.io/2026/11/22/ionic-crystal-structures/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zpc">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/WPOrganization">
+      <meta itemprop="name" content="ZPC's homepage">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">常见化合物晶体结构</h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-11-22 10:00:00" itemprop="dateCreated datePublished" datetime="2026-11-22T10:00:00+08:00">2026-11-22</time>
+            </span>
+
+        </div>
+      </header>
+
+
+
+    <div class="post-body" itemprop="articleBody">
+
+        <p>离子晶体中，阴、阳离子按一定的几何排列方式相互交替占据空间，结构由<strong>半径比</strong>（r<sub>+</sub>/r<sub>−</sub>）决定。半径比不同，阳离子周围能容纳的阴离子个数（<strong>配位数</strong>）不同，于是形成了形形色色的结构类型。下面用可旋转的三维模型，把 7 种常见的无机晶体放在一起展示——它们几乎覆盖了中学化学和大学无机里出现频率最高的例子。</p>
+
+        <h2 id="viewer"><a href="#viewer" class="headerlink" title="交互式三维查看器"></a>一、交互式三维查看器</h2>
+
+        <p>拖拽模型旋转，滚轮缩放。不同颜色代表不同种类的原子：<span style="color:#2c7a7b;font-weight:600;">青绿色</span>一般是阳离子，<span style="color:#ef9256;font-weight:600;">橙红色</span>一般是阴离子，<span style="color:#8a6fb0;font-weight:600;">紫色</span>留给钙钛矿里的 Ti、尖晶石里的 Al 等第三种原子。切换结构时，晶胞参数随之改变，视角自动重置。</p>
+
+        <div class="mcp-app">
+          <div class="mcp-toolbar">
+            <span class="mcp-title">常见化合物晶体 3D 查看器</span>
+            <div class="mcp-tools">
+              <label class="mcp-chk"><input type="checkbox" id="mcp-auto" checked><span>自动旋转</span></label>
+              <label class="mcp-chk"><input type="checkbox" id="mcp-cell" checked><span>显示晶胞</span></label>
+              <button class="mcp-btn" id="mcp-reset" type="button">重置视角</button>
+            </div>
+          </div>
+
+          <div class="mcp-tabs" id="mcp-tabs" role="tablist" aria-label="选择晶体结构">
+            <button class="mcp-tab" type="button" data-kind="nacl" role="tab">NaCl 岩盐</button>
+            <button class="mcp-tab" type="button" data-kind="cscl" role="tab">CsCl 氯化铯</button>
+            <button class="mcp-tab" type="button" data-kind="zns" role="tab">ZnS 闪锌矿</button>
+            <button class="mcp-tab" type="button" data-kind="caf2" role="tab">CaF₂ 萤石</button>
+            <button class="mcp-tab" type="button" data-kind="tio2" role="tab">TiO₂ 金红石</button>
+            <button class="mcp-tab is-active" type="button" data-kind="perovskite" role="tab">CaTiO₃ 钙钛矿</button>
+            <button class="mcp-tab" type="button" data-kind="spinel" role="tab">MgAl₂O₄ 尖晶石</button>
+          </div>
+
+          <div class="mcp-stage">
+            <canvas id="mcp-canvas" aria-label="化合物晶体结构三维模型"></canvas>
+            <div class="mcp-hint">拖拽旋转 · 滚轮缩放</div>
+            <div class="mcp-legend" id="mcp-legend">
+              <!-- 图例由 JS 动态生成 -->
+            </div>
+          </div>
+
+          <p class="mcp-stage-note" id="mcp-stage-note">钙钛矿型：八面体 Ti 位于体心，O 在六个面心形成八面体，Ca 占据八个立方体顶点。</p>
+
+          <div class="mcp-info" id="mcp-info">
+            <div class="mcp-info-head">
+              <span class="mcp-info-name" id="mcp-name">CaTiO₃ 钙钛矿</span>
+              <span class="mcp-info-tag" id="mcp-tag">ABO₃ · 立方晶系</span>
+            </div>
+            <dl class="mcp-fields">
+              <div><dt>阳离子配位数</dt><dd id="mcp-cation-cn">12（Ca）/ 6（Ti）</dd></div>
+              <div><dt>阴离子配位数</dt><dd id="mcp-anion-cn">2</dd></div>
+              <div><dt>晶胞化学式数</dt><dd id="mcp-formula">1</dd></div>
+              <div><dt>晶系</dt><dd id="mcp-crystal">立方 Pm-3m</dd></div>
+              <div><dt>典型代表</dt><dd id="mcp-examples">BaTiO₃、SrTiO₃</dd></div>
+            </dl>
+            <p class="mcp-desc" id="mcp-desc">Ca 在 8 个顶点、Ti 在体心、O 在 6 个面心。Ti 被 6 个 O 包围形成 TiO₆ 八面体，Ca 被 12 个 O 包围——这正是高温超导体、压电陶瓷、钙钛矿太阳能电池的结构原型。</p>
+          </div>
+        </div>
+
+        <p class="mcp-footnote">查看器中的晶胞参数 <em>a</em>（和 TiO₂ 的 <em>c</em>）全部取 4 或其合理近似，目的是让原子在画面中占据合适的相对位置，不代表真实的 Ångström 数值。不同结构使用不同的相对比例以便看清。</p>
+
+        <h2 id="compare"><a href="#compare" class="headerlink" title="七种结构速览"></a>二、七种结构速览</h2>
+
+        <p>半径比规则把阳离子配位数和晶体结构直接联系起来。记住它的几个阈值，就能大致预测常见 AB、AB₂、ABO₃ 型的结构。</p>
+
+        <div class="mcp-table-wrap">
+          <table class="mcp-table">
+            <thead>
+              <tr><th>结构类型</th><th>化学式</th><th>晶系</th><th>阳离子配位数</th><th>阴离子配位数</th><th>晶胞式量数</th><th>典型代表</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>NaCl 岩盐型</strong></td>
+                <td>AB</td>
+                <td>立方 Fm-3m</td>
+                <td>6</td>
+                <td>6</td>
+                <td>4</td>
+                <td>NaCl、MgO、CaO</td>
+              </tr>
+              <tr>
+                <td><strong>CsCl 氯化铯型</strong></td>
+                <td>AB</td>
+                <td>立方 Pm-3m</td>
+                <td>8</td>
+                <td>8</td>
+                <td>1</td>
+                <td>CsCl、CsBr、CsI</td>
+              </tr>
+              <tr>
+                <td><strong>ZnS 闪锌矿型</strong></td>
+                <td>AB</td>
+                <td>立方 F-43m</td>
+                <td>4</td>
+                <td>4</td>
+                <td>4</td>
+                <td>ZnS、GaAs、CdTe</td>
+              </tr>
+              <tr>
+                <td><strong>CaF₂ 萤石型</strong></td>
+                <td>AB₂</td>
+                <td>立方 Fm-3m</td>
+                <td>8</td>
+                <td>4</td>
+                <td>4</td>
+                <td>CaF₂、ZrO₂、HfO₂</td>
+              </tr>
+              <tr>
+                <td><strong>TiO₂ 金红石型</strong></td>
+                <td>AB₂</td>
+                <td>四方 P4₂/mnm</td>
+                <td>6</td>
+                <td>3</td>
+                <td>2</td>
+                <td>TiO₂、SnO₂、PbO₂</td>
+              </tr>
+              <tr>
+                <td><strong>CaTiO₃ 钙钛矿型</strong></td>
+                <td>ABO₃</td>
+                <td>立方 Pm-3m</td>
+                <td>A:12 / B:6</td>
+                <td>2</td>
+                <td>1</td>
+                <td>CaTiO₃、BaTiO₃、SrTiO₃</td>
+              </tr>
+              <tr>
+                <td><strong>MgAl₂O₄ 尖晶石型</strong></td>
+                <td>AB₂O₄</td>
+                <td>立方 Fd-3m</td>
+                <td>A:4 / B:6</td>
+                <td>4</td>
+                <td>8<small>（惯用晶胞）</small></td>
+                <td>MgAl₂O₄、Fe₃O₄、CoAl₂O₄</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ul class="mcp-notes">
+          <li><strong>半径比规则</strong>：r<sub>+</sub>/r<sub>−</sub> ≈ 0.225 配位数 4，≈ 0.414 配位数 6，≈ 0.732 配位数 8。NaCl 型落在 0.414~0.732，CsCl 落在 0.732~1.00。</li>
+          <li><strong>晶胞式量数</strong>：用均摊法顶点 1/8、棱心 1/4、面心 1/2、体心 1。NaCl 晶胞 4 个 Na + 4 个 Cl = 4 NaCl ✓。</li>
+          <li><strong>注意反向结构</strong>：阳离子与阴离子互换位置会得到"反式"结构，例如反萤石型（Na₂O、K₂S）、反钙钛矿型。</li>
+        </ul>
+
+        <h2 id="radius"><a href="#radius" class="headerlink" title="半径比与配位数"></a>三、半径比：为什么同一 1:1 会长成三种不同的结构？</h2>
+
+        <p>AB 型化合物并不是只有 NaCl 这一种 1:1 结构。当阴离子按最密堆积排好后，阳离子有两种可以选择的"洞"：<strong>八面体空隙</strong>（配位数 6）和<strong>四面体空隙</strong>（配位数 4）。阳离子越大，越需要周围更多阴离子"抱住"它——配位数越高，能容纳的 r<sub>+</sub>/r<sub>−</sub> 下限越高。</p>
+
+        <div class="mcp-calc-grid">
+          <div class="mcp-calc-card">
+            <h3>NaCl 型 · r<sub>+</sub>/r<sub>−</sub> ≈ 0.414 ~ 0.732</h3>
+            <p>Cl⁻ 先按面心立方最密堆积排好，Na⁺ 填进<strong>全部八面体空隙</strong>。结果是两套互相错开 <em>a</em>/2 的 FCC，一套是 Cl⁻，一套是 Na⁺。MgO、CaO、SrO 也都是 NaCl 型。</p>
+          </div>
+          <div class="mcp-calc-card">
+            <h3>CsCl 型 · r<sub>+</sub>/r<sub>−</sub> ≈ 0.732 ~ 1.00</h3>
+            <p>Cs⁺ 足够大，能同时与 8 个 Cl⁻ 相切。结构相当于两个简单立方互相穿插：Cs⁺ 在 Cl⁻ 立方的体心，或者反过来。常见于 Cs 盐、Tl 盐和高温相的 NH₄Cl。</p>
+          </div>
+          <div class="mcp-calc-card">
+            <h3>ZnS 型 · r<sub>+</sub>/r<sub>−</sub> ≈ 0.225 ~ 0.414</h3>
+            <p>Zn²⁺ 非常小，只能填进 S²⁻ 密堆积中的<strong>四面体空隙</strong>，而且只填一半——另一半留空。GaAs、CdTe、InP 等 III-V 和 II-VI 半导体就是这种结构。</p>
+          </div>
+        </div>
+
+        <h2 id="classroom"><a href="#classroom" class="headerlink" title="课堂提示"></a>四、课堂演示建议</h2>
+
+        <ol class="mcp-notes">
+          <li><strong>按配位数从小到大演示</strong>：先点 ZnS（4 配位），再 NaCl（6 配位），最后 CsCl（8 配位）。让学生数每个阳离子周围最近的阴离子个数，再对应半径比区间。</li>
+          <li><strong>突出钙钛矿的八面体</strong>：把自动旋转关掉，拖动视角让 Ti—O 八面体正对屏幕——6 个 O 围成的形状一眼就能看出来，旁边还有 12 配位的 Ca。</li>
+          <li><strong>萤石和反萤石</strong>：把 CaF₂ 的颜色反过来（把阳离子换成橙色），就是 Na₂O 的结构，阳离子填进全部四面体空隙。</li>
+          <li><strong>金红石的四方变形</strong>：和 NaCl 对比，TiO₂ 的 c 轴比 a 轴短，O 不再是正八面体配位而是略压扁的。</li>
+        </ol>
+
+        <h2 id="common"><a href="#common" class="headerlink" title="常见误区"></a>五、几个常见误区</h2>
+
+        <ul class="mcp-notes">
+          <li><strong>"离子晶体配位数=阴阳离子半径比"</strong>：只能说"大致"。共价成分高的 ZnS 系列，离子半径比规则已经开始失效，必须用电子密度和杂化轨道来解释。</li>
+          <li><strong>"NaCl 和 ZnS 都是阴离子 FCC"</strong>：对，但阳离子填的空隙数不同——NaCl 填全部八面体空隙，ZnS 只填一半四面体空隙。别让学生以为它们是同一种 AB 结构。</li>
+          <li><strong>"TiO₂ 晶胞式量数是 4"</strong>：不。金红石是简单四方素晶胞，Z=2；而如果把它放大 2×2×1 得到新金红石相，Z 才是 4。素晶胞只含 2 个 TiO₂。</li>
+          <li><strong>"尖晶石里 O 是简单立方"</strong>：是 FCC。镁铝尖晶石（MgAl₂O₄）的 O 亚晶格是密堆积，Mg 在四面体空隙，Al 在八面体空隙，两个位置的占用率都很低。</li>
+        </ul>
+
+        <style>
+          /* ================= 颜色常量（CSS 不支持 JS 变量名引用，这里只放结构性样式）================= */
+          .mcp-app{
+            position:relative;
+            margin:22px auto 30px;
+            padding:18px;
+            max-width:880px;
+            background:linear-gradient(160deg,#f7fbfb 0%,#eef5f4 100%);
+            border-radius:14px;
+            border:1px solid #dde8e7;
+            box-shadow:0 2px 10px rgba(34,72,70,0.08);
+            font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+          }
+          .mcp-toolbar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding-bottom:10px;
+            margin-bottom:12px;
+            border-bottom:1px solid #e3ecea;
+          }
+          .mcp-title{
+            font-size:15px;
+            font-weight:700;
+            color:#2c575a;
+            letter-spacing:0.4px;
+          }
+          .mcp-tools{ display:flex; gap:10px; align-items:center; }
+          .mcp-chk{ display:inline-flex; align-items:center; gap:4px; font-size:12px; color:#4a6b6c; cursor:pointer; user-select:none; }
+          .mcp-chk input{ accent-color:#2c7a7b; }
+          .mcp-btn{
+            padding:4px 12px;
+            font-size:12px;
+            color:#2c575a;
+            background:#fff;
+            border:1px solid #b3d5d2;
+            border-radius:16px;
+            cursor:pointer;
+            transition:all .15s;
+          }
+          .mcp-btn:hover{ background:#2c7a7b; color:#fff; border-color:#2c7a7b; }
+          .mcp-tabs{
+            display:flex;
+            flex-wrap:wrap;
+            gap:6px;
+            margin-bottom:12px;
+          }
+          .mcp-tab{
+            padding:7px 14px;
+            font-size:12.5px;
+            color:#4a6b6c;
+            background:#fff;
+            border:1px solid #c8dad8;
+            border-radius:20px;
+            cursor:pointer;
+            transition:all .15s;
+          }
+          .mcp-tab:hover{ color:#2c7a7b; border-color:#2c7a7b; }
+          .mcp-tab.is-active{
+            color:#fff;
+            background:#2c7a7b;
+            border-color:#2c7a7b;
+            box-shadow:0 2px 6px rgba(44,122,123,0.3);
+          }
+          .mcp-stage{
+            position:relative;
+            height:380px;
+            background:#ffffff;
+            border-radius:10px;
+            border:1px solid #dbe8e7;
+            overflow:hidden;
+          }
+          .mcp-stage canvas{ display:block; width:100%; height:100%; }
+          .mcp-hint{
+            position:absolute;
+            left:10px; bottom:8px;
+            font-size:11px;
+            color:#94b0b0;
+            pointer-events:none;
+            letter-spacing:0.3px;
+          }
+          .mcp-legend{
+            position:absolute;
+            right:10px; top:8px;
+            display:flex; gap:10px; flex-wrap:wrap; max-width:72%;
+            font-size:11px; color:#4a6b6c;
+            background:rgba(255,255,255,0.78);
+            padding:4px 10px; border-radius:5px;
+            pointer-events:none;
+            box-shadow:0 1px 3px rgba(0,0,0,0.06);
+          }
+          .mcp-legend > span{ display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
+          .mcp-swatch{
+            display:inline-block;
+            width:11px; height:11px;
+            border-radius:50%;
+            border:1px solid rgba(0,0,0,0.1);
+            flex-shrink:0;
+          }
+          .mcp-stage-note{
+            margin:10px 0 0;
+            font-size:12px;
+            color:#577677;
+            font-style:italic;
+          }
+          .mcp-info{
+            margin-top:12px;
+            padding:14px 16px;
+            background:#ffffff;
+            border-radius:10px;
+            border:1px solid #dbe8e7;
+          }
+          .mcp-info-head{
+            display:flex; justify-content:space-between; align-items:baseline;
+            margin-bottom:10px;
+            padding-bottom:8px;
+            border-bottom:1px dashed #dde8e7;
+          }
+          .mcp-info-name{ font-size:15px; font-weight:700; color:#2c575a; }
+          .mcp-info-tag{
+            font-size:11px;
+            padding:2px 8px;
+            background:#ecf5f3;
+            color:#2c7a7b;
+            border-radius:10px;
+          }
+          .mcp-fields{
+            display:grid;
+            grid-template-columns:repeat(3, minmax(0,1fr));
+            gap:10px 16px;
+            margin:0 0 12px;
+            padding:0;
+          }
+          .mcp-fields div{ display:flex; flex-direction:column; gap:2px; }
+          .mcp-fields dt{
+            font-size:11px;
+            color:#7a9595;
+            text-transform:uppercase;
+            letter-spacing:0.3px;
+          }
+          .mcp-fields dd{
+            margin:0;
+            font-size:14px;
+            font-weight:600;
+            color:#2c575a;
+          }
+          .mcp-desc{
+            margin:0;
+            font-size:13px;
+            line-height:1.8;
+            color:#3d5a5c;
+          }
+          .mcp-footnote{
+            margin-top:18px;
+            font-size:12px;
+            color:#7a9595;
+            font-style:italic;
+          }
+          /* --- 表格 --- */
+          .mcp-table-wrap{ overflow-x:auto; margin:16px 0; }
+          .mcp-table{
+            width:100%;
+            border-collapse:collapse;
+            font-size:13px;
+            color:#2c575a;
+            min-width:620px;
+          }
+          .mcp-table th, .mcp-table td{
+            padding:10px 12px;
+            text-align:left;
+            border-bottom:1px solid #e2eceb;
+            vertical-align:top;
+            white-space:nowrap;
+          }
+          .mcp-table th{
+            font-weight:600;
+            font-size:12px;
+            color:#2c7a7b;
+            background:#f3f9f8;
+            letter-spacing:0.3px;
+          }
+          .mcp-table tbody tr:hover{ background:#f5faf9; }
+          .mcp-table small{ font-size:10.5px; color:#8aa3a4; }
+          .mcp-notes{
+            margin:12px 0; padding-left:20px;
+            font-size:13px; color:#3d5a5c; line-height:1.9;
+          }
+          .mcp-notes li{ margin-bottom:4px; }
+          .mcp-calc-grid{
+            display:grid;
+            grid-template-columns:repeat(3, minmax(0,1fr));
+            gap:14px;
+            margin:14px 0;
+          }
+          .mcp-calc-card{
+            padding:14px 16px;
+            background:#f3f9f8;
+            border-radius:10px;
+            border-left:3px solid #2c7a7b;
+            font-size:13px;
+            color:#3d5a5c;
+            line-height:1.8;
+          }
+          .mcp-calc-card h3{
+            margin:0 0 6px;
+            font-size:13px;
+            color:#2c575a;
+          }
+          .mcp-calc-card p{ margin:0; }
+
+          @media (max-width:720px){
+            .mcp-app{ padding:12px; margin:16px auto; }
+            .mcp-stage{ height:320px; }
+            .mcp-fields{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+            .mcp-calc-grid{ grid-template-columns:1fr; }
+            .mcp-legend{ flex-wrap:wrap; max-width:calc(100% - 20px); right:10px; gap:8px 10px; }
+            /* 移动端表格：隐藏后两列 */
+            .mcp-table-wrap{ overflow-x:visible; }
+            .mcp-table{ min-width:0; font-size:12px; }
+            .mcp-table th,
+            .mcp-table td{ padding:6px 8px; white-space:normal; line-height:1.5; }
+            .mcp-table thead th:nth-child(6),
+            .mcp-table tbody td:nth-child(6),
+            .mcp-table thead th:nth-child(7),
+            .mcp-table tbody td:nth-child(7){ display:none; }
+          }
+        </style>
+
+        <script>
+        (function(){
+          /* ================= 常量 ================= */
+          var TEAL   = '#2c7a7b';
+          var ORANGE = '#ef9256';
+          var PURPLE = '#8a6fb0';
+          var R = 1;                 /* 球半径统一为 1 */
+          var DPR = window.devicePixelRatio || 1;
+
+          /* ================= 三维模型构建 ================= */
+          function makeCubeModel(A, atoms){
+            /* 标准立方晶胞轮廓 + 一组自定义原子，中心自动算出 */
+            var edges = [];
+            var c = 0, d = 0;
+            for (var i = 0; i < 4; i++){
+              for (var j = 0; j < 4; j++){
+                var k = (i + j) % 2;
+                edges.push([{x:i*A/3, y:j*A/3, z:k*A/3},{x:(i+1)*A/3, y:j*A/3, z:k*A/3}]);
+                edges.push([{x:i*A/3, y:j*A/3, z:k*A/3},{x:i*A/3, y:(j+1)*A/3, z:k*A/3}]);
+              }
+            }
+            /* 简化：用 8 个角点连接出 12 条棱 */
+            edges = [];
+            var c000={x:0,y:0,z:0}, c100={x:A,y:0,z:0}, c010={x:0,y:A,z:0}, c110={x:A,y:A,z:0};
+            var c001={x:0,y:0,z:A}, c101={x:A,y:0,z:A}, c011={x:0,y:A,z:A}, c111={x:A,y:A,z:A};
+            edges = [
+              [c000,c100],[c100,c110],[c110,c010],[c010,c000],
+              [c001,c101],[c101,c111],[c111,c011],[c011,c001],
+              [c000,c001],[c100,c101],[c110,c111],[c010,c011]
+            ];
+            return { atoms: atoms, edges: edges, lattice: { a: A, b: A, c: A } };
+          }
+
+          function makeTetragonalModel(A, C, atoms){
+            /* 四方晶胞轮廓：a=b≠c */
+            var edges = [];
+            var c000={x:0,y:0,z:0}, c100={x:A,y:0,z:0}, c010={x:0,y:A,z:0}, c110={x:A,y:A,z:0};
+            var c001={x:0,y:0,z:C}, c101={x:A,y:0,z:C}, c011={x:0,y:A,z:C}, c111={x:A,y:A,z:C};
+            edges = [
+              [c000,c100],[c100,c110],[c110,c010],[c010,c000],
+              [c001,c101],[c101,c111],[c111,c011],[c011,c001],
+              [c000,c001],[c100,c101],[c110,c111],[c010,c011]
+            ];
+            return { atoms: atoms, edges: edges, lattice: { a: A, b: A, c: C } };
+          }
+
+          function finalize(model){
+            if (!model.atoms || model.atoms.length === 0) model.atoms = [];
+            var xs = model.atoms.map(function(a){ return a.x; });
+            var ys = model.atoms.map(function(a){ return a.y; });
+            var zs = model.atoms.map(function(a){ return a.z; });
+            var cx = (Math.min.apply(null, xs) + Math.max.apply(null, xs)) / 2;
+            var cy = (Math.min.apply(null, ys) + Math.max.apply(null, ys)) / 2;
+            var cz = (Math.min.apply(null, zs) + Math.max.apply(null, zs)) / 2;
+            model.center = { x: cx, y: cy, z: cz };
+            var dx = Math.max.apply(null, xs) - Math.min.apply(null, xs);
+            var dy = Math.max.apply(null, ys) - Math.min.apply(null, ys);
+            var dz = Math.max.apply(null, zs) - Math.min.apply(null, zs);
+            model.boundR = Math.max(dx, dy, dz) / 2 + 1.2;
+            return model;
+          }
+
+          /* 工具：FCC 位置，参数 a，返回 14 个角+面心原子坐标 */
+          function fccPositions(a){
+            var p = [];
+            for (var i = 0; i < 2; i++)
+              for (var j = 0; j < 2; j++)
+                for (var k = 0; k < 2; k++)
+                  p.push({x:i*a, y:j*a, z:k*a});
+            p.push({x:a/2, y:a/2, z:0});
+            p.push({x:a/2, y:a/2, z:a});
+            p.push({x:a/2, y:0, z:a/2});
+            p.push({x:a/2, y:a, z:a/2});
+            p.push({x:0, y:a/2, z:a/2});
+            p.push({x:a, y:a/2, z:a/2});
+            return p;
+          }
+
+          function tetrahedralHoles(a){
+            /* 8 个四面体孔位置（0.25a × 奇数组合） */
+            var p = [];
+            var signs = [0.25, 0.75];
+            for (var i = 0; i < 2; i++)
+              for (var j = 0; j < 2; j++)
+                for (var k = 0; k < 2; k++)
+                  p.push({x: signs[i]*a, y: signs[j]*a, z: signs[k]*a});
+            return p;
+          }
+
+          /* ================= 七种晶体结构 ================= */
+          var A = 4;
+          var models = {};
+
+          /* 1. NaCl 岩盐型 — Fm-3m, a=4 */
+          (function(){
+            var atoms = [];
+            fccPositions(A).forEach(function(p){ atoms.push({x:p.x, y:p.y, z:p.z, c: ORANGE, t:'anion'}); });
+            /* 阳离子：12 条棱中点 + 体心 */
+            var cations = [
+              {x:0, y:0, z:A/2}, {x:A, y:0, z:A/2}, {x:0, y:A, z:A/2}, {x:A, y:A, z:A/2},
+              {x:0, y:A/2, z:0}, {x:A, y:A/2, z:0}, {x:0, y:A/2, z:A}, {x:A, y:A/2, z:A},
+              {x:A/2, y:0, z:0}, {x:A/2, y:A, z:0}, {x:A/2, y:0, z:A}, {x:A/2, y:A, z:A},
+              {x:A/2, y:A/2, z:A/2}
+            ];
+            cations.forEach(function(p){ atoms.push({x:p.x, y:p.y, z:p.z, c: TEAL, t:'cation'}); });
+            models.nacl = finalize(makeCubeModel(A, atoms));
+          })();
+
+          /* 2. CsCl 型 — Pm-3m, a=4 */
+          (function(){
+            var atoms = [];
+            for (var i = 0; i < 2; i++)
+              for (var j = 0; j < 2; j++)
+                for (var k = 0; k < 2; k++)
+                  atoms.push({x:i*A, y:j*A, z:k*A, c: ORANGE, t:'anion'});
+            atoms.push({x:A/2, y:A/2, z:A/2, c: TEAL, t:'cation'});
+            models.cscl = finalize(makeCubeModel(A, atoms));
+          })();
+
+          /* 3. ZnS 闪锌矿型 — F-43m, a=4 */
+          (function(){
+            var atoms = [];
+            fccPositions(A).forEach(function(p){ atoms.push({x:p.x, y:p.y, z:p.z, c: ORANGE, t:'anion'}); });
+            /* 4 个四面体孔（奇数 × 奇数 × 奇数 组合中的一半） */
+            var tetra = tetrahedralHoles(A);
+            var occupied = [
+              {x:A/4, y:A/4, z:A/4},
+              {x:3*A/4, y:3*A/4, z:A/4},
+              {x:3*A/4, y:A/4, z:3*A/4},
+              {x:A/4, y:3*A/4, z:3*A/4}
+            ];
+            occupied.forEach(function(p){ atoms.push({x:p.x, y:p.y, z:p.z, c: TEAL, t:'cation'}); });
+            models.zns = finalize(makeCubeModel(A, atoms));
+          })();
+
+          /* 4. CaF₂ 萤石型 — Fm-3m, a=4 */
+          (function(){
+            var atoms = [];
+            fccPositions(A).forEach(function(p){ atoms.push({x:p.x, y:p.y, z:p.z, c: TEAL, t:'cation'}); });
+            /* 8 个四面体孔全部占据 */
+            tetrahedralHoles(A).forEach(function(p){ atoms.push({x:p.x, y:p.y, z:p.z, c: ORANGE, t:'anion'}); });
+            models.caf2 = finalize(makeCubeModel(A, atoms));
+          })();
+
+          /* 5. TiO₂ 金红石型 — P4₂/mnm, a=b=4, c≈2.85 */
+          (function(){
+            var C = 2.85;
+            var atoms = [];
+            /* Ti⁴⁺：两个 */
+            atoms.push({x:0, y:0, z:0, c: TEAL, t:'Ti'});
+            atoms.push({x:A/2, y:A/2, z:C/2, c: TEAL, t:'Ti'});
+            /* O²⁻：四个，z ≈ 0.3 取 0.3 */
+            var z1 = 0.3 * C;
+            atoms.push({x:0, y:0, z:z1, c: ORANGE, t:'O'});
+            atoms.push({x:0, y:0, z:C - z1, c: ORANGE, t:'O'});
+            atoms.push({x:A/2, y:A/2, z:z1 + C/2, c: ORANGE, t:'O'});
+            atoms.push({x:A/2, y:A/2, z:C/2 - z1, c: ORANGE, t:'O'});
+            models.tio2 = finalize(makeTetragonalModel(A, C, atoms));
+          })();
+
+          /* 6. CaTiO₃ 钙钛矿型 — Pm-3m, a=4 */
+          (function(){
+            var atoms = [];
+            /* Ca²⁺：8 顶点 */
+            for (var i = 0; i < 2; i++)
+              for (var j = 0; j < 2; j++)
+                for (var k = 0; k < 2; k++)
+                  atoms.push({x:i*A, y:j*A, z:k*A, c: TEAL, t:'Ca'});
+            /* Ti⁴⁺：体心 */
+            atoms.push({x:A/2, y:A/2, z:A/2, c: PURPLE, t:'Ti'});
+            /* O²⁻：6 面心 */
+            atoms.push({x:A/2, y:A/2, z:0, c: ORANGE, t:'O'});
+            atoms.push({x:A/2, y:A/2, z:A, c: ORANGE, t:'O'});
+            atoms.push({x:A/2, y:0, z:A/2, c: ORANGE, t:'O'});
+            atoms.push({x:A/2, y:A, z:A/2, c: ORANGE, t:'O'});
+            atoms.push({x:0, y:A/2, z:A/2, c: ORANGE, t:'O'});
+            atoms.push({x:A, y:A/2, z:A/2, c: ORANGE, t:'O'});
+            models.perovskite = finalize(makeCubeModel(A, atoms));
+          })();
+
+          /* 7. MgAl₂O₄ 尖晶石型（简化）— Fd-3m, a=4 */
+          (function(){
+            var atoms = [];
+            /* O²⁻：FCC */
+            fccPositions(A).forEach(function(p){ atoms.push({x:p.x, y:p.y, z:p.z, c: ORANGE, t:'O'}); });
+            /* Mg²⁺：四面体孔 */
+            atoms.push({x:A/4, y:A/4, z:A/4, c: TEAL, t:'Mg'});
+            /* Al³⁺：八面体孔 */
+            atoms.push({x:A/2, y:A/2, z:A/2, c: PURPLE, t:'Al'});
+            /* 再加几个对称等价位置，让画面饱满 */
+            atoms.push({x:3*A/4, y:3*A/4, z:A/4, c: TEAL, t:'Mg'});
+            atoms.push({x:3*A/4, y:A/4, z:3*A/4, c: TEAL, t:'Mg'});
+            atoms.push({x:A/4, y:3*A/4, z:3*A/4, c: TEAL, t:'Mg'});
+            atoms.push({x:0, y:A/2, z:A/2, c: PURPLE, t:'Al'});
+            atoms.push({x:A, y:A/2, z:A/2, c: PURPLE, t:'Al'});
+            atoms.push({x:A/2, y:0, z:A/2, c: PURPLE, t:'Al'});
+            atoms.push({x:A/2, y:A, z:A/2, c: PURPLE, t:'Al'});
+            models.spinel = finalize(makeCubeModel(A, atoms));
+          })();
+
+          /* ================= 信息面板数据 ================= */
+          var DATA = {
+            nacl: {
+              name: 'NaCl 岩盐型',
+              tag: 'AB · 立方 Fm-3m',
+              cn_cation: '6',
+              cn_anion: '6',
+              formula: '4',
+              crystal: '立方 Fm-3m',
+              examples: 'NaCl、MgO、CaO',
+              desc: 'Cl⁻ 面心立方最密堆积，Na⁺ 填满全部八面体空隙。两套互相错开 <em>a</em>/2 的 FCC，阳离子与阴离子配位数都是 6。半径比 r<sub>+</sub>/r<sub>−</sub> ≈ 0.414~0.732。',
+              note: '左：fcc 单胞（顶点灰 + 面心金）；右：2×2×2 超胞，ABC 三色。'
+            },
+            cscl: {
+              name: 'CsCl 氯化铯型',
+              tag: 'AB · 立方 Pm-3m',
+              cn_cation: '8',
+              cn_anion: '8',
+              formula: '1',
+              crystal: '立方 Pm-3m',
+              examples: 'CsCl、CsBr、CsI',
+              desc: 'Cs⁺ 足够大，能与 8 个 Cl⁻ 同时相切。阴离子简单立方排列，阳离子在体心——相当于两个简单立方互相穿插。半径比 r<sub>+</sub>/r<sub>−</sub> ≈ 0.732~1.00。',
+              note: 'Cl⁻ 在 8 个顶点，Cs⁺ 在体心，配位数 8。'
+            },
+            zns: {
+              name: 'ZnS 闪锌矿型',
+              tag: 'AB · 立方 F-43m',
+              cn_cation: '4',
+              cn_anion: '4',
+              formula: '4',
+              crystal: '立方 F-43m',
+              examples: 'ZnS、GaAs、CdTe',
+              desc: 'S²⁻ 面心立方最密堆积，Zn²⁺ 只填进<strong>一半四面体空隙</strong>。另一半留空。这是共价性成分最高的 1:1 结构，半径比规则在这里开始失效——Zn²⁺ 太小，但 4 配位反而更稳定。',
+              note: 'S²⁻ 面心立方，Zn²⁺ 只占 4/8 四面体空隙。'
+            },
+            caf2: {
+              name: 'CaF₂ 萤石型',
+              tag: 'AB₂ · 立方 Fm-3m',
+              cn_cation: '8',
+              cn_anion: '4',
+              formula: '4',
+              crystal: '立方 Fm-3m',
+              examples: 'CaF₂、ZrO₂、HfO₂',
+              desc: 'Ca²⁺ 面心立方，F⁻ 填满<strong>全部 8 个四面体空隙</strong>。与 ZnS 相比，就是把四面体孔全填上。阳离子配位数 8、阴离子配位数 4，正好 1:2 配比。',
+              note: 'Ca²⁺ 面心立方，F⁻ 占据全部 8 个四面体孔。'
+            },
+            tio2: {
+              name: 'TiO₂ 金红石型',
+              tag: 'AB₂ · 四方 P4₂/mnm',
+              cn_cation: '6',
+              cn_anion: '3',
+              formula: '2',
+              crystal: '四方 P4₂/mnm',
+              examples: 'TiO₂、SnO₂、PbO₂',
+              desc: 'Ti⁴⁺ 在简单四方格子的 (0,0,0) 和 (1/2,1/2,1/2) 位置；O²⁻ 4 个，沿 c 轴方向排布。Ti 的配位数是 6（八面体），O 的配位数是 3。c 轴比 a 轴短一些。',
+              note: 'Ti⁴⁺ 在两个等效位置，O²⁻ 共 4 个，c ≈ 0.71a。'
+            },
+            perovskite: {
+              name: 'CaTiO₃ 钙钛矿型',
+              tag: 'ABO₃ · 立方 Pm-3m',
+              cn_cation: '12（Ca）/ 6（Ti）',
+              cn_anion: '2',
+              formula: '1',
+              crystal: '立方 Pm-3m',
+              examples: 'CaTiO₃、BaTiO₃、SrTiO₃',
+              desc: 'Ca 在 8 个顶点、Ti 在体心、O 在 6 个面心。Ti 被 6 个 O 包围形成 TiO₆ 八面体，Ca 被 12 个 O 包围——这正是高温超导体、压电陶瓷、钙钛矿太阳能电池的结构原型。',
+              note: 'Ti—O 八面体在体心，Ca 占据 8 顶点，O 占据 6 面心。'
+            },
+            spinel: {
+              name: 'MgAl₂O₄ 尖晶石型',
+              tag: 'AB₂O₄ · 立方 Fd-3m',
+              cn_cation: '4（Mg）/ 6（Al）',
+              cn_anion: '4',
+              formula: '8（惯用）',
+              crystal: '立方 Fd-3m',
+              examples: 'MgAl₂O₄、Fe₃O₄、CoAl₂O₄',
+              desc: 'O²⁻ 面心立方密堆积，Mg²⁺ 占据 1/8 四面体孔，Al³⁺ 占据 1/2 八面体孔。尖晶石的 O 亚晶格和 NaCl、CaF₂ 一样都是 FCC，但阳离子分布更复杂，惯用晶胞包含 8 个化学式。',
+              note: '简化视图：O 面心立方 + 若干 Mg（四面体）+ 若干 Al（八面体）。'
+            }
+          };
+
+          var LEGEND = {
+            nacl: [[TEAL, 'Na⁺ 阳离子'], [ORANGE, 'Cl⁻ 阴离子']],
+            cscl: [[TEAL, 'Cs⁺ 阳离子'], [ORANGE, 'Cl⁻ 阴离子']],
+            zns: [[TEAL, 'Zn²⁺ 阳离子'], [ORANGE, 'S²⁻ 阴离子']],
+            caf2: [[TEAL, 'Ca²⁺ 阳离子'], [ORANGE, 'F⁻ 阴离子']],
+            tio2: [[TEAL, 'Ti⁴⁺ 阳离子'], [ORANGE, 'O²⁻ 阴离子']],
+            perovskite: [[TEAL, 'Ca²⁺'], [PURPLE, 'Ti⁴⁺'], [ORANGE, 'O²⁻']],
+            spinel: [[TEAL, 'Mg²⁺ 四面体'], [PURPLE, 'Al³⁺ 八面体'], [ORANGE, 'O²⁻']]
+          };
+
+          /* ================= Canvas 与投影 ================= */
+          var canvas, stage, ctx, W, H;
+
+          function initCanvas(){
+            canvas = document.getElementById('mcp-canvas');
+            stage = canvas.parentElement;
+            ctx = canvas.getContext('2d');
+            resize();
+          }
+
+          function resize(){
+            var rect = stage.getBoundingClientRect();
+            W = Math.max(1, rect.width);
+            H = Math.max(1, rect.height);
+            canvas.width = Math.round(W * DPR);
+            canvas.height = Math.round(H * DPR);
+            ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+            state.need = true;
+          }
+
+          function mix(hex, target, t){
+            var a = parseInt(hex.slice(1), 16);
+            var b = parseInt(target.slice(1), 16);
+            var r = Math.round(((a >> 16) & 255) * (1 - t) + ((b >> 8) & 255) * t);
+            var g = Math.round(((a >> 8) & 255) * (1 - t) + ((b >> 8) & 255) * t);
+            var bl = Math.round((a & 255) * (1 - t) + (b & 255) * t);
+            return 'rgb(' + r + ',' + g + ',' + bl + ')';
+          }
+
+          function drawSphere(px, py, pr, color){
+            var g = ctx.createRadialGradient(
+              px - pr * 0.34, py - pr * 0.36, pr * 0.08,
+              px, py, pr * 1.02
+            );
+            g.addColorStop(0, mix(color, '#ffffff', 0.58));
+            g.addColorStop(0.45, mix(color, '#ffffff', 0.16));
+            g.addColorStop(1, mix(color, '#000000', 0.24));
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(px, py, pr, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,0.42)';
+            ctx.lineWidth = Math.max(0.6, pr * 0.035);
+            ctx.stroke();
+          }
+
+          function draw(model){
+            if (!W || !H || !model) return;
+            ctx.clearRect(0, 0, W, H);
+
+            var cosY = Math.cos(state.yaw), sinY = Math.sin(state.yaw);
+            var cosP = Math.cos(state.pitch), sinP = Math.sin(state.pitch);
+            var scale = Math.min(W, H) * 0.38 / model.boundR * state.zoom;
+            var cx = W / 2, cy = H / 2;
+
+            function project(p){
+              var x = p.x - model.center.x;
+              var y = p.y - model.center.y;
+              var z = p.z - model.center.z;
+              var x1 = x * cosY - y * sinY;
+              var y1 = x * sinY + y * cosY;
+              return {
+                x: cx + x1 * scale,
+                y: cy - (z * cosP + y1 * sinP) * scale,
+                depth: z * sinP - y1 * cosP
+              };
+            }
+
+            if (state.showCell && model.edges){
+              ctx.save();
+              ctx.strokeStyle = 'rgba(64,112,112,0.55)';
+              ctx.lineWidth = 1.2;
+              ctx.setLineDash([]);
+              ctx.lineJoin = 'round';
+              model.edges.forEach(function(e){
+                var a = project(e[0]);
+                var b = project(e[1]);
+                ctx.beginPath();
+                ctx.moveTo(a.x, a.y);
+                ctx.lineTo(b.x, b.y);
+                ctx.stroke();
+              });
+              ctx.restore();
+            }
+
+            var list = model.atoms.map(function(a){ return { a: a, pr: project(a) }; });
+            list.sort(function(p, q){ return p.pr.depth - q.pr.depth; });
+            list.forEach(function(item){
+              drawSphere(item.pr.x, item.pr.y, R * scale, item.a.c);
+            });
+          }
+
+          /* ================= 状态与事件 ================= */
+          var state = {
+            kind: 'perovskite',
+            yaw: 0.7,
+            pitch: 0.35,
+            zoom: 1,
+            auto: true,
+            showCell: true,
+            dragging: false,
+            lastX: 0,
+            lastY: 0,
+            need: true
+          };
+
+          function renderLegend(kind){
+            var leg = LEGEND[kind];
+            var legendEl = document.getElementById('mcp-legend');
+            legendEl.innerHTML = leg.map(function(item){
+              return '<span><i class="mcp-swatch" style="background:' + item[0] + '"></i><b>' + item[1] + '</b></span>';
+            }).join('');
+          }
+
+          function updateInfo(kind){
+            var d = DATA[kind];
+            document.getElementById('mcp-name').textContent = d.name;
+            document.getElementById('mcp-tag').textContent = d.tag;
+            document.getElementById('mcp-cation-cn').textContent = d.cn_cation;
+            document.getElementById('mcp-anion-cn').textContent = d.cn_anion;
+            document.getElementById('mcp-formula').textContent = d.formula;
+            document.getElementById('mcp-crystal').textContent = d.crystal;
+            document.getElementById('mcp-examples').textContent = d.examples;
+            document.getElementById('mcp-desc').innerHTML = d.desc;
+            document.getElementById('mcp-stage-note').textContent = d.note;
+            renderLegend(kind);
+          }
+
+          function switchKind(kind){
+            state.kind = kind;
+            state.yaw = 0.7;
+            state.pitch = 0.35;
+            state.zoom = 1;
+            updateInfo(kind);
+            state.need = true;
+          }
+
+          function tick(){
+            if (state.auto && !state.dragging){
+              state.yaw += 0.0034;
+              state.need = true;
+            }
+            if (state.need){
+              draw(models[state.kind]);
+              state.need = false;
+            }
+            requestAnimationFrame(tick);
+          }
+
+          function init(){
+            initCanvas();
+            window.addEventListener('resize', resize);
+
+            /* tabs */
+            var tabs = document.getElementById('mcp-tabs');
+            tabs.addEventListener('click', function(e){
+              var btn = e.target.closest('.mcp-tab');
+              if (!btn) return;
+              Array.prototype.forEach.call(tabs.children, function(c){ c.classList.remove('is-active'); });
+              btn.classList.add('is-active');
+              switchKind(btn.dataset.kind);
+            });
+
+            /* checkboxes & buttons */
+            document.getElementById('mcp-auto').addEventListener('change', function(e){ state.auto = e.target.checked; });
+            document.getElementById('mcp-cell').addEventListener('change', function(e){ state.showCell = e.target.checked; state.need = true; });
+            document.getElementById('mcp-reset').addEventListener('click', function(){
+              state.yaw = 0.7; state.pitch = 0.35; state.zoom = 1; state.need = true;
+            });
+
+            /* mouse drag */
+            stage.addEventListener('pointerdown', function(e){
+              state.dragging = true;
+              state.lastX = e.clientX;
+              state.lastY = e.clientY;
+              stage.setPointerCapture(e.pointerId);
+            });
+            stage.addEventListener('pointermove', function(e){
+              if (!state.dragging) return;
+              var dx = e.clientX - state.lastX;
+              var dy = e.clientY - state.lastY;
+              state.lastX = e.clientX;
+              state.lastY = e.clientY;
+              state.yaw += dx * 0.008;
+              state.pitch += dy * 0.008;
+              state.pitch = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, state.pitch));
+              state.need = true;
+            });
+            function endDrag(){ state.dragging = false; }
+            stage.addEventListener('pointerup', endDrag);
+            stage.addEventListener('pointercancel', endDrag);
+            stage.addEventListener('pointerleave', endDrag);
+
+            /* wheel zoom */
+            stage.addEventListener('wheel', function(e){
+              e.preventDefault();
+              var delta = -e.deltaY * 0.001;
+              state.zoom *= (1 + delta);
+              state.zoom = Math.max(0.5, Math.min(3, state.zoom));
+              state.need = true;
+            }, { passive: false });
+
+            updateInfo(state.kind);
+            requestAnimationFrame(tick);
+          }
+
+          if (document.readyState === 'loading'){
+            document.addEventListener('DOMContentLoaded', init);
+          } else {
+            init();
+          }
+        })();
+        </script>
+
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+                    <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#viewer"><span class="nav-number">1.</span> <span class="nav-text">交互式三维查看器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#compare"><span class="nav-number">2.</span> <span class="nav-text">七种结构速览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#radius"><span class="nav-number">3.</span> <span class="nav-text">半径比：为什么同一 1:1 会长成三种不同的结构？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#classroom"><span class="nav-number">4.</span> <span class="nav-text">课堂演示建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#common"><span class="nav-number">5.</span> <span class="nav-text">几个常见误区</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zpc</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+
+
+
+
+<div class="copyright">
+
+  &copy;
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zpc</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+</body>
+</html>
