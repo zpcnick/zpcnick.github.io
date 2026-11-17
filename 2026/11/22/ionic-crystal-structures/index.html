@@ -738,12 +738,17 @@
             var x = 0.305;         /* O 的 Wyckoff 4f 参数 */
             var atoms = [];
             var na = 1, nb = 1, nc = 2;   /* 超胞：1a × 1b × 2c（c 轴拉长便于透视） */
+            /* Ti 顶点：补全所有边界格点（含棱中点、顶面），i/j/k 均取到上限 */
+            for (var vi = 0; vi <= na; vi++)
+              for (var vj = 0; vj <= nb; vj++)
+                for (var vk = 0; vk <= nc; vk++)
+                  atoms.push({x:vi*A, y:vj*A, z:vk*C, c:TEAL, t:'Ti'});
+            /* Ti 体心 + O：每个单胞内部 */
             for (var ti = 0; ti < na; ti++){
               for (var tj = 0; tj < nb; tj++){
                 for (var tk = 0; tk < nc; tk++){
                   var X0 = ti*A, Y0 = tj*A, Z0 = tk*C;
-                  /* Ti⁴⁺ Wyckoff 2a */
-                  atoms.push({x:X0,           y:Y0,           z:Z0,       c: TEAL,   t:'Ti'});
+                  /* Ti⁴⁺ 体心 Wyckoff 2a (1/2,1/2,1/2) */
                   atoms.push({x:X0 + A/2,     y:Y0 + A/2,     z:Z0 + C/2, c: TEAL,   t:'Ti'});
                   /* O²⁻ Wyckoff 4f — 四个位置 */
                   atoms.push({x:X0 + x*A,     y:Y0 + x*A,     z:Z0,       c: ORANGE, t:'O'});
