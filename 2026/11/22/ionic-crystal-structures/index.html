@@ -970,27 +970,36 @@
               };
             }
 
+            /* 边线分段 + 原子球统一深度排序：近处边线画在原子上层，避免被遮挡消失 */
+            var items = [];
             if (state.showCell && model.edges){
-              ctx.save();
-              ctx.strokeStyle = 'rgba(64,112,112,0.55)';
-              ctx.lineWidth = 1.2;
-              ctx.setLineDash([]);
-              ctx.lineJoin = 'round';
               model.edges.forEach(function(e){
-                var a = project(e[0]);
-                var b = project(e[1]);
-                ctx.beginPath();
-                ctx.moveTo(a.x, a.y);
-                ctx.lineTo(b.x, b.y);
-                ctx.stroke();
+                var A = e[0], B = e[1], SEG = 12;
+                for (var i = 0; i < SEG; i++){
+                  var t1 = i/SEG, t2 = (i+1)/SEG;
+                  var p1 = project({x:A.x+(B.x-A.x)*t1, y:A.y+(B.y-A.y)*t1, z:A.z+(B.z-A.z)*t1});
+                  var p2 = project({x:A.x+(B.x-A.x)*t2, y:A.y+(B.y-A.y)*t2, z:A.z+(B.z-A.z)*t2});
+                  items.push({ edge:true, p1:p1, p2:p2, depth:(p1.depth+p2.depth)/2 });
+                }
               });
-              ctx.restore();
             }
-
-            var list = model.atoms.map(function(a){ return { a: a, pr: project(a) }; });
-            list.sort(function(p, q){ return p.pr.depth - q.pr.depth; });
-            list.forEach(function(item){
-              drawSphere(item.pr.x, item.pr.y, R * scale, item.a.c);
+            model.atoms.forEach(function(a){
+              var pr = project(a);
+              items.push({ edge:false, pr:pr, a:a, depth:pr.depth });
+            });
+            items.sort(function(p, q){ return p.depth - q.depth; });
+            items.forEach(function(item){
+              if (item.edge){
+                ctx.strokeStyle = 'rgba(64,112,112,0.6)';
+                ctx.lineWidth = 1.5;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(item.p1.x, item.p1.y);
+                ctx.lineTo(item.p2.x, item.p2.y);
+                ctx.stroke();
+              } else {
+                drawSphere(item.pr.x, item.pr.y, R * scale, item.a.c);
+              }
             });
           }
 
