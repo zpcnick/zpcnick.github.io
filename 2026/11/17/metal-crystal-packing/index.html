@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zpcnick.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="用可拖拽旋转的三维模型展示金属晶体的四种堆积方式：简单立方、体心立方、面心立方最密堆积与六方最密堆积，对比配位数、晶胞原子数、空间利用率与 ABAB / ABCABC 层序。">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="金属晶体的四种堆积方式">
+  <meta property="og:url" content="https://zpcnick.github.io/2026/11/17/metal-crystal-packing/">
+  <meta property="og:site_name" content="ZPC&#39;s homepage">
+  <meta property="og:description" content="用可拖拽旋转的三维模型展示金属晶体的四种堆积方式：简单立方、体心立方、面心立方最密堆积与六方最密堆积，对比配位数、晶胞原子数、空间利用率与 ABAB / ABCABC 层序。">
+  <meta property="og:locale">
+  <meta property="article:published_time" content="2026-11-17T02:00:00.000Z">
+  <meta property="article:modified_time" content="2026-11-17T02:00:00.000Z">
+  <meta property="article:author" content="zpc">
+  <meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zpcnick.github.io/2026/11/17/metal-crystal-packing/">
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'ch'
+  };
+</script>
+
+  <title>金属晶体的四种堆积方式 | ZPC's homepage</title>
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">ZPC's homepage</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+        </ul>
+</nav>
+
+
+
+</div>
+    </header>
+
+
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+
+
+          <div class="content post posts-expand">
+
+
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="ch">
+    <link itemprop="mainEntityOfPage" href="https://zpcnick.github.io/2026/11/17/metal-crystal-packing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zpc">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/WPOrganization">
+      <meta itemprop="name" content="ZPC's homepage">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          金属晶体的四种堆积方式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-11-17 10:00:00" itemprop="dateCreated datePublished" datetime="2026-11-17T10:00:00+08:00">2026-11-17</time>
+            </span>
+
+        </div>
+      </header>
+
+
+
+    <div class="post-body" itemprop="articleBody">
+
+        <p>金属键没有方向性和饱和性，金属原子倾向于尽可能紧密地堆积，以降低体系能量。把原子近似看作半径相同的刚性小球，小球怎样排列，就决定了晶体的<strong>配位数</strong>、<strong>晶胞原子数</strong>与<strong>空间利用率</strong>。下面用可旋转的三维模型，把四种常见堆积方式放在一起对比。</p>
+
+        <h2 id="viewer"><a href="#viewer" class="headerlink" title="交互式三维查看器"></a>一、交互式三维查看器</h2>
+
+        <p>拖拽模型可以旋转，滚轮可以缩放。切换堆积方式时，晶胞参数会随之改变，相机自动重新取景；勾选“显示晶胞”可以隐藏或显示晶胞轮廓。</p>
+
+        <div class="mcp-app">
+          <div class="mcp-toolbar">
+            <span class="mcp-title">金属晶体堆积 3D 查看器</span>
+            <div class="mcp-tools">
+              <label class="mcp-chk"><input type="checkbox" id="mcp-auto" checked><span>自动旋转</span></label>
+              <label class="mcp-chk"><input type="checkbox" id="mcp-cell" checked><span>显示晶胞</span></label>
+              <button class="mcp-btn" id="mcp-reset" type="button">重置视角</button>
+            </div>
+          </div>
+
+          <div class="mcp-tabs" id="mcp-tabs" role="tablist" aria-label="选择金属晶体堆积方式">
+            <button class="mcp-tab" type="button" data-kind="sc" role="tab">简单立方</button>
+            <button class="mcp-tab" type="button" data-kind="bcc" role="tab">体心立方</button>
+            <button class="mcp-tab is-active" type="button" data-kind="fcc" role="tab">面心立方最密</button>
+            <button class="mcp-tab" type="button" data-kind="hcp" role="tab">六方最密</button>
+          </div>
+
+          <div class="mcp-stage">
+            <canvas id="mcp-canvas" aria-label="金属晶体堆积方式三维模型"></canvas>
+            <div class="mcp-hint">拖拽旋转 · 滚轮缩放</div>
+            <div class="mcp-legend" id="mcp-legend">
+              <span><i class="mcp-swatch" id="mcp-sw1"></i><b id="mcp-lb1">顶点原子</b></span>
+              <span id="mcp-leg2"><i class="mcp-swatch" id="mcp-sw2"></i><b id="mcp-lb2">面心原子</b></span>
+            </div>
+          </div>
+
+          <p class="mcp-stage-note" id="mcp-stage-note">面心立方最密堆积：顶点 + 六个面心，密置层按 ABCABC 堆叠。</p>
+
+          <div class="mcp-info" id="mcp-info">
+            <div class="mcp-info-head">
+              <span class="mcp-info-name" id="mcp-name">面心立方最密堆积</span>
+              <span class="mcp-info-tag" id="mcp-tag">密置层 · ABCABC</span>
+            </div>
+            <dl class="mcp-fields">
+              <div><dt>配位数</dt><dd id="mcp-cn">12</dd></div>
+              <div><dt>晶胞原子数</dt><dd id="mcp-atoms">4（8×1/8 + 6×1/2）</dd></div>
+              <div><dt>空间利用率</dt><dd id="mcp-eff">74.0%</dd></div>
+              <div><dt>层序</dt><dd id="mcp-seq">ABCABC</dd></div>
+              <div><dt>典型金属</dt><dd id="mcp-metals">Cu、Ag、Au、Al</dd></div>
+              <div><dt>半径关系</dt><dd id="mcp-radius">r = √2a / 4</dd></div>
+            </dl>
+            <div class="mcp-eff-track"><i id="mcp-effbar"></i></div>
+            <p class="mcp-desc" id="mcp-desc">顶点加六个面心，等价于密置层按 ABCABC 堆叠；每个球与同层 6 个、上下各 3 个球相切，配位数为 12。</p>
+          </div>
+        </div>
+
+        <p class="mcp-footnote">模型按等径球绘制，所有小球半径统一取 1；不同堆积方式的晶胞棱长不同，因此画面中球的相对大小看起来会变化。六方最密堆积用三层密置层示意 ABAB 层序，晶胞原子数仍按六方晶胞计算。</p>
+
+        <h2 id="compare"><a href="#compare" class="headerlink" title="四种堆积方式速览"></a>二、四种堆积方式速览</h2>
+
+        <p>先记住一组关键数字：简单立方配位数 6，体心立方 8，两种最密堆积都是 12；空间利用率则从 52.4% 一路升到 74.0%。</p>
+
+        <div class="mcp-table-wrap">
+          <table class="mcp-table">
+            <thead>
+              <tr><th>堆积方式</th><th>配位数</th><th>晶胞原子数</th><th>空间利用率</th><th>层序</th><th>典型金属</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>简单立方</strong><small>简单堆积</small></td>
+                <td>6</td>
+                <td>1</td>
+                <td>52.4%</td>
+                <td>无</td>
+                <td>α-Po</td>
+              </tr>
+              <tr>
+                <td><strong>体心立方</strong><small>bcc</small></td>
+                <td>8</td>
+                <td>2</td>
+                <td>68.0%</td>
+                <td>无</td>
+                <td>Na、K、α-Fe、W</td>
+              </tr>
+              <tr class="is-close">
+                <td><strong>面心立方最密</strong><small>ccp / fcc</small></td>
+                <td>12</td>
+                <td>4</td>
+                <td>74.0%</td>
+                <td>ABCABC</td>
+                <td>Cu、Ag、Au、Al</td>
+              </tr>
+              <tr class="is-close">
+                <td><strong>六方最密</strong><small>hcp</small></td>
+                <td>12</td>
+                <td>6</td>
+                <td>74.0%</td>
+                <td>ABAB</td>
+                <td>Mg、Zn、Ti</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ul class="mcp-notes">
+          <li><strong>配位数</strong>：一个原子周围最近且等距的原子个数。</li>
+          <li><strong>晶胞原子数</strong>：用均摊法计算，顶点记 1/8、面心记 1/2、体心记 1。</li>
+          <li><strong>空间利用率</strong>：晶胞中所有球的体积之和占晶胞体积的百分比。</li>
+        </ul>
+
+        <h2 id="efficiency"><a href="#efficiency" class="headerlink" title="空间利用率是怎么算出来的"></a>三、空间利用率是怎么算出来的</h2>
+
+        <p>四种堆积方式的差别，最终都可以落到“球半径 r 与晶胞棱长 a 的关系”上。找到相切方向，就能把 r 写成 a 的倍数，再代入体积公式。</p>
+
+        <div class="mcp-calc-grid">
+          <div class="mcp-calc">
+            <h3>简单立方</h3>
+            <p class="mcp-formula">n = 8 × 1/8 = 1</p>
+            <p class="mcp-formula">a = 2r</p>
+            <p class="mcp-formula">η = (4/3)πr³ / a³ = π/6 ≈ 52.4%</p>
+            <p>同层四个球相切，上下各一个，配位数为 6。空隙很大，只有钋等极少数金属采用。</p>
+          </div>
+
+          <div class="mcp-calc">
+            <h3>体心立方</h3>
+            <p class="mcp-formula">n = 8 × 1/8 + 1 = 2</p>
+            <p class="mcp-formula">4r = √3a</p>
+            <p class="mcp-formula">η = 2 × (4/3)πr³ / a³ = √3π/8 ≈ 68.0%</p>
+            <p>体心球与 8 个顶点球相切，相切方向沿体对角线；沿体对角线方向三个球依次接触。</p>
+          </div>
+
+          <div class="mcp-calc">
+            <h3>面心立方最密</h3>
+            <p class="mcp-formula">n = 8 × 1/8 + 6 × 1/2 = 4</p>
+            <p class="mcp-formula">4r = √2a</p>
+            <p class="mcp-formula">η = 4 × (4/3)πr³ / a³ = √2π/6 ≈ 74.0%</p>
+            <p>相切方向沿面对角线；每个球与同层 6 个、上下各 3 个球相切，配位数为 12。</p>
+          </div>
+
+          <div class="mcp-calc">
+            <h3>六方最密</h3>
+            <p class="mcp-formula">n = 6（六方晶胞）</p>
+            <p class="mcp-formula">a = 2r，c = 4r√(2/3)</p>
+            <p class="mcp-formula">η = 74.0%</p>
+            <p>与面心立方同为最密堆积，空间利用率相同；差别只在密置层的堆叠顺序。</p>
+          </div>
+        </div>
+
+        <h3 class="mcp-subtitle">空间利用率对比</h3>
+        <div class="mcp-bars" aria-label="四种堆积方式空间利用率对比">
+          <div class="mcp-bar-row">
+            <span class="mcp-bar-label">简单立方</span>
+            <div class="mcp-bar-track"><i class="mcp-bar-fill" style="width:52.4%"></i></div>
+            <b class="mcp-bar-value">52.4%</b>
+          </div>
+          <div class="mcp-bar-row">
+            <span class="mcp-bar-label">体心立方</span>
+            <div class="mcp-bar-track"><i class="mcp-bar-fill" style="width:68.0%"></i></div>
+            <b class="mcp-bar-value">68.0%</b>
+          </div>
+          <div class="mcp-bar-row">
+            <span class="mcp-bar-label">面心立方最密</span>
+            <div class="mcp-bar-track"><i class="mcp-bar-fill is-max" style="width:74.0%"></i></div>
+            <b class="mcp-bar-value">74.0%</b>
+          </div>
+          <div class="mcp-bar-row">
+            <span class="mcp-bar-label">六方最密</span>
+            <div class="mcp-bar-track"><i class="mcp-bar-fill is-max" style="width:74.0%"></i></div>
+            <b class="mcp-bar-value">74.0%</b>
+          </div>
+        </div>
+        <p class="mcp-footnote">条形长度按空间利用率数值绘制。74.0% 是等径球堆积的理论上限，因此两种最密堆积并列最高。</p>
+
+        <h2 id="stacking"><a href="#stacking" class="headerlink" title="ABAB 与 ABCABC：最密堆积的两种层序"></a>四、ABAB 与 ABCABC：最密堆积的两种层序</h2>
+
+        <p>最密堆积可以这样理解：在同一层内，每个球与周围 6 个球相切，形成<strong>密置层</strong>；球与球之间留下三角形空隙。第二层球只能落在其中一组空隙上，记为 <strong>B 位</strong>。到了第三层，有两种选择：</p>
+
+        <ul class="mcp-notes">
+          <li><strong>回到 A 位</strong>：层序变成 ABAB…，得到六方最密堆积（hcp）。</li>
+          <li><strong>落到另一组空隙 C 位</strong>：层序变成 ABCABC…，得到面心立方最密堆积（ccp / fcc）。</li>
+        </ul>
+
+        <div class="mcp-seq-compare">
+          <div class="mcp-seq-card">
+            <div class="mcp-seq-head">
+              <span class="mcp-seq-name">六方最密堆积</span>
+              <span class="mcp-seq-tag">ABAB</span>
+            </div>
+            <div class="mcp-layer-row">
+              <i class="mcp-layer a">A</i>
+              <i class="mcp-layer b">B</i>
+              <i class="mcp-layer a">A</i>
+              <i class="mcp-layer b">B</i>
+              <i class="mcp-layer a">A</i>
+            </div>
+            <p>第三层回到第一层的位置，重复周期为两层。</p>
+          </div>
+
+          <div class="mcp-seq-card">
+            <div class="mcp-seq-head">
+              <span class="mcp-seq-name">面心立方最密堆积</span>
+              <span class="mcp-seq-tag">ABCABC</span>
+            </div>
+            <div class="mcp-layer-row">
+              <i class="mcp-layer a">A</i>
+              <i class="mcp-layer b">B</i>
+              <i class="mcp-layer c">C</i>
+              <i class="mcp-layer a">A</i>
+              <i class="mcp-layer b">B</i>
+              <i class="mcp-layer c">C</i>
+            </div>
+            <p>第三层落在另一组空隙上，重复周期为三层。</p>
+          </div>
+        </div>
+
+        <p>两种最密堆积的空间利用率都是 74.0%，配位数都是 12。判断它们的关键不是“密不密”，而是<strong>层序</strong>：ABAB 是六方，ABCABC 是面心立方。</p>
+
+        <h2 id="classroom"><a href="#classroom" class="headerlink" title="课堂演示建议与常见误区"></a>五、课堂演示建议与常见误区</h2>
+
+        <p><strong>演示顺序</strong>：先停在简单立方，让学生数出一个球周围有几个最近邻；再切到体心立方，观察体心球与 8 个顶点球的关系；最后切到两种最密堆积，对比配位数 12 和层序差异。</p>
+
+        <p><strong>可以追问</strong>：为什么简单立方的空间利用率最低？体心立方的 8 配位从哪里看出来的？面心立方和六方最密堆积的利用率相同，为什么晶体性质仍可能有差异？</p>
+
+        <ul class="mcp-mistakes">
+          <li><strong>混淆晶胞原子数与画面球数</strong>：晶胞里画出的球要按均摊法计算，顶点、面心、体心的贡献不同。</li>
+          <li><strong>把体心立方当成最密堆积</strong>：体心立方配位数为 8，空间利用率 68.0%，并不是密置层堆积。</li>
+          <li><strong>认为两种最密堆积利用率不同</strong>：面心立方与六方最密的空间利用率都为 74.0%，区别在层序。</li>
+        </ul>
+
+        <div class="mcp-mnemonic">
+          <p>简单立方最疏松，体心立方八配位；</p>
+          <p>面心六方同最密，一个 ABC 一个 ABAB。</p>
+        </div>
+
+        <style>
+        /* 金属晶体堆积查看器（局部作用域） */
+        .mcp-app{
+          max-width:780px;
+          margin:24px auto;
+          padding:18px;
+          background:#fff;
+          border:1px solid #d7e8e3;
+          border-radius:14px;
+          box-shadow:0 6px 24px rgba(44,122,123,0.12);
+          font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+          color:#1f3b3c;
+        }
+        .mcp-app *{ box-sizing:border-box; }
+        .mcp-toolbar{
+          display:flex;
+          align-items:center;
+          flex-wrap:wrap;
+          gap:10px;
+          margin-bottom:12px;
+        }
+        .mcp-title{ font-size:15px; font-weight:700; color:#2c7a7b; }
+        .mcp-tools{ margin-left:auto; display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+        .mcp-chk{
+          display:inline-flex; align-items:center; gap:4px;
+          font-size:12px; color:#4a6b6c; cursor:pointer; user-select:none;
+        }
+        .mcp-chk input{ margin:0; accent-color:#2c7a7b; cursor:pointer; }
+        .mcp-btn{
+          padding:5px 10px;
+          font-size:12px;
+          line-height:1.5;
+          color:#2c7a7b;
+          background:#f2f8f7;
+          border:1px solid #cfe5e1;
+          border-radius:7px;
+          cursor:pointer;
+          transition:background .15s ease, border-color .15s ease;
+        }
+        .mcp-btn:hover{ background:#e6f2f0; border-color:#b9dbd6; }
+        .mcp-tabs{
+          display:flex; flex-wrap:wrap; gap:6px;
+          margin-bottom:12px;
+        }
+        .mcp-tab{
+          padding:5px 11px;
+          font-size:13px;
+          line-height:1.5;
+          font-family:inherit;
+          color:#3c5c5d;
+          background:#f6faf9;
+          border:1px solid #d9e9e6;
+          border-radius:7px;
+          cursor:pointer;
+          transition:all .15s ease;
+        }
+        .mcp-tab:hover{ background:#eaf4f2; }
+        .mcp-tab.is-active{
+          color:#fff;
+          background:#2c7a7b;
+          border-color:#2c7a7b;
+          box-shadow:0 2px 8px rgba(44,122,123,0.28);
+        }
+        .mcp-stage{
+          position:relative;
+          height:380px;
+          border-radius:12px;
+          overflow:hidden;
+          background:radial-gradient(circle at 50% 38%,#fbfdfc 0%,#f1f8f6 62%,#e8f2ef 100%);
+          border:1px solid #e1eeeb;
+        }
+        .mcp-stage canvas{
+          display:block;
+          width:100%;
+          height:100%;
+          touch-action:none;
+          cursor:grab;
+        }
+        .mcp-stage canvas:active{ cursor:grabbing; }
+        .mcp-hint{
+          position:absolute;
+          left:10px;
+          bottom:8px;
+          padding:2px 7px;
+          font-size:11px;
+          color:#6d8a8b;
+          background:rgba(255,255,255,0.72);
+          border-radius:5px;
+          pointer-events:none;
+        }
+        .mcp-legend{
+          position:absolute;
+          right:10px;
+          top:8px;
+          display:flex;
+          gap:12px;
+          font-size:11px;
+          color:#4a6b6c;
+          background:rgba(255,255,255,0.74);
+          padding:3px 8px;
+          border-radius:5px;
+          pointer-events:none;
+        }
+        .mcp-legend span{ display:inline-flex; align-items:center; gap:4px; }
+        .mcp-legend b{ font-weight:500; }
+        .mcp-swatch{
+          display:inline-block;
+          width:8px; height:8px;
+          border-radius:50%;
+        }
+        .mcp-stage-note{
+          margin:10px 0 0 !important;
+          font-size:12px !important;
+          line-height:1.7 !important;
+          color:#5a7a7b !important;
+          text-align:center;
+        }
+        .mcp-info{
+          margin-top:14px;
+          padding:12px 14px;
+          background:#f7fbfa;
+          border:1px solid #e1eeeb;
+          border-radius:10px;
+        }
+        .mcp-info-head{
+          display:flex;
+          align-items:baseline;
+          gap:10px;
+          flex-wrap:wrap;
+        }
+        .mcp-info-name{ font-size:14px; font-weight:700; color:#1f3b3c; }
+        .mcp-info-tag{
+          padding:1px 7px;
+          font-size:11px;
+          color:#b7682b;
+          background:#fdf0e6;
+          border-radius:4px;
+        }
+        .mcp-fields{
+          display:grid;
+          grid-template-columns:repeat(3, minmax(0,1fr));
+          gap:8px 14px;
+          margin:10px 0 0;
+          padding:0;
+        }
+        .mcp-fields > div{ min-width:0; }
+        .mcp-fields dt{ margin:0; font-size:11px; color:#7b9495; }
+        .mcp-fields dd{ margin:2px 0 0; font-size:12.5px; color:#2f5051; }
+        .mcp-eff-track{
+          height:6px;
+          margin:12px 0 0;
+          background:#e6f2f0;
+          border-radius:4px;
+          overflow:hidden;
+        }
+        .mcp-eff-track i{
+          display:block;
+          height:100%;
+          width:74%;
+          border-radius:4px;
+          background:linear-gradient(90deg,#7cc0b8,#2c7a7b);
+          transition:width .3s ease;
+        }
+        .mcp-desc{
+          margin:10px 0 0;
+          font-size:12.5px;
+          line-height:1.7;
+          color:#527273;
+        }
+        .mcp-footnote{
+          max-width:780px;
+          margin:14px auto !important;
+          font-size:12.5px !important;
+          line-height:1.8 !important;
+          color:#5a7a7b;
+        }
+        .mcp-table-wrap{ overflow-x:auto; }
+        .mcp-table{
+          width:100%;
+          min-width:620px;
+          border-collapse:collapse;
+          font-size:12.5px;
+          background:#fff;
+          border:1px solid #dfedea;
+          border-radius:10px;
+        }
+        .mcp-table th,
+        .mcp-table td{
+          padding:8px 10px;
+          border-bottom:1px solid #edf4f2;
+          text-align:left;
+          white-space:nowrap;
+        }
+        .mcp-table th{
+          background:#f2f8f7;
+          color:#48696a;
+          font-weight:600;
+        }
+        .mcp-table tbody tr:last-child td{ border-bottom:none; }
+        .mcp-table tr.is-close td{ background:#fbfdf8; }
+        .mcp-table small{ display:block; font-size:10.5px; color:#8aa3a4; }
+        .mcp-notes,
+        .mcp-mistakes{
+          margin:8px 0 0;
+          padding-left:1.2em;
+        }
+        .mcp-notes li,
+        .mcp-mistakes li{ margin:8px 0; line-height:1.8; }
+        .mcp-calc-grid{
+          display:grid;
+          grid-template-columns:repeat(2, minmax(0,1fr));
+          gap:12px;
+          margin:16px 0;
+        }
+        .mcp-calc{
+          padding:12px 14px;
+          background:#f7fbfa;
+          border:1px solid #e1eeeb;
+          border-radius:10px;
+        }
+        .mcp-calc h3{
+          margin:0 0 8px;
+          padding:0;
+          font-size:13.5px;
+          color:#2c7a7b;
+          border:none;
+        }
+        .mcp-calc p{
+          margin:6px 0 !important;
+          font-size:12.5px;
+          line-height:1.7;
+          color:#527273;
+        }
+        .mcp-formula{
+          font-variant-numeric:tabular-nums;
+          color:#2f5051 !important;
+          font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+          font-size:12px !important;
+        }
+        .mcp-subtitle{
+          margin:22px 0 10px;
+          font-size:14px;
+          color:#2c7a7b;
+          font-weight:700;
+        }
+        .mcp-bars{
+          max-width:780px;
+          margin:10px 0 0;
+          padding:14px 16px;
+          background:#f7fbfa;
+          border:1px solid #e1eeeb;
+          border-radius:10px;
+        }
+        .mcp-bar-row{
+          display:grid;
+          grid-template-columns:96px minmax(0,1fr) 52px;
+          align-items:center;
+          gap:10px;
+          margin:9px 0;
+          font-size:12px;
+          color:#527273;
+        }
+        .mcp-bar-label{ white-space:nowrap; }
+        .mcp-bar-track{
+          height:10px;
+          background:#e6f2f0;
+          border-radius:5px;
+          overflow:hidden;
+        }
+        .mcp-bar-fill{
+          display:block;
+          height:100%;
+          border-radius:5px;
+          background:linear-gradient(90deg,#9ed3cc,#4f9a97);
+        }
+        .mcp-bar-fill.is-max{ background:linear-gradient(90deg,#f3b98f,#ef9256); }
+        .mcp-bar-value{
+          text-align:right;
+          font-variant-numeric:tabular-nums;
+          color:#2f5051;
+          font-weight:600;
+        }
+        .mcp-seq-compare{
+          display:grid;
+          grid-template-columns:repeat(2, minmax(0,1fr));
+          gap:12px;
+          margin:16px 0;
+        }
+        .mcp-seq-card{
+          padding:12px 14px;
+          background:#f7fbfa;
+          border:1px solid #e1eeeb;
+          border-radius:10px;
+        }
+        .mcp-seq-head{
+          display:flex;
+          align-items:baseline;
+          gap:8px;
+          flex-wrap:wrap;
+          margin-bottom:10px;
+        }
+        .mcp-seq-name{ font-size:13px; font-weight:700; color:#1f3b3c; }
+        .mcp-seq-tag{
+          padding:1px 6px;
+          font-size:10.5px;
+          color:#2c7a7b;
+          background:#e6f2f0;
+          border-radius:4px;
+        }
+        .mcp-layer-row{
+          display:flex;
+          flex-wrap:wrap;
+          gap:5px;
+        }
+        .mcp-layer{
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          width:26px;
+          height:26px;
+          border-radius:50%;
+          font-style:normal;
+          font-size:12px;
+          font-weight:700;
+          color:#fff;
+        }
+        .mcp-layer.a{ background:#2c7a7b; }
+        .mcp-layer.b{ background:#ef9256; }
+        .mcp-layer.c{ background:#8a6fb0; }
+        .mcp-seq-card p{
+          margin:10px 0 0 !important;
+          font-size:11.5px;
+          line-height:1.7;
+          color:#7b9495;
+        }
+        .mcp-mnemonic{
+          margin:16px 0 !important;
+          padding:12px 16px;
+          border-left:3px solid #7cc0b8;
+          background:#f4faf8;
+          border-radius:0 8px 8px 0;
+        }
+        .mcp-mnemonic p{ margin:0 !important; line-height:1.9 !important; }
+        @media (max-width:720px){
+          .mcp-app{ padding:12px; margin:16px auto; }
+          .mcp-stage{ height:300px; }
+          .mcp-fields{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+          .mcp-calc-grid{ grid-template-columns:1fr; }
+          .mcp-seq-compare{ grid-template-columns:1fr; }
+          .mcp-legend{ flex-direction:column; gap:2px; }
+          .mcp-bar-row{ grid-template-columns:82px minmax(0,1fr) 48px; }
+        }
+        </style>
+
+        <script>
+        (function(){
+          'use strict';
+
+          var canvas = document.getElementById('mcp-canvas');
+          if (!canvas || !canvas.getContext) return;
+          var ctx = canvas.getContext('2d');
+          var stage = canvas.parentNode;
+          var DPR = Math.min(2, window.devicePixelRatio || 1);
+          var W = 0, H = 0;
+
+          var TEAL = '#2c7a7b';
+          var ORANGE = '#ef9256';
+          var R = 1;
+
+          /* ================= 几何模型 ================= */
+          function cubeCorners(a){
+            var p = [];
+            for (var i = 0; i < 8; i++){
+              p.push({
+                x: (i & 1) ? a : 0,
+                y: (i & 2) ? a : 0,
+                z: (i & 4) ? a : 0
+              });
+            }
+            return p;
+          }
+
+          function cubeEdges(a){
+            var c = cubeCorners(a);
+            var idx = [[0,1],[1,3],[3,2],[2,0],[4,5],[5,7],[7,6],[6,4],[0,4],[1,5],[2,6],[3,7]];
+            return idx.map(function(e){ return [c[e[0]], c[e[1]]]; });
+          }
+
+          function makeCubeModel(a, extras){
+            var atoms = cubeCorners(a).map(function(p){
+              return { x:p.x, y:p.y, z:p.z, c:TEAL };
+            });
+            extras.forEach(function(p){ atoms.push(p); });
+            return finalize({
+              atoms: atoms,
+              edges: cubeEdges(a)
+            });
+          }
+
+          function finalize(model){
+            var pts = model.atoms.map(function(a){
+              return { x:a.x, y:a.y, z:a.z, r:R };
+            });
+            (model.edges || []).forEach(function(e){
+              pts.push({ x:e[0].x, y:e[0].y, z:e[0].z, r:0 });
+              pts.push({ x:e[1].x, y:e[1].y, z:e[1].z, r:0 });
+            });
+            var minX = Infinity, minY = Infinity, minZ = Infinity;
+            var maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
+            pts.forEach(function(p){
+              minX = Math.min(minX, p.x - p.r); maxX = Math.max(maxX, p.x + p.r);
+              minY = Math.min(minY, p.y - p.r); maxY = Math.max(maxY, p.y + p.r);
+              minZ = Math.min(minZ, p.z - p.r); maxZ = Math.max(maxZ, p.z + p.r);
+            });
+            model.center = {
+              x: (minX + maxX) / 2,
+              y: (minY + maxY) / 2,
+              z: (minZ + maxZ) / 2
+            };
+            var bound = 0;
+            pts.forEach(function(p){
+              var dx = p.x - model.center.x;
+              var dy = p.y - model.center.y;
+              var dz = p.z - model.center.z;
+              bound = Math.max(bound, Math.sqrt(dx*dx + dy*dy + dz*dz) + p.r);
+            });
+            model.boundR = bound || 1;
+            return model;
+          }
+
+          /* 简单立方：a = 2r */
+          var SC = makeCubeModel(2, []);
+
+          /* 体心立方：4r = √3a */
+          var BCC = makeCubeModel(4 / Math.sqrt(3), [{
+            x: 2 / Math.sqrt(3),
+            y: 2 / Math.sqrt(3),
+            z: 2 / Math.sqrt(3),
+            c: ORANGE
+          }]);
+
+          /* 面心立方最密：4r = √2a */
+          var FCC_A = 2 * Math.sqrt(2);
+          var FCC = makeCubeModel(FCC_A, [
+            { x: FCC_A / 2, y: FCC_A / 2, z: 0, c: ORANGE },
+            { x: FCC_A / 2, y: FCC_A / 2, z: FCC_A, c: ORANGE },
+            { x: FCC_A / 2, y: 0, z: FCC_A / 2, c: ORANGE },
+            { x: FCC_A / 2, y: FCC_A, z: FCC_A / 2, c: ORANGE },
+            { x: 0, y: FCC_A / 2, z: FCC_A / 2, c: ORANGE },
+            { x: FCC_A, y: FCC_A / 2, z: FCC_A / 2, c: ORANGE }
+          ]);
+
+          /* 六方最密：三层密置层示意 ABAB */
+          var HCP_H = 2 * Math.sqrt(2 / 3);
+          var hcpAtoms = [];
+          function hexRing(radius, z, color){
+            for (var k = 0; k < 6; k++){
+              var t = k * Math.PI / 3;
+              hcpAtoms.push({ x: radius * Math.cos(t), y: radius * Math.sin(t), z: z, c: color });
+            }
+          }
+          hcpAtoms.push({ x: 0, y: 0, z: 0, c: TEAL });
+          hexRing(2, 0, TEAL);
+          var hx = 1, hy = 1 / Math.sqrt(3);
+          var bOffsets = [[hx, hy], [-hx, hy], [0, -2 * hy]];
+          bOffsets.forEach(function(o){
+            hcpAtoms.push({ x: o[0], y: o[1], z: HCP_H, c: ORANGE });
+          });
+          hcpAtoms.push({ x: 0, y: 0, z: 2 * HCP_H, c: TEAL });
+          hexRing(2, 2 * HCP_H, TEAL);
+
+          var hcpEdges = [];
+          var hcpBottom = [], hcpTop = [];
+          for (var hk = 0; hk < 6; hk++){
+            var ht = hk * Math.PI / 3;
+            hcpBottom.push({ x: 2 * Math.cos(ht), y: 2 * Math.sin(ht), z: 0 });
+            hcpTop.push({ x: 2 * Math.cos(ht), y: 2 * Math.sin(ht), z: 2 * HCP_H });
+          }
+          for (var he = 0; he < 6; he++){
+            hcpEdges.push([hcpBottom[he], hcpBottom[(he + 1) % 6]]);
+            hcpEdges.push([hcpTop[he], hcpTop[(he + 1) % 6]]);
+            hcpEdges.push([hcpBottom[he], hcpTop[he]]);
+          }
+          var HCP = finalize({ atoms: hcpAtoms, edges: hcpEdges });
+
+          var MODELS = { sc: SC, bcc: BCC, fcc: FCC, hcp: HCP };
+
+          var DATA = {
+            sc: {
+              name: '简单立方堆积',
+              tag: '非密置层 · 简单堆积',
+              cn: '6',
+              atoms: '1（8×1/8）',
+              eff: '52.4%',
+              effVal: 52.4,
+              seq: '无',
+              metals: 'α-Po（钋）',
+              radius: 'r = a / 2',
+              desc: '球心位于立方体八个顶点，同层四个球相切，上下各有一个球，配位数为 6。空隙很大，实际金属中只有钋等极少数采用。',
+              note: '简单立方堆积：八个顶点各一个球，同层四球相切，配位数为 6。'
+            },
+            bcc: {
+              name: '体心立方堆积',
+              tag: '非密置层 · bcc',
+              cn: '8',
+              atoms: '2（8×1/8 + 1）',
+              eff: '68.0%',
+              effVal: 68.0,
+              seq: '无',
+              metals: 'Na、K、α-Fe、W',
+              radius: 'r = √3a / 4',
+              desc: '顶点加体心，体心球与 8 个顶点球相切，相切方向沿体对角线。配位数为 8，空间利用率 68.0%，不属于密置层堆积。',
+              note: '体心立方堆积：顶点 + 体心，体心球与 8 个顶点球相切。'
+            },
+            fcc: {
+              name: '面心立方最密堆积',
+              tag: '密置层 · ABCABC',
+              cn: '12',
+              atoms: '4（8×1/8 + 6×1/2）',
+              eff: '74.0%',
+              effVal: 74.0,
+              seq: 'ABCABC',
+              metals: 'Cu、Ag、Au、Al',
+              radius: 'r = √2a / 4',
+              desc: '顶点加六个面心，等价于密置层按 ABCABC 堆叠；每个球与同层 6 个、上下各 3 个球相切，配位数为 12。',
+              note: '面心立方最密堆积：顶点 + 六个面心，密置层按 ABCABC 堆叠。'
+            },
+            hcp: {
+              name: '六方最密堆积',
+              tag: '密置层 · ABAB',
+              cn: '12',
+              atoms: '6（六方晶胞）',
+              eff: '74.0%',
+              effVal: 74.0,
+              seq: 'ABAB',
+              metals: 'Mg、Zn、Ti',
+              radius: 'r = a / 2，c = 4r√(2/3)',
+              desc: '密置层按 ABAB 堆叠，第三层回到第一层的位置；每个球与同层 6 个、上下各 3 个球相切，配位数为 12。',
+              note: '六方最密堆积：三层密置层示意 ABAB 层序，A 层青色、B 层橙色。'
+            }
+          };
+
+          var LEGEND = {
+            sc: [[TEAL, '顶点原子']],
+            bcc: [[TEAL, '顶点原子'], [ORANGE, '体心原子']],
+            fcc: [[TEAL, '顶点原子'], [ORANGE, '面心原子']],
+            hcp: [[TEAL, 'A 层原子'], [ORANGE, 'B 层原子']]
+          };
+
+          var state = {
+            kind: 'fcc',
+            yaw: 0.68,
+            pitch: 0.38,
+            zoom: 1,
+            auto: true,
+            showCell: true,
+            dragging: false,
+            lastX: 0,
+            lastY: 0,
+            need: true
+          };
+          var current = MODELS[state.kind];
+
+          /* ================= 画布与三维投影 ================= */
+          function resize(){
+            var rect = stage.getBoundingClientRect();
+            W = Math.max(1, rect.width);
+            H = Math.max(1, rect.height);
+            canvas.width = Math.round(W * DPR);
+            canvas.height = Math.round(H * DPR);
+            ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+            state.need = true;
+          }
+
+          function mix(hex, target, t){
+            var a = parseInt(hex.slice(1), 16);
+            var b = parseInt(target.slice(1), 16);
+            var r = Math.round(((a >> 16) & 255) * (1 - t) + ((b >> 16) & 255) * t);
+            var g = Math.round(((a >> 8) & 255) * (1 - t) + ((b >> 8) & 255) * t);
+            var bl = Math.round((a & 255) * (1 - t) + (b & 255) * t);
+            return 'rgb(' + r + ',' + g + ',' + bl + ')';
+          }
+
+          function drawSphere(px, py, pr, color){
+            var g = ctx.createRadialGradient(
+              px - pr * 0.34, py - pr * 0.36, pr * 0.08,
+              px, py, pr * 1.02
+            );
+            g.addColorStop(0, mix(color, '#ffffff', 0.58));
+            g.addColorStop(0.45, mix(color, '#ffffff', 0.16));
+            g.addColorStop(1, mix(color, '#000000', 0.24));
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(px, py, pr, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,0.42)';
+            ctx.lineWidth = Math.max(0.6, pr * 0.035);
+            ctx.stroke();
+          }
+
+          function draw(){
+            if (!W || !H) return;
+            ctx.clearRect(0, 0, W, H);
+
+            var model = MODELS[state.kind];
+            var cosY = Math.cos(state.yaw), sinY = Math.sin(state.yaw);
+            var cosP = Math.cos(state.pitch), sinP = Math.sin(state.pitch);
+            var scale = Math.min(W, H) * 0.40 / model.boundR * state.zoom;
+            var cx = W / 2, cy = H / 2;
+
+            function project(p){
+              var x = p.x - model.center.x;
+              var y = p.y - model.center.y;
+              var z = p.z - model.center.z;
+              var x1 = x * cosY - y * sinY;
+              var y1 = x * sinY + y * cosY;
+              return {
+                x: cx + x1 * scale,
+                y: cy - (z * cosP + y1 * sinP) * scale,
+                depth: z * sinP - y1 * cosP
+              };
+            }
+
+            if (state.showCell && model.edges){
+              ctx.save();
+              ctx.strokeStyle = 'rgba(64,112,112,0.42)';
+              ctx.lineWidth = 1.1;
+              ctx.lineJoin = 'round';
+              model.edges.forEach(function(e){
+                var a = project(e[0]);
+                var b = project(e[1]);
+                ctx.beginPath();
+                ctx.moveTo(a.x, a.y);
+                ctx.lineTo(b.x, b.y);
+                ctx.stroke();
+              });
+              ctx.restore();
+            }
+
+            var list = model.atoms.map(function(a){
+              return { a: a, pr: project(a) };
+            });
+            list.sort(function(p, q){ return p.pr.depth - q.pr.depth; });
+            list.forEach(function(item){
+              drawSphere(item.pr.x, item.pr.y, R * scale, item.a.c);
+            });
+
+            if (state.showCell && model.edges){
+              ctx.save();
+              ctx.strokeStyle = 'rgba(18,66,66,0.52)';
+              ctx.lineWidth = 1.5;
+              ctx.setLineDash([5, 3]);
+              ctx.lineJoin = 'round';
+              model.edges.forEach(function(e){
+                var a = project(e[0]);
+                var b = project(e[1]);
+                ctx.beginPath();
+                ctx.moveTo(a.x, a.y);
+                ctx.lineTo(b.x, b.y);
+                ctx.stroke();
+              });
+              ctx.restore();
+            }
+          }
+
+          function tick(){
+            if (state.auto && !state.dragging){
+              state.yaw += 0.0034;
+              state.need = true;
+            }
+            if (state.need){
+              draw();
+              state.need = false;
+            }
+            requestAnimationFrame(tick);
+          }
+
+          /* ================= 界面更新 ================= */
+          var tabs = Array.prototype.slice.call(document.querySelectorAll('.mcp-tab'));
+          var nameEl = document.getElementById('mcp-name');
+          var tagEl = document.getElementById('mcp-tag');
+          var cnEl = document.getElementById('mcp-cn');
+          var atomsEl = document.getElementById('mcp-atoms');
+          var effEl = document.getElementById('mcp-eff');
+          var seqEl = document.getElementById('mcp-seq');
+          var metalsEl = document.getElementById('mcp-metals');
+          var radiusEl = document.getElementById('mcp-radius');
+          var descEl = document.getElementById('mcp-desc');
+          var stageNoteEl = document.getElementById('mcp-stage-note');
+          var effBarEl = document.getElementById('mcp-effbar');
+          var leg2El = document.getElementById('mcp-leg2');
+          var sw1El = document.getElementById('mcp-sw1');
+          var sw2El = document.getElementById('mcp-sw2');
+          var lb1El = document.getElementById('mcp-lb1');
+          var lb2El = document.getElementById('mcp-lb2');
+
+          function setKind(kind){
+            if (!MODELS[kind]) return;
+            state.kind = kind;
+            current = MODELS[kind];
+            var d = DATA[kind];
+
+            tabs.forEach(function(t){
+              t.classList.toggle('is-active', t.getAttribute('data-kind') === kind);
+            });
+
+            nameEl.textContent = d.name;
+            tagEl.textContent = d.tag;
+            cnEl.textContent = d.cn;
+            atomsEl.textContent = d.atoms;
+            effEl.textContent = d.eff;
+            seqEl.textContent = d.seq;
+            metalsEl.textContent = d.metals;
+            radiusEl.textContent = d.radius;
+            descEl.textContent = d.desc;
+            stageNoteEl.textContent = d.note;
+            effBarEl.style.width = d.effVal + '%';
+
+            var leg = LEGEND[kind];
+            sw1El.style.background = leg[0][0];
+            lb1El.textContent = leg[0][1];
+            if (leg[1]){
+              leg2El.style.display = '';
+              sw2El.style.background = leg[1][0];
+              lb2El.textContent = leg[1][1];
+            } else {
+              leg2El.style.display = 'none';
+            }
+
+            state.need = true;
+          }
+
+          tabs.forEach(function(t){
+            t.addEventListener('click', function(){
+              setKind(t.getAttribute('data-kind'));
+            });
+          });
+
+          document.getElementById('mcp-auto').addEventListener('change', function(){
+            state.auto = this.checked;
+            state.need = true;
+          });
+          document.getElementById('mcp-cell').addEventListener('change', function(){
+            state.showCell = this.checked;
+            state.need = true;
+          });
+          document.getElementById('mcp-reset').addEventListener('click', function(){
+            state.yaw = 0.68;
+            state.pitch = 0.38;
+            state.zoom = 1;
+            state.need = true;
+          });
+
+          /* ================= 拖拽与缩放 ================= */
+          canvas.addEventListener('pointerdown', function(e){
+            state.dragging = true;
+            state.lastX = e.clientX;
+            state.lastY = e.clientY;
+            if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+          });
+          canvas.addEventListener('pointermove', function(e){
+            if (!state.dragging) return;
+            var dx = e.clientX - state.lastX;
+            var dy = e.clientY - state.lastY;
+            state.lastX = e.clientX;
+            state.lastY = e.clientY;
+            state.yaw += dx * 0.008;
+            state.pitch = Math.max(-1.15, Math.min(1.25, state.pitch + dy * 0.006));
+            state.need = true;
+          });
+          function endDrag(){ state.dragging = false; }
+          canvas.addEventListener('pointerup', endDrag);
+          canvas.addEventListener('pointercancel', endDrag);
+          canvas.addEventListener('pointerleave', endDrag);
+
+          canvas.addEventListener('wheel', function(e){
+            e.preventDefault();
+            state.zoom = Math.max(0.6, Math.min(2.2, state.zoom * Math.exp(-e.deltaY * 0.0012)));
+            state.need = true;
+          }, { passive: false });
+
+          if (window.ResizeObserver){
+            new ResizeObserver(resize).observe(stage);
+          } else {
+            window.addEventListener('resize', resize);
+          }
+
+          setKind('fcc');
+          resize();
+          requestAnimationFrame(tick);
+        })();
+        </script>
+
+        <hr>
+        <p>四种堆积方式看起来只是小球摆放位置不同，背后却是配位数、晶胞参数和空间利用率的一整套关系。把模型转一转、把四种方式来回切几次，再对照表格里的数字，学生很容易发现：最密堆积之所以“最密”，是因为每个球都被 12 个球包围，而且层与层之间恰好落在空隙里。</p>
+
+    </div>
+
+
+
+
+  </article>
+
+
+
+          </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+
+
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#viewer"><span class="nav-number">1.</span> <span class="nav-text">交互式三维查看器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#compare"><span class="nav-number">2.</span> <span class="nav-text">四种堆积方式速览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#efficiency"><span class="nav-number">3.</span> <span class="nav-text">空间利用率是怎么算出来的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stacking"><span class="nav-number">4.</span> <span class="nav-text">ABAB 与 ABCABC：最密堆积的两种层序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#classroom"><span class="nav-number">5.</span> <span class="nav-text">课堂演示建议与常见误区</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zpc</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+
+
+
+
+<div class="copyright">
+
+  &copy;
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zpc</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+</body>
+</html>
