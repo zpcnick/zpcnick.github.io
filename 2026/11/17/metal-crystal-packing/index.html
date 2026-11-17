@@ -202,15 +202,19 @@
           </div>
 
           <div class="mcp-tabs" id="mcp-tabs" role="tablist" aria-label="选择金属晶体堆积方式">
-            <button class="mcp-tab" type="button" data-kind="sc" role="tab">简单立方</button>
-            <button class="mcp-tab" type="button" data-kind="bcc" role="tab">体心立方</button>
-            <button class="mcp-tab is-active" type="button" data-kind="fcc" role="tab">面心立方最密</button>
-            <button class="mcp-tab" type="button" data-kind="hcp" role="tab">六方最密</button>
+            <button class="mcp-tab" type="button" data-kind="sc" role="tab">简单立方 sc</button>
+            <button class="mcp-tab" type="button" data-kind="bcc" role="tab">体心立方 bcc</button>
+            <button class="mcp-tab is-active" type="button" data-kind="fcc" role="tab">面心立方 fcc</button>
+            <button class="mcp-tab" type="button" data-kind="hcp" role="tab">六方最密 hcp</button>
           </div>
 
           <div class="mcp-stage">
             <canvas id="mcp-canvas" aria-label="金属晶体堆积方式三维模型"></canvas>
             <div class="mcp-hint">拖拽旋转 · 滚轮缩放</div>
+            <div class="mcp-viewport-labels">
+              <div class="mcp-vp-label mcp-vp-unit">单胞</div>
+              <div class="mcp-vp-label mcp-vp-super">超胞</div>
+            </div>
             <div class="mcp-legend" id="mcp-legend">
               <span><i class="mcp-swatch" id="mcp-sw1"></i><b id="mcp-lb1">A 层原子</b></span>
               <span id="mcp-leg2"><i class="mcp-swatch" id="mcp-sw2"></i><b id="mcp-lb2">B 层原子</b></span>
@@ -218,7 +222,7 @@
             </div>
           </div>
 
-          <p class="mcp-stage-note" id="mcp-stage-note">面心立方最密堆积：2×2×2 超胞转到 [111] 方向观察，按密置层着色，可见 ABCABC 层序。</p>
+          <p class="mcp-stage-note" id="mcp-stage-note">左边单胞、右边 2×2×2 超胞（面心立方 fcc）；超胞转到 [111] 方向观察，按密置层着色。</p>
 
           <div class="mcp-info" id="mcp-info">
             <div class="mcp-info-head">
@@ -238,7 +242,7 @@
           </div>
         </div>
 
-        <p class="mcp-footnote">模型按等径球绘制，所有小球半径统一取 1；不同堆积方式的晶胞棱长不同，因此画面中球的相对大小看起来会变化。面心立方最密堆积用 2×2×2 超胞并按 (111) 层着色，六方最密堆积用 4 层密置层超胞；信息面板中的晶胞原子数仍按单个晶胞计算。</p>
+        <p class="mcp-footnote">左半边渲染<strong>单胞</strong>、右半边渲染<strong>超胞</strong>，两者共用同一个视角以便对比。简单立方 / 体心立方用 2×2×2 超胞；面心立方 fcc 的超胞转到 [111] 方向并按密置层着色；六方最密 hcp 的超胞是 4 层密置层。超胞图中的原子总数远多于单胞，信息面板里的晶胞原子数仍按<strong>单个单胞</strong>均摊计算。</p>
 
         <h2 id="compare"><a href="#compare" class="headerlink" title="四种堆积方式速览"></a>二、四种堆积方式速览</h2>
 
@@ -247,11 +251,12 @@
         <div class="mcp-table-wrap">
           <table class="mcp-table">
             <thead>
-              <tr><th>堆积方式</th><th>配位数</th><th>晶胞原子数</th><th>空间利用率</th><th>层序</th><th>典型金属</th></tr>
+              <tr><th>堆积方式</th><th>英文名</th><th>配位数</th><th>晶胞原子数</th><th>空间利用率</th><th>层序</th><th>典型金属</th></tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>简单立方</strong><small>简单堆积</small></td>
+                <td><strong>简单立方</strong></td>
+                <td><code>simple cubic</code>（sc）</td>
                 <td>6</td>
                 <td>1</td>
                 <td>52.4%</td>
@@ -259,7 +264,8 @@
                 <td>α-Po</td>
               </tr>
               <tr>
-                <td><strong>体心立方</strong><small>bcc</small></td>
+                <td><strong>体心立方</strong></td>
+                <td><code>body-centered cubic</code>（bcc）</td>
                 <td>8</td>
                 <td>2</td>
                 <td>68.0%</td>
@@ -267,7 +273,8 @@
                 <td>Na、K、α-Fe、W</td>
               </tr>
               <tr class="is-close">
-                <td><strong>面心立方最密</strong><small>ccp / fcc</small></td>
+                <td><strong>面心立方最密</strong></td>
+                <td><code>face-centered cubic</code>（fcc / ccp）</td>
                 <td>12</td>
                 <td>4</td>
                 <td>74.0%</td>
@@ -275,7 +282,8 @@
                 <td>Cu、Ag、Au、Al</td>
               </tr>
               <tr class="is-close">
-                <td><strong>六方最密</strong><small>hcp</small></td>
+                <td><strong>六方最密</strong></td>
+                <td><code>hexagonal close-packed</code>（hcp）</td>
                 <td>12</td>
                 <td>6</td>
                 <td>74.0%</td>
@@ -617,6 +625,14 @@
         .mcp-table tbody tr:last-child td{ border-bottom:none; }
         .mcp-table tr.is-close td{ background:#fbfdf8; }
         .mcp-table small{ display:block; font-size:10.5px; color:#8aa3a4; }
+        .mcp-table code{
+          padding:1px 5px;
+          font-size:11.5px;
+          font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+          color:#2c7a7b;
+          background:#ecf5f3;
+          border-radius:3px;
+        }
         .mcp-notes,
         .mcp-mistakes{
           margin:8px 0 0;
@@ -759,6 +775,20 @@
           border-radius:0 8px 8px 0;
         }
         .mcp-mnemonic p{ margin:0 !important; line-height:1.9 !important; }
+        .mcp-vp-label{
+          position:absolute;
+          top:10px;
+          padding:2px 8px;
+          font-size:11px;
+          font-weight:600;
+          color:#416465;
+          background:rgba(255,255,255,0.72);
+          border-radius:5px;
+          pointer-events:none;
+          letter-spacing:0.5px;
+        }
+        .mcp-vp-unit{ left:14px; }
+        .mcp-vp-super{ right:14px; }
         @media (max-width:720px){
           .mcp-app{ padding:12px; margin:16px auto; }
           .mcp-stage{ height:300px; }
@@ -846,22 +876,64 @@
             return model;
           }
 
-          /* 简单立方：a = 2r */
-          var SC = makeCubeModel(2, []);
+          /* ---- 简单立方 sc ---- */
+          var SC_A = 2;
+          var scUnit = makeCubeModel(SC_A, []);
 
-          /* 体心立方：4r = √3a */
-          var BCC = makeCubeModel(4 / Math.sqrt(3), [{
-            x: 2 / Math.sqrt(3),
-            y: 2 / Math.sqrt(3),
-            z: 2 / Math.sqrt(3),
-            c: ORANGE
+          var scSuperAtoms = [];
+          for (var si = 0; si <= 2; si++){
+            for (var sj = 0; sj <= 2; sj++){
+              for (var sk = 0; sk <= 2; sk++){
+                scSuperAtoms.push({ x: si * SC_A, y: sj * SC_A, z: sk * SC_A, c: TEAL });
+              }
+            }
+          }
+          var scSuper = finalize({ atoms: scSuperAtoms, edges: cubeEdges(SC_A * 2) });
+
+          /* ---- 体心立方 bcc ---- */
+          var BCC_A = 4 / Math.sqrt(3);
+          var bccUnit = makeCubeModel(BCC_A, [{
+            x: BCC_A / 2, y: BCC_A / 2, z: BCC_A / 2, c: ORANGE
           }]);
 
-          /* 面心立方最密：2×2×2 超胞，转到 [111] 方向观察，按 (111) 密置层着色 */
+          var bccSuperAtoms = [];
+          for (var bi = 0; bi <= 2; bi++){
+            for (var bj = 0; bj <= 2; bj++){
+              for (var bk = 0; bk <= 2; bk++){
+                bccSuperAtoms.push({ x: bi * BCC_A, y: bj * BCC_A, z: bk * BCC_A, c: TEAL });
+              }
+            }
+          }
+          for (var bi = 0; bi < 2; bi++){
+            for (var bj = 0; bj < 2; bj++){
+              for (var bk = 0; bk < 2; bk++){
+                bccSuperAtoms.push({
+                  x: bi * BCC_A + BCC_A / 2,
+                  y: bj * BCC_A + BCC_A / 2,
+                  z: bk * BCC_A + BCC_A / 2,
+                  c: ORANGE
+                });
+              }
+            }
+          }
+          var bccSuper = finalize({ atoms: bccSuperAtoms, edges: cubeEdges(BCC_A * 2) });
+
+          /* ---- 面心立方 fcc ---- */
           var FCC_A = 2 * Math.sqrt(2);
           var PURPLE = '#8a6fb0';
           var fccLayerColors = [TEAL, ORANGE, PURPLE];
-          var fccAtoms = [];
+
+          /* fcc 单胞：标准立方视图，顶点 teal + 面心 orange */
+          var fccUnit = makeCubeModel(FCC_A, [
+            { x: FCC_A / 2, y: FCC_A / 2, z: 0, c: ORANGE },
+            { x: FCC_A / 2, y: FCC_A / 2, z: FCC_A, c: ORANGE },
+            { x: FCC_A / 2, y: 0, z: FCC_A / 2, c: ORANGE },
+            { x: FCC_A / 2, y: FCC_A, z: FCC_A / 2, c: ORANGE },
+            { x: 0, y: FCC_A / 2, z: FCC_A / 2, c: ORANGE },
+            { x: FCC_A, y: FCC_A / 2, z: FCC_A / 2, c: ORANGE }
+          ]);
+
+          /* fcc 超胞：2×2×2，转到 [111] 方向并按密置层着色 */
           function fccPoint(x, y, z){
             return {
               x: (x - y) / Math.SQRT2,
@@ -869,32 +941,72 @@
               z: (x + y + z) / Math.sqrt(3)
             };
           }
+          var fccSuperAtoms = [];
           for (var fi = 0; fi <= 4; fi++){
             for (var fj = 0; fj <= 4; fj++){
               for (var fk = 0; fk <= 4; fk++){
                 if (((fi + fj + fk) & 1) !== 0) continue;
                 var fLayer = (fi + fj + fk) / 2;
                 var fp = fccPoint(
-                  fi * FCC_A / 2,
-                  fj * FCC_A / 2,
-                  fk * FCC_A / 2
+                  fi * FCC_A / 2, fj * FCC_A / 2, fk * FCC_A / 2
                 );
                 fp.c = fccLayerColors[fLayer % 3];
-                fccAtoms.push(fp);
+                fccSuperAtoms.push(fp);
               }
             }
           }
-          var fccEdges = cubeEdges(FCC_A * 2).map(function(e){
+          var fccSuperEdges = cubeEdges(FCC_A * 2).map(function(e){
             return [fccPoint(e[0].x, e[0].y, e[0].z), fccPoint(e[1].x, e[1].y, e[1].z)];
           });
-          var FCC = finalize({
-            atoms: fccAtoms,
-            edges: fccEdges
-          });
+          var fccSuper = finalize({ atoms: fccSuperAtoms, edges: fccSuperEdges });
 
-          /* 六方最密：4 层密置层超胞，按 A/B/A/B 着色 */
+          /* ---- 六方最密 hcp ---- */
           var HCP_H = 2 * Math.sqrt(2 / 3);
-          var hcpAtoms = [];
+          function hexPrism(radius, zBottom, zTop){
+            var bottom = [], top = [];
+            for (var k = 0; k < 6; k++){
+              var t = k * Math.PI / 3;
+              bottom.push({ x: radius * Math.cos(t), y: radius * Math.sin(t), z: zBottom });
+              top.push({ x: radius * Math.cos(t), y: radius * Math.sin(t), z: zTop });
+            }
+            var edges = [];
+            for (var k = 0; k < 6; k++){
+              edges.push([bottom[k], bottom[(k + 1) % 6]]);
+              edges.push([top[k], top[(k + 1) % 6]]);
+              edges.push([bottom[k], top[k]]);
+            }
+            return { bottom: bottom, top: top, edges: edges };
+          }
+
+          /* hcp 单胞：最小六方棱柱，两层（A 在底 + B 在中 + A 在顶 = 2 个 A + 1 个 B 原子在顶点，再加 1 个 B 在内部 = 总共 6 个，即一个完整 hcp 单胞） */
+          var hcpUnitAtoms = [];
+          var hoffB = { x: 1, y: 1 / Math.sqrt(3) };
+          /* 底层 A：6 个在六边形顶点 + 1 个中心 */
+          hcpUnitAtoms.push({ x: 0, y: 0, z: 0, c: TEAL });
+          for (var k = 0; k < 6; k++){
+            var t = k * Math.PI / 3;
+            hcpUnitAtoms.push({ x: 2 * Math.cos(t), y: 2 * Math.sin(t), z: 0, c: TEAL });
+          }
+          /* 中层 B：3 个在三角形顶点 */
+          var bCenters = [
+            { x: 1, y: Math.sqrt(3) },
+            { x: -2, y: 0 },
+            { x: 1, y: -Math.sqrt(3) }
+          ];
+          bCenters.forEach(function(p){
+            hcpUnitAtoms.push({ x: p.x, y: p.y, z: HCP_H, c: ORANGE });
+          });
+          /* 顶层 A：与底层 A 重合 */
+          hcpUnitAtoms.push({ x: 0, y: 0, z: 2 * HCP_H, c: TEAL });
+          for (var k = 0; k < 6; k++){
+            var t = k * Math.PI / 3;
+            hcpUnitAtoms.push({ x: 2 * Math.cos(t), y: 2 * Math.sin(t), z: 2 * HCP_H, c: TEAL });
+          }
+          var hcpUnitPrism = hexPrism(2, 0, 2 * HCP_H);
+          var hcpUnit = finalize({ atoms: hcpUnitAtoms, edges: hcpUnitPrism.edges });
+
+          /* hcp 超胞：4 层密置层 ABAB */
+          var hcpSuperAtoms = [];
           var hcpLayerColors = [TEAL, ORANGE, TEAL, ORANGE];
           for (var hl = 0; hl < 4; hl++){
             var hoffX = (hl & 1) ? 1 : 0;
@@ -905,31 +1017,24 @@
                 var hx = 2 * n1 + n2 + hoffX;
                 var hy = Math.sqrt(3) * n2 + hoffY;
                 if (hoffX && Math.sqrt(hx * hx + hy * hy) > 3.5) continue;
-                hcpAtoms.push({ x: hx, y: hy, z: hl * HCP_H, c: hcpLayerColors[hl] });
+                hcpSuperAtoms.push({ x: hx, y: hy, z: hl * HCP_H, c: hcpLayerColors[hl] });
               }
             }
           }
+          var hcpSuperPrism = hexPrism(4, 0, 3 * HCP_H);
+          var hcpSuper = finalize({ atoms: hcpSuperAtoms, edges: hcpSuperPrism.edges });
 
-          var hcpEdges = [];
-          var hcpBottom = [], hcpTop = [];
-          for (var hk = 0; hk < 6; hk++){
-            var ht = hk * Math.PI / 3;
-            hcpBottom.push({ x: 4 * Math.cos(ht), y: 4 * Math.sin(ht), z: 0 });
-            hcpTop.push({ x: 4 * Math.cos(ht), y: 4 * Math.sin(ht), z: 3 * HCP_H });
-          }
-          for (var he = 0; he < 6; he++){
-            hcpEdges.push([hcpBottom[he], hcpBottom[(he + 1) % 6]]);
-            hcpEdges.push([hcpTop[he], hcpTop[(he + 1) % 6]]);
-            hcpEdges.push([hcpBottom[he], hcpTop[he]]);
-          }
-          var HCP = finalize({ atoms: hcpAtoms, edges: hcpEdges });
-
-          var MODELS = { sc: SC, bcc: BCC, fcc: FCC, hcp: HCP };
+          var MODELS = {
+            sc:  { unit: scUnit,  super: scSuper  },
+            bcc: { unit: bccUnit, super: bccSuper },
+            fcc: { unit: fccUnit, super: fccSuper },
+            hcp: { unit: hcpUnit, super: hcpSuper }
+          };
 
           var DATA = {
             sc: {
-              name: '简单立方堆积',
-              tag: '非密置层 · 简单堆积',
+              name: '简单立方堆积 sc',
+              tag: '非密置层',
               cn: '6',
               atoms: '1（8×1/8）',
               eff: '52.4%',
@@ -938,11 +1043,11 @@
               metals: 'α-Po（钋）',
               radius: 'r = a / 2',
               desc: '球心位于立方体八个顶点，同层四个球相切，上下各有一个球，配位数为 6。空隙很大，实际金属中只有钋等极少数采用。',
-              note: '简单立方堆积：八个顶点各一个球，同层四球相切，配位数为 6。'
+              note: '左：sc 单胞 8 顶点；右：2×2×2 超胞，共 27 个顶点。'
             },
             bcc: {
-              name: '体心立方堆积',
-              tag: '非密置层 · bcc',
+              name: '体心立方堆积 bcc',
+              tag: '非密置层',
               cn: '8',
               atoms: '2（8×1/8 + 1）',
               eff: '68.0%',
@@ -951,10 +1056,10 @@
               metals: 'Na、K、α-Fe、W',
               radius: 'r = √3a / 4',
               desc: '顶点加体心，体心球与 8 个顶点球相切，相切方向沿体对角线。配位数为 8，空间利用率 68.0%，不属于密置层堆积。',
-              note: '体心立方堆积：顶点 + 体心，体心球与 8 个顶点球相切。'
+              note: '左：bcc 单胞（顶点 + 体心）；右：2×2×2 超胞，8 个体心位置填满。'
             },
             fcc: {
-              name: '面心立方最密堆积',
+              name: '面心立方最密堆积 fcc',
               tag: '密置层 · ABCABC',
               cn: '12',
               atoms: '4（8×1/8 + 6×1/2）',
@@ -963,11 +1068,11 @@
               seq: 'ABCABC',
               metals: 'Cu、Ag、Au、Al',
               radius: 'r = √2a / 4',
-              desc: '2×2×2 超胞中可清楚看到 (111) 密置层按 ABCABC 堆叠；每个球与同层 6 个、上下各 3 个球相切，配位数为 12。',
-              note: '面心立方最密堆积：2×2×2 超胞转到 [111] 方向观察，按密置层着色，可见 ABCABC 层序。'
+              desc: '单胞为面心立方；2×2×2 超胞转到 [111] 方向，按密置层着色后可以清楚看到 ABCABC 的重复周期。',
+              note: '左：fcc 单胞（顶点 + 面心）；右：2×2×2 超胞沿 [111] 着色，可见 ABCABC。'
             },
             hcp: {
-              name: '六方最密堆积',
+              name: '六方最密堆积 hcp',
               tag: '密置层 · ABAB',
               cn: '12',
               atoms: '6（六方晶胞）',
@@ -976,15 +1081,15 @@
               seq: 'ABAB',
               metals: 'Mg、Zn、Ti',
               radius: 'r = a / 2，c = 4r√(2/3)',
-              desc: '4 层密置层超胞中，第三层回到第一层的位置，层序为 ABAB；每个球与同层 6 个、上下各 3 个球相切，配位数为 12。',
-              note: '六方最密堆积：4 层密置层超胞，A 层青色、B 层橙色交替，可见 ABAB 层序。'
+              desc: '单胞为两层六方棱柱（A + B + A 表面）；4 层超胞可清楚看到第三层回到第一层位置，层序为 ABAB。',
+              note: '左：hcp 单胞（两层）；右：4 层超胞，A 青色、B 橙色交替，可见 ABAB。'
             }
           };
 
           var LEGEND = {
-            sc: [[TEAL, '顶点原子']],
+            sc: [[TEAL, '原子']],
             bcc: [[TEAL, '顶点原子'], [ORANGE, '体心原子']],
-            fcc: [[TEAL, 'A 层原子'], [ORANGE, 'B 层原子'], [PURPLE, 'C 层原子']],
+            fcc: [[TEAL, '顶点 / A 层'], [ORANGE, '面心 / B 层'], [PURPLE, 'C 层']],
             hcp: [[TEAL, 'A 层原子'], [ORANGE, 'B 层原子']]
           };
 
@@ -1039,15 +1144,38 @@
             ctx.stroke();
           }
 
-          function draw(){
-            if (!W || !H) return;
-            ctx.clearRect(0, 0, W, H);
+          function drawEdges(model, cx, cy, scale, cosY, sinY, cosP, sinP, style){
+            if (!state.showCell || !model.edges) return;
+            ctx.save();
+            ctx.strokeStyle = style.color;
+            ctx.lineWidth = style.width;
+            if (style.dashed) ctx.setLineDash([5, 3]);
+            else ctx.setLineDash([]);
+            ctx.lineJoin = 'round';
+            model.edges.forEach(function(e){
+              function projRaw(p){
+                var x = p.x - model.center.x;
+                var y = p.y - model.center.y;
+                var z = p.z - model.center.z;
+                var x1 = x * cosY - y * sinY;
+                var y1 = x * sinY + y * cosY;
+                return {
+                  x: cx + x1 * scale,
+                  y: cy - (z * cosP + y1 * sinP) * scale
+                };
+              }
+              var a = projRaw(e[0]);
+              var b = projRaw(e[1]);
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            });
+            ctx.restore();
+          }
 
-            var model = MODELS[state.kind];
-            var cosY = Math.cos(state.yaw), sinY = Math.sin(state.yaw);
-            var cosP = Math.cos(state.pitch), sinP = Math.sin(state.pitch);
-            var scale = Math.min(W, H) * 0.40 / model.boundR * state.zoom;
-            var cx = W / 2, cy = H / 2;
+          function drawModel(model, cx, cy, scale, cosY, sinY, cosP, sinP, edgeStyle){
+            drawEdges(model, cx, cy, scale, cosY, sinY, cosP, sinP, edgeStyle);
 
             function project(p){
               var x = p.x - model.center.x;
@@ -1062,22 +1190,6 @@
               };
             }
 
-            if (state.showCell && model.edges){
-              ctx.save();
-              ctx.strokeStyle = 'rgba(64,112,112,0.42)';
-              ctx.lineWidth = 1.1;
-              ctx.lineJoin = 'round';
-              model.edges.forEach(function(e){
-                var a = project(e[0]);
-                var b = project(e[1]);
-                ctx.beginPath();
-                ctx.moveTo(a.x, a.y);
-                ctx.lineTo(b.x, b.y);
-                ctx.stroke();
-              });
-              ctx.restore();
-            }
-
             var list = model.atoms.map(function(a){
               return { a: a, pr: project(a) };
             });
@@ -1085,23 +1197,50 @@
             list.forEach(function(item){
               drawSphere(item.pr.x, item.pr.y, R * scale, item.a.c);
             });
+          }
 
-            if (state.showCell && model.edges){
-              ctx.save();
-              ctx.strokeStyle = 'rgba(18,66,66,0.52)';
-              ctx.lineWidth = 1.5;
-              ctx.setLineDash([5, 3]);
-              ctx.lineJoin = 'round';
-              model.edges.forEach(function(e){
-                var a = project(e[0]);
-                var b = project(e[1]);
-                ctx.beginPath();
-                ctx.moveTo(a.x, a.y);
-                ctx.lineTo(b.x, b.y);
-                ctx.stroke();
-              });
-              ctx.restore();
-            }
+          function draw(){
+            if (!W || !H) return;
+            ctx.clearRect(0, 0, W, H);
+
+            var pair = MODELS[state.kind];
+            var unit = pair.unit;
+            var superC = pair.super;
+
+            var cosY = Math.cos(state.yaw), sinY = Math.sin(state.yaw);
+            var cosP = Math.cos(state.pitch), sinP = Math.sin(state.pitch);
+
+            var gap = 24;
+            var half = (W - gap) / 2;
+
+            var unitScale = Math.min(half, H) * 0.38 / unit.boundR * state.zoom;
+            var superScale = Math.min(half, H) * 0.38 / superC.boundR * state.zoom;
+
+            var cxU = half / 2;
+            var cxS = half + gap + half / 2;
+            var cy = H / 2;
+
+            drawModel(unit, cxU, cy, unitScale, cosY, sinY, cosP, sinP, {
+              color: 'rgba(64,112,112,0.58)',
+              width: 1.2,
+              dashed: false
+            });
+            drawModel(superC, cxS, cy, superScale, cosY, sinY, cosP, sinP, {
+              color: 'rgba(18,66,66,0.52)',
+              width: 1.5,
+              dashed: true
+            });
+
+            /* 中间分隔线 */
+            ctx.save();
+            ctx.strokeStyle = 'rgba(18,66,66,0.12)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 4]);
+            ctx.beginPath();
+            ctx.moveTo(half + gap / 2, 8);
+            ctx.lineTo(half + gap / 2, H - 8);
+            ctx.stroke();
+            ctx.restore();
           }
 
           function tick(){
