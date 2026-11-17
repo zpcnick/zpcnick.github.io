@@ -732,12 +732,12 @@
             models.caf2 = finalize(makeCubeModel(A, atoms));
           })();
 
-          /* 5. TiO₂ 金红石型 — P4₂/mnm, a=b=4, c≈2.58, x≈0.305；2×2×1 超胞 */
+          /* 5. TiO₂ 金红石型 — P4₂/mnm, a=b=4, c≈2.58, x≈0.305；1×1×2 超胞 */
           (function(){
             var C = 2.58;          /* c/a ≈ 0.645 */
             var x = 0.305;         /* O 的 Wyckoff 4f 参数 */
             var atoms = [];
-            var na = 2, nb = 2, nc = 1;   /* 超胞：2a × 2b × 1c */
+            var na = 1, nb = 1, nc = 2;   /* 超胞：1a × 1b × 2c（c 轴拉长便于透视） */
             for (var ti = 0; ti < na; ti++){
               for (var tj = 0; tj < nb; tj++){
                 for (var tk = 0; tk < nc; tk++){
@@ -753,7 +753,7 @@
                 }
               }
             }
-            /* 超胞轮廓：2a × 2b × 1c */
+            /* 超胞轮廓：1a × 1b × 2c */
             var aS = na*A, bS = nb*A, cS = nc*C;
             var c000={x:0,y:0,z:0},  c100={x:aS,y:0,z:0},   c010={x:0,y:bS,z:0}, c110={x:aS,y:bS,z:0};
             var c001={x:0,y:0,z:cS}, c101={x:aS,y:0,z:cS},  c011={x:0,y:bS,z:cS},c111={x:aS,y:bS,z:cS};
@@ -859,8 +859,8 @@
               formula: '2',
               crystal: '四方 P4₂/mnm',
               examples: 'TiO₂、SnO₂、PbO₂',
-              desc: 'Ti⁴⁺ 在简单四方格子的 2a 位置 (0,0,0) 和 (1/2,1/2,1/2)；O²⁻ 在 Wyckoff 4f 位置，x ≈ 0.305。注意 Ti 周围最近的 6 个 O 中，4 个来自相邻晶胞——所以画面用了 <strong>2×2×1 超胞</strong>，这样 Ti—O 八面体的完整配位就能看到。',
-              note: '2×2×1 超胞；c/a ≈ 0.645，x ≈ 0.305。'
+              desc: 'Ti⁴⁺ 在简单四方格子的 2a 位置；O²⁻ 在 Wyckoff 4f 位置，x ≈ 0.305。画面用了 <strong>1×1×2 超胞</strong>：沿 c 轴两层叠加，透视时四方变形和 Ti—O 八面体都更清楚。',
+              note: '1×1×2 超胞；c/a ≈ 0.645，x ≈ 0.305。'
             },
             perovskite: {
               name: 'CaTiO₃ 钙钛矿型',
