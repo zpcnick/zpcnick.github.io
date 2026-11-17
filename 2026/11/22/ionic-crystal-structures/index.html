@@ -732,20 +732,37 @@
             models.caf2 = finalize(makeCubeModel(A, atoms));
           })();
 
-          /* 5. TiO₂ 金红石型 — P4₂/mnm, a=b=4, c≈2.58, x≈0.305 */
+          /* 5. TiO₂ 金红石型 — P4₂/mnm, a=b=4, c≈2.58, x≈0.305；2×2×1 超胞 */
           (function(){
-            var C = 2.58;          /* c/a ≈ 0.645，贴近真实金红石 */
+            var C = 2.58;          /* c/a ≈ 0.645 */
             var x = 0.305;         /* O 的 Wyckoff 4f 参数 */
             var atoms = [];
-            /* Ti⁴⁺：Wyckoff 2a — (0,0,0) 和 (1/2,1/2,1/2) */
-            atoms.push({x:0,         y:0,         z:0,       c: TEAL,   t:'Ti'});
-            atoms.push({x:A/2,       y:A/2,       z:C/2,     c: TEAL,   t:'Ti'});
-            /* O²⁻：Wyckoff 4f — 四个位置，不在 4 次轴上 */
-            atoms.push({x: x*A,      y: x*A,      z:0,       c: ORANGE, t:'O'});
-            atoms.push({x:(1-x)*A,   y:(1-x)*A,   z:0,       c: ORANGE, t:'O'});
-            atoms.push({x:(0.5-x)*A, y:(0.5+x)*A, z:C/2,     c: ORANGE, t:'O'});
-            atoms.push({x:(0.5+x)*A, y:(0.5-x)*A, z:C/2,     c: ORANGE, t:'O'});
-            models.tio2 = finalize(makeTetragonalModel(A, C, atoms));
+            var na = 2, nb = 2, nc = 1;   /* 超胞：2a × 2b × 1c */
+            for (var ti = 0; ti < na; ti++){
+              for (var tj = 0; tj < nb; tj++){
+                for (var tk = 0; tk < nc; tk++){
+                  var X0 = ti*A, Y0 = tj*A, Z0 = tk*C;
+                  /* Ti⁴⁺ Wyckoff 2a */
+                  atoms.push({x:X0,           y:Y0,           z:Z0,       c: TEAL,   t:'Ti'});
+                  atoms.push({x:X0 + A/2,     y:Y0 + A/2,     z:Z0 + C/2, c: TEAL,   t:'Ti'});
+                  /* O²⁻ Wyckoff 4f — 四个位置 */
+                  atoms.push({x:X0 + x*A,     y:Y0 + x*A,     z:Z0,       c: ORANGE, t:'O'});
+                  atoms.push({x:X0 + (1-x)*A, y:Y0 + (1-x)*A, z:Z0,       c: ORANGE, t:'O'});
+                  atoms.push({x:X0 + (0.5-x)*A, y:Y0 + (0.5+x)*A, z:Z0 + C/2, c: ORANGE, t:'O'});
+                  atoms.push({x:X0 + (0.5+x)*A, y:Y0 + (0.5-x)*A, z:Z0 + C/2, c: ORANGE, t:'O'});
+                }
+              }
+            }
+            /* 超胞轮廓：2a × 2b × 1c */
+            var aS = na*A, bS = nb*A, cS = nc*C;
+            var c000={x:0,y:0,z:0},  c100={x:aS,y:0,z:0},   c010={x:0,y:bS,z:0}, c110={x:aS,y:bS,z:0};
+            var c001={x:0,y:0,z:cS}, c101={x:aS,y:0,z:cS},  c011={x:0,y:bS,z:cS},c111={x:aS,y:bS,z:cS};
+            var edges = [
+              [c000,c100],[c100,c110],[c110,c010],[c010,c000],
+              [c001,c101],[c101,c111],[c111,c011],[c011,c001],
+              [c000,c001],[c100,c101],[c110,c111],[c010,c011]
+            ];
+            models.tio2 = finalize({ atoms: atoms, edges: edges, lattice: { a: aS, b: bS, c: cS } });
           })();
 
           /* 6. CaTiO₃ 钙钛矿型 — Pm-3m, a=4 */
@@ -842,8 +859,8 @@
               formula: '2',
               crystal: '四方 P4₂/mnm',
               examples: 'TiO₂、SnO₂、PbO₂',
-              desc: 'Ti⁴⁺ 在简单四方格子的 2a 位置 (0,0,0) 和 (1/2,1/2,1/2)；O²⁻ 在 Wyckoff 4f 位置，x ≈ 0.305，分布在 z=0 和 z=c/2 两层但不在四旋转轴上。Ti 的配位数是 6（八面体），O 的配位数是 3。c/a ≈ 0.645，比 a 轴明显短。',
-              note: 'Ti⁴⁺ 在 2a，O²⁻ 在 4f (x≈0.305)，共 6 原子；c ≈ 0.64a。'
+              desc: 'Ti⁴⁺ 在简单四方格子的 2a 位置 (0,0,0) 和 (1/2,1/2,1/2)；O²⁻ 在 Wyckoff 4f 位置，x ≈ 0.305。注意 Ti 周围最近的 6 个 O 中，4 个来自相邻晶胞——所以画面用了 <strong>2×2×1 超胞</strong>，这样 Ti—O 八面体的完整配位就能看到。',
+              note: '2×2×1 超胞；c/a ≈ 0.645，x ≈ 0.305。'
             },
             perovskite: {
               name: 'CaTiO₃ 钙钛矿型',
