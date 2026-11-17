@@ -23,16 +23,16 @@
   <meta name="description" content="用可旋转三维模型展示 7 种常见化合物晶体结构：NaCl 岩盐、CsCl、ZnS 闪锌矿、CaF₂ 萤石、TiO₂ 金红石、CaTiO₃ 钙钛矿、MgAl₂O₄ 尖晶石。">
   <meta property="og:type" content="article">
   <meta property="og:title" content="常见化合物晶体结构">
-  <meta property="og:url" content="https://zpcnick.github.io/2026/11/22/ionic-crystal-structures/">
+  <meta property="og:url" content="https://zpcnick.github.io/2026/11/17/ionic-crystal-structures/">
   <meta property="og:site_name" content="ZPC&#39;s homepage">
   <meta property="og:description" content="用可旋转三维模型展示 7 种常见化合物晶体结构：NaCl 岩盐、CsCl、ZnS 闪锌矿、CaF₂ 萤石、TiO₂ 金红石、CaTiO₃ 钙钛矿、MgAl₂O₄ 尖晶石。">
   <meta property="og:locale">
-  <meta property="article:published_time" content="2026-11-22T02:00:00.000Z">
-  <meta property="article:modified_time" content="2026-11-22T02:00:00.000Z">
+  <meta property="article:published_time" content="2026-11-17T02:00:00.000Z">
+  <meta property="article:modified_time" content="2026-11-17T02:00:00.000Z">
   <meta property="article:author" content="zpc">
   <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://zpcnick.github.io/2026/11/22/ionic-crystal-structures/">
+<link rel="canonical" href="https://zpcnick.github.io/2026/11/17/ionic-crystal-structures/">
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
@@ -152,7 +152,7 @@
 
 
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="ch">
-    <link itemprop="mainEntityOfPage" href="https://zpcnick.github.io/2026/11/22/ionic-crystal-structures/">
+    <link itemprop="mainEntityOfPage" href="https://zpcnick.github.io/2026/11/17/ionic-crystal-structures/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -173,7 +173,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2026-11-22 10:00:00" itemprop="dateCreated datePublished" datetime="2026-11-22T10:00:00+08:00">2026-11-22</time>
+              <time title="Created: 2026-11-17 10:00:00" itemprop="dateCreated datePublished" datetime="2026-11-17T10:00:00+08:00">2026-11-17</time>
             </span>
 
         </div>
@@ -345,7 +345,7 @@
           <li><strong>按配位数从小到大演示</strong>：先点 ZnS（4 配位），再 NaCl（6 配位），最后 CsCl（8 配位）。让学生数每个阳离子周围最近的阴离子个数，再对应半径比区间。</li>
           <li><strong>突出钙钛矿的八面体</strong>：把自动旋转关掉，拖动视角让 Ti—O 八面体正对屏幕——6 个 O 围成的形状一眼就能看出来，旁边还有 12 配位的 Ca。</li>
           <li><strong>萤石和反萤石</strong>：把 CaF₂ 的颜色反过来（把阳离子换成橙色），就是 Na₂O 的结构，阳离子填进全部四面体空隙。</li>
-          <li><strong>金红石的四方变形</strong>：和 NaCl 对比，TiO₂ 的 c 轴比 a 轴短，O 不再是正八面体配位而是略压扁的。</li>
+          <li><strong>金红石的四方变形</strong>：和 NaCl 对比，TiO₂ 的 c 轴只有 a 轴的 ~64%，O 也不在四旋转轴上而是错开一个 4f 参数 x≈0.305 的位置——Ti 的八面体配位因此被压扁了。</li>
         </ol>
 
         <h2 id="common"><a href="#common" class="headerlink" title="常见误区"></a>五、几个常见误区</h2>
@@ -428,6 +428,9 @@
             border-radius:10px;
             border:1px solid #dbe8e7;
             overflow:hidden;
+            touch-action:none;
+            user-select:none;
+            -webkit-user-select:none;
           }
           .mcp-stage canvas{ display:block; width:100%; height:100%; }
           .mcp-hint{
@@ -729,20 +732,43 @@
             models.caf2 = finalize(makeCubeModel(A, atoms));
           })();
 
-          /* 5. TiO₂ 金红石型 — P4₂/mnm, a=b=4, c≈2.85 */
+          /* 5. TiO₂ 金红石型 — P4₂/mnm, a=b=4, c≈2.58, x≈0.305；1×1×2 超胞 */
           (function(){
-            var C = 2.85;
+            var C = 2.58;          /* c/a ≈ 0.645 */
+            var x = 0.305;         /* O 的 Wyckoff 4f 参数 */
             var atoms = [];
-            /* Ti⁴⁺：两个 */
-            atoms.push({x:0, y:0, z:0, c: TEAL, t:'Ti'});
-            atoms.push({x:A/2, y:A/2, z:C/2, c: TEAL, t:'Ti'});
-            /* O²⁻：四个，z ≈ 0.3 取 0.3 */
-            var z1 = 0.3 * C;
-            atoms.push({x:0, y:0, z:z1, c: ORANGE, t:'O'});
-            atoms.push({x:0, y:0, z:C - z1, c: ORANGE, t:'O'});
-            atoms.push({x:A/2, y:A/2, z:z1 + C/2, c: ORANGE, t:'O'});
-            atoms.push({x:A/2, y:A/2, z:C/2 - z1, c: ORANGE, t:'O'});
-            models.tio2 = finalize(makeTetragonalModel(A, C, atoms));
+            var na = 1, nb = 1, nc = 2;   /* 超胞：1a × 1b × 2c（c 轴拉长便于透视） */
+            /* Ti 顶点：补全所有边界格点（含棱中点、顶面），i/j/k 均取到上限 */
+            for (var vi = 0; vi <= na; vi++)
+              for (var vj = 0; vj <= nb; vj++)
+                for (var vk = 0; vk <= nc; vk++)
+                  atoms.push({x:vi*A, y:vj*A, z:vk*C, c:TEAL, t:'Ti'});
+            /* Ti 体心 + O：每个单胞内部 */
+            for (var ti = 0; ti < na; ti++){
+              for (var tj = 0; tj < nb; tj++){
+                for (var tk = 0; tk < nc; tk++){
+                  var X0 = ti*A, Y0 = tj*A, Z0 = tk*C;
+                  /* Ti⁴⁺ 体心 Wyckoff 2a (1/2,1/2,1/2) */
+                  atoms.push({x:X0 + A/2,     y:Y0 + A/2,     z:Z0 + C/2, c: TEAL,   t:'Ti'});
+                  /* O²⁻ Wyckoff 4f — 四个位置 */
+                  atoms.push({x:X0 + x*A,     y:Y0 + x*A,     z:Z0,       c: ORANGE, t:'O'});
+                  atoms.push({x:X0 + (1-x)*A, y:Y0 + (1-x)*A, z:Z0,       c: ORANGE, t:'O'});
+                  atoms.push({x:X0 + (0.5-x)*A, y:Y0 + (0.5+x)*A, z:Z0 + C/2, c: ORANGE, t:'O'});
+                  atoms.push({x:X0 + (0.5+x)*A, y:Y0 + (0.5-x)*A, z:Z0 + C/2, c: ORANGE, t:'O'});
+                }
+              }
+            }
+            /* 超胞轮廓：1a × 1b × 2c */
+            var aS = na*A, bS = nb*A, cS = nc*C;
+            var c000={x:0,y:0,z:0},  c100={x:aS,y:0,z:0},   c010={x:0,y:bS,z:0}, c110={x:aS,y:bS,z:0};
+            var c001={x:0,y:0,z:cS}, c101={x:aS,y:0,z:cS},  c011={x:0,y:bS,z:cS},c111={x:aS,y:bS,z:cS};
+            var edges = [
+              [c000,c100],[c100,c110],[c110,c010],[c010,c000],
+              [c001,c101],[c101,c111],[c111,c011],[c011,c001],
+              [c000,c001],[c100,c101],[c110,c111],[c010,c011]
+            ];
+            var tio2model = finalize({ atoms: atoms, edges: edges, lattice: { a: aS, b: bS, c: cS } });
+            models.tio2 = tio2model;
           })();
 
           /* 6. CaTiO₃ 钙钛矿型 — Pm-3m, a=4 */
@@ -839,8 +865,8 @@
               formula: '2',
               crystal: '四方 P4₂/mnm',
               examples: 'TiO₂、SnO₂、PbO₂',
-              desc: 'Ti⁴⁺ 在简单四方格子的 (0,0,0) 和 (1/2,1/2,1/2) 位置；O²⁻ 4 个，沿 c 轴方向排布。Ti 的配位数是 6（八面体），O 的配位数是 3。c 轴比 a 轴短一些。',
-              note: 'Ti⁴⁺ 在两个等效位置，O²⁻ 共 4 个，c ≈ 0.71a。'
+              desc: 'Ti⁴⁺ 在简单四方格子的 2a 位置；O²⁻ 在 Wyckoff 4f 位置，x ≈ 0.305。画面用了 <strong>1×1×2 超胞</strong>：沿 c 轴两层叠加，透视时四方变形和 Ti—O 八面体都更清楚。',
+              note: '1×1×2 超胞；c/a ≈ 0.645，x ≈ 0.305。'
             },
             perovskite: {
               name: 'CaTiO₃ 钙钛矿型',
@@ -944,27 +970,36 @@
               };
             }
 
+            /* 边线分段 + 原子球统一深度排序：近处边线画在原子上层，避免被遮挡消失 */
+            var items = [];
             if (state.showCell && model.edges){
-              ctx.save();
-              ctx.strokeStyle = 'rgba(64,112,112,0.55)';
-              ctx.lineWidth = 1.2;
-              ctx.setLineDash([]);
-              ctx.lineJoin = 'round';
               model.edges.forEach(function(e){
-                var a = project(e[0]);
-                var b = project(e[1]);
-                ctx.beginPath();
-                ctx.moveTo(a.x, a.y);
-                ctx.lineTo(b.x, b.y);
-                ctx.stroke();
+                var A = e[0], B = e[1], SEG = 12;
+                for (var i = 0; i < SEG; i++){
+                  var t1 = i/SEG, t2 = (i+1)/SEG;
+                  var p1 = project({x:A.x+(B.x-A.x)*t1, y:A.y+(B.y-A.y)*t1, z:A.z+(B.z-A.z)*t1});
+                  var p2 = project({x:A.x+(B.x-A.x)*t2, y:A.y+(B.y-A.y)*t2, z:A.z+(B.z-A.z)*t2});
+                  items.push({ edge:true, p1:p1, p2:p2, depth:(p1.depth+p2.depth)/2 });
+                }
               });
-              ctx.restore();
             }
-
-            var list = model.atoms.map(function(a){ return { a: a, pr: project(a) }; });
-            list.sort(function(p, q){ return p.pr.depth - q.pr.depth; });
-            list.forEach(function(item){
-              drawSphere(item.pr.x, item.pr.y, R * scale, item.a.c);
+            model.atoms.forEach(function(a){
+              var pr = project(a);
+              items.push({ edge:false, pr:pr, a:a, depth:pr.depth });
+            });
+            items.sort(function(p, q){ return p.depth - q.depth; });
+            items.forEach(function(item){
+              if (item.edge){
+                ctx.strokeStyle = 'rgba(64,112,112,0.6)';
+                ctx.lineWidth = 1.5;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(item.p1.x, item.p1.y);
+                ctx.lineTo(item.p2.x, item.p2.y);
+                ctx.stroke();
+              } else {
+                drawSphere(item.pr.x, item.pr.y, R * scale, item.a.c);
+              }
             });
           }
 
@@ -1046,8 +1081,9 @@
               state.yaw = 0.7; state.pitch = 0.35; state.zoom = 1; state.need = true;
             });
 
-            /* mouse drag */
+            /* mouse/touch drag */
             stage.addEventListener('pointerdown', function(e){
+              e.preventDefault();
               state.dragging = true;
               state.lastX = e.clientX;
               state.lastY = e.clientY;
@@ -1055,6 +1091,7 @@
             });
             stage.addEventListener('pointermove', function(e){
               if (!state.dragging) return;
+              e.preventDefault();
               var dx = e.clientX - state.lastX;
               var dy = e.clientY - state.lastY;
               state.lastX = e.clientX;
