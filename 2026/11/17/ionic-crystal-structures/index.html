@@ -604,7 +604,7 @@
           var TEAL   = '#2c7a7b';
           var ORANGE = '#ef9256';
           var PURPLE = '#8a6fb0';
-          var R = 1;                 /* 球半径统一为 1 */
+          var R = 1;                 /* 球半径基准；个别离子用原子的 r 字段放大/缩小 */
           var DPR = window.devicePixelRatio || 1;
 
           /* ================= 三维模型构建 ================= */
@@ -713,7 +713,7 @@
               for (var j = 0; j < 2; j++)
                 for (var k = 0; k < 2; k++)
                   atoms.push({x:i*A, y:j*A, z:k*A, c: ORANGE, t:'anion'});
-            atoms.push({x:A/2, y:A/2, z:A/2, c: TEAL, t:'cation'});
+            atoms.push({x:A/2, y:A/2, z:A/2, c: TEAL, t:'cation', r: 1.28});
             models.cscl = finalize(makeCubeModel(A, atoms));
           })();
 
@@ -729,7 +729,7 @@
               {x:3*A/4, y:A/4, z:3*A/4},
               {x:A/4, y:3*A/4, z:3*A/4}
             ];
-            occupied.forEach(function(p){ atoms.push({x:p.x, y:p.y, z:p.z, c: TEAL, t:'cation'}); });
+            occupied.forEach(function(p){ atoms.push({x:p.x, y:p.y, z:p.z, c: TEAL, t:'cation', r: 0.6}); });
             models.zns = finalize(makeCubeModel(A, atoms));
           })();
 

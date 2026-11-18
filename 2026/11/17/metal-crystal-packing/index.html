@@ -991,18 +991,17 @@
 
           /* hcp 单胞：最小六方棱柱，两层（A 在底 + B 在中 + A 在顶 = 2 个 A + 1 个 B 原子在顶点，再加 1 个 B 在内部 = 总共 6 个，即一个完整 hcp 单胞） */
           var hcpUnitAtoms = [];
-          var hoffB = { x: 1, y: 1 / Math.sqrt(3) };
           /* 底层 A：6 个在六边形顶点 + 1 个中心 */
           hcpUnitAtoms.push({ x: 0, y: 0, z: 0, c: TEAL });
           for (var k = 0; k < 6; k++){
             var t = k * Math.PI / 3;
             hcpUnitAtoms.push({ x: 2 * Math.cos(t), y: 2 * Math.sin(t), z: 0, c: TEAL });
           }
-          /* 中层 B：3 个在三角形顶点 */
+          /* 中层 B：3 个落在 A 层三角形的空隙中心，与上下 A 层错位 */
           var bCenters = [
-            { x: 1, y: Math.sqrt(3) },
-            { x: -2, y: 0 },
-            { x: 1, y: -Math.sqrt(3) }
+            { x: 1, y: 1 / Math.sqrt(3) },
+            { x: -1, y: 1 / Math.sqrt(3) },
+            { x: 0, y: -2 / Math.sqrt(3) }
           ];
           bCenters.forEach(function(p){
             hcpUnitAtoms.push({ x: p.x, y: p.y, z: HCP_H, c: ORANGE });
