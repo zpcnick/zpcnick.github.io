@@ -794,7 +794,7 @@
             models.perovskite = finalize(makeCubeModel(A, atoms));
           })();
 
-          /* 7. MgAl₂O₄ 尖晶石型 — O²⁻ 立方最密堆积小胞：Mg 占 1/8 四面体空隙、Al 占 1/2 八面体空隙
+          /* 7. MgAl₂O₄ 尖晶石型 — O²⁻ 立方最密堆积小胞：Mg 占 1/8 四面体空隙，Al 占 1/2 八面体空隙
              均摊后晶胞含 1 Mg + 2 Al + 4 O（= 1 个 MgAl₂O₄） */
           (function(){
             var a = 4;                 /* 小胞棱长（显示用相对值，非真实 Å） */
@@ -804,12 +804,14 @@
               atoms.push({x:p.x, y:p.y, z:p.z, c: ORANGE, t:'O'});
             });
             /* Mg²⁺：1 个四面体空隙 (1/4,1/4,1/4)，即 8 个四面体孔中占 1/8 */
-            atoms.push({x:a/4, y:a/4, z:a/4, c: TEAL, t:'Mg'});
-            /* Al³⁺：2 个八面体空隙（4 个中占 1/2）—— 体心 + 棱心；
-               棱心为 4 个晶胞共有，因此把它在四条等价棱上的球都画出来 */
-            atoms.push({x:a/2, y:a/2, z:a/2, c: PURPLE, t:'Al'});
-            [[a/2,0,0], [a/2,a,0], [a/2,0,a], [a/2,a,a]].forEach(function(p){
-              atoms.push({x:p[0], y:p[1], z:p[2], c: PURPLE, t:'Al'});
+            atoms.push({x:a/4, y:a/4, z:a/4, c: TEAL, t:'Mg', r: 0.7});
+            /* Al³⁺：只占八面体空隙中的棱心（不取与 Mg 靠近的体心孔）。上下两个面共 8 条棱，
+               棱心各 1 个 Al，均摊后 8 × 1/4 = 2 个 Al */
+            [[a/2, 0, 0], [a/2, a, 0], [a/2, 0, a], [a/2, a, a]].forEach(function(p){
+              atoms.push({x:p[0], y:p[1], z:p[2], c: PURPLE, t:'Al', r: 0.6});
+            });
+            [[0, a/2, 0], [a, a/2, 0], [0, a/2, a], [a, a/2, a]].forEach(function(p){
+              atoms.push({x:p[0], y:p[1], z:p[2], c: PURPLE, t:'Al', r: 0.6});
             });
             models.spinel = finalize(makeCubeModel(a, atoms));
           })();
@@ -890,8 +892,8 @@
               formula: '1（图示小胞）',
               crystal: '立方 Fd-3m',
               examples: 'MgAl₂O₄、Fe₃O₄、CoAl₂O₄',
-              desc: 'O²⁻ 按立方最密堆积（面心立方）排布；Mg²⁺ 占据 1/8 的四面体空隙，Al³⁺ 占据 1/2 的八面体空隙。均摊后晶胞含 1 个 Mg、2 个 Al、4 个 O，正好是 1 个 MgAl₂O₄。完整的惯用晶胞（a ≈ 8.08 Å）含 8 个 MgAl₂O₄，Mg—O ≈ 1.92 Å（4 配位），Al—O ≈ 1.93 Å（6 配位）。',
-              note: 'O 在 8 个顶点 + 6 个面心；Mg 位于 (1/4,1/4,1/4) 的四面体空隙；Al 位于体心与棱心的八面体空隙（棱心球为相邻晶胞共有）。均摊：1 Mg + 2 Al + 4 O。'
+              desc: 'O²⁻ 按立方最密堆积（面心立方）排布；Mg²⁺ 占据 1/8 的四面体空隙（晶胞内 1 个），Al³⁺ 占据 1/2 的八面体空隙——图中全部取棱心位置（上下底面共 8 条棱，各 1 个，均摊 8 × 1/4 = 2 个，且不与 Mg 接触）。均摊后晶胞含 1 Mg + 2 Al + 4 O，正好是 1 个 MgAl₂O₄；完整的惯用晶胞（a ≈ 8.08 Å）含 8 个。',
+              note: 'O 在 8 个顶点 + 6 个面心；Mg 位于 (1/4,1/4,1/4) 的四面体空隙；Al 全部在上下底面 8 条棱的棱心（每个棱心为 4 个晶胞共有）。均摊：1 Mg + 2 Al + 4 O。'
             }
           };
 
@@ -1001,7 +1003,7 @@
                 ctx.lineTo(item.p2.x, item.p2.y);
                 ctx.stroke();
               } else {
-                drawSphere(item.pr.x, item.pr.y, R * scale, item.a.c);
+                drawSphere(item.pr.x, item.pr.y, (item.a.r || R) * scale, item.a.c);
               }
             });
           }
