@@ -821,8 +821,22 @@
               [0.9877,0.2623,0.9877], [0.7623,0.4877,0.9877], [0.4877,0.7623,0.9877], [0.2623,0.9877,0.9877]
             ];
             var atoms = [];
+            /* 单胞球棍模型：凡落在晶胞边界（分数坐标 = 0 或 1）上的原子，按周期性在所有等价的
+               面/棱/顶点位置重复画出，保证边界完整，球体不会被晶胞边界"切开" */
             function add(list, color, tag){
-              list.forEach(function(p){ atoms.push({x:p[0]*a, y:p[1]*a, z:p[2]*a, c:color, t:tag}); });
+              list.forEach(function(p){
+                var xs = [p[0]], ys = [p[1]], zs = [p[2]];
+                if (Math.abs(p[0]) < 1e-6) xs.push(1);
+                if (Math.abs(p[1]) < 1e-6) ys.push(1);
+                if (Math.abs(p[2]) < 1e-6) zs.push(1);
+                xs.forEach(function(x){
+                  ys.forEach(function(y){
+                    zs.forEach(function(z){
+                      atoms.push({x:x*a, y:y*a, z:z*a, c:color, t:tag});
+                    });
+                  });
+                });
+              });
             }
             add(OX, ORANGE, 'O');
             add(MG, TEAL,   'Mg');
@@ -911,7 +925,7 @@
               crystal: '立方 Fd-3m',
               examples: 'MgAl₂O₄、Fe₃O₄、CoAl₂O₄',
               desc: 'O²⁻ 按面心立方密堆积排布（Wyckoff 32e），Mg²⁺ 占据 1/8 的四面体空隙（8a），Al³⁺ 占据 1/2 的八面体空隙（16d）。惯用晶胞 a ≈ 8.08 Å，含 32 个 O、8 个 Mg、16 个 Al，即 8 个 MgAl₂O₄；Mg—O ≈ 1.92 Å（4 配位），Al—O ≈ 1.93 Å（6 配位）。',
-              note: '惯用晶胞：32 O（面心立方）+ 8 Mg（四面体空隙）+ 16 Al（八面体空隙）= 8 MgAl₂O₄。'
+              note: '惯用晶胞：32 O（面心立方）+ 8 Mg（四面体空隙）+ 16 Al（八面体空隙）= 8 MgAl₂O₄。边界上的原子按周期性重复画出，所以画面上的 Al 球数多于 16。'
             }
           };
 
