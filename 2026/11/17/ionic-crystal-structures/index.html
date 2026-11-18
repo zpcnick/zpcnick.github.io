@@ -205,6 +205,7 @@
             <button class="mcp-tab" type="button" data-kind="zns" role="tab">ZnS 闪锌矿</button>
             <button class="mcp-tab" type="button" data-kind="caf2" role="tab">CaF₂ 萤石</button>
             <button class="mcp-tab" type="button" data-kind="tio2" role="tab">TiO₂ 金红石</button>
+            <button class="mcp-tab" type="button" data-kind="corundum" role="tab">Al₂O₃ 刚玉</button>
             <button class="mcp-tab is-active" type="button" data-kind="perovskite" role="tab">CaTiO₃ 钙钛矿</button>
             <button class="mcp-tab" type="button" data-kind="spinel" role="tab">MgAl₂O₄ 尖晶石</button>
           </div>
@@ -237,7 +238,7 @@
 
         <p class="mcp-footnote">查看器中的晶胞参数 <em>a</em>（和 TiO₂ 的 <em>c</em>）以及原子球半径都是相对值，目的是让原子在画面中占据合适的相对位置，不代表真实的 Ångström 数值。尖晶石按 Fd-3m 惯用晶胞（a ≈ 8.08 Å）绘制，含 8 个 MgAl₂O₄；O 球画得较大、阳离子球按离子半径比例画小，以便看清它们在空隙中的位置。</p>
 
-        <h2 id="compare"><a href="#compare" class="headerlink" title="七种结构速览"></a>二、七种结构速览</h2>
+        <h2 id="compare"><a href="#compare" class="headerlink" title="八种结构速览"></a>二、八种结构速览</h2>
 
         <p>半径比规则把阳离子配位数和晶体结构直接联系起来。记住它的几个阈值，就能大致预测常见 AB、AB₂、ABO₃ 型的结构。</p>
 
@@ -291,6 +292,15 @@
                 <td>3</td>
                 <td>2</td>
                 <td>TiO₂、SnO₂、PbO₂</td>
+              </tr>
+              <tr>
+                <td><strong>Al₂O₃ 刚玉型</strong></td>
+                <td>A₂B₃</td>
+                <td>三方 R-3c</td>
+                <td>6</td>
+                <td>4</td>
+                <td>6</td>
+                <td>Al₂O₃、Fe₂O₃、Cr₂O₃</td>
               </tr>
               <tr>
                 <td><strong>CaTiO₃ 钙钛矿型</strong></td>
@@ -677,7 +687,7 @@
             return p;
           }
 
-          /* ================= 七种晶体结构 ================= */
+          /* ================= 八种晶体结构 ================= */
           var A = 4;
           var models = {};
 
@@ -774,7 +784,69 @@
             models.tio2 = tio2model;
           })();
 
-          /* 6. CaTiO₃ 钙钛矿型 — Pm-3m, a=4 */
+          /* 6. Al₂O₃ 刚玉型 — R-3c（六方设置）：a = 4.76 Å，c = 12.99 Å，12 Al + 18 O（Z = 6）
+             Al 在 12c (0,0,0.352)，O 在 18e (0.306,0,0.25)，坐标为分数坐标 */
+          (function(){
+            var a = 4.76, c = 12.99;
+            var AL = [
+              [0, 0, 0.148], [0, 0, 0.352], [0, 0, 0.648], [0, 0, 0.852],
+              [0.3333, 0.6667, 0.0187], [0.3333, 0.6667, 0.3147],
+              [0.3333, 0.6667, 0.5187], [0.3333, 0.6667, 0.8147],
+              [0.6667, 0.3333, 0.1853], [0.6667, 0.3333, 0.4813],
+              [0.6667, 0.3333, 0.6853], [0.6667, 0.3333, 0.9813]
+            ];
+            var OX = [
+              [0, 0.306, 0.25], [0, 0.694, 0.75], [0.306, 0, 0.25], [0.306, 0.306, 0.75],
+              [0.694, 0, 0.75], [0.694, 0.694, 0.25],
+              [0.0273, 0.3607, 0.9167], [0.0273, 0.6667, 0.4167],
+              [0.3333, 0.3607, 0.4167], [0.3333, 0.9727, 0.9167],
+              [0.3607, 0.0273, 0.5833], [0.3607, 0.3333, 0.0833],
+              [0.6393, 0.6667, 0.9167], [0.6393, 0.9727, 0.4167],
+              [0.6667, 0.0273, 0.0833], [0.6667, 0.6393, 0.5833],
+              [0.9727, 0.3333, 0.5833], [0.9727, 0.6393, 0.0833]
+            ];
+            var atoms = [];
+            /* 六方坐标 → 笛卡尔：a1=(a,0)，a2=(-a/2, a√3/2)，c 沿 z；边界上的原子按周期性补全 */
+            function add(list, color, tag, r){
+              list.forEach(function(p){
+                var xs = [p[0]], ys = [p[1]], zs = [p[2]];
+                if (Math.abs(p[0]) < 1e-6) xs.push(1);
+                if (Math.abs(p[1]) < 1e-6) ys.push(1);
+                if (Math.abs(p[2]) < 1e-6) zs.push(1);
+                xs.forEach(function(x){
+                  ys.forEach(function(y){
+                    zs.forEach(function(z){
+                      atoms.push({
+                        x: a * (x - y / 2), y: a * y * Math.sqrt(3) / 2, z: c * z,
+                        c: color, t: tag, r: r
+                      });
+                    });
+                  });
+                });
+              });
+            }
+            add(OX, ORANGE, 'O',  1.15);
+            add(AL, PURPLE, 'Al', 0.62);
+            /* 六方晶胞轮廓：菱形底面的平行六面体 */
+            var vy = a * Math.sqrt(3) / 2;
+            var V = {
+              a000:{x:0,y:0,z:0},     a100:{x:a,y:0,z:0},
+              a010:{x:-a/2,y:vy,z:0}, a110:{x:a/2,y:vy,z:0},
+              a001:{x:0,y:0,z:c},     a101:{x:a,y:0,z:c},
+              a011:{x:-a/2,y:vy,z:c}, a111:{x:a/2,y:vy,z:c}
+            };
+            var edges = [
+              [V.a000,V.a100],[V.a100,V.a110],[V.a110,V.a010],[V.a010,V.a000],
+              [V.a001,V.a101],[V.a101,V.a111],[V.a111,V.a011],[V.a011,V.a001],
+              [V.a000,V.a001],[V.a100,V.a101],[V.a110,V.a111],[V.a010,V.a011]
+            ];
+            var model = finalize({ atoms: atoms, edges: edges, lattice: { a: a, b: a, c: c } });
+            model.center = {x:(a - a/2)/2, y: vy/2, z: c/2};
+            model.boundR = Math.sqrt(Math.pow(a * Math.sqrt(3) / 2, 2) + Math.pow(c / 2, 2)) + 1.3;
+            models.corundum = model;
+          })();
+
+          /* 7. CaTiO₃ 钙钛矿型 — Pm-3m, a=4 */
           (function(){
             var atoms = [];
             /* Ca²⁺：8 顶点 */
@@ -794,7 +866,7 @@
             models.perovskite = finalize(makeCubeModel(A, atoms));
           })();
 
-          /* 7. MgAl₂O₄ 尖晶石型 — 按上传的 VASP 结构原样绘制：
+          /* 8. MgAl₂O₄ 尖晶石型 — 按上传的 VASP 结构原样绘制：
              a = 8.0803909302 Å，Mg₈ Al₁₆ O₃₂（Fd-3m，Z = 8），下方为文件里的笛卡尔坐标 (Å) */
           (function(){
             var a = 8.0803909302;
@@ -912,6 +984,17 @@
               desc: 'Ti⁴⁺ 在简单四方格子的 2a 位置；O²⁻ 在 Wyckoff 4f 位置，x ≈ 0.305。画面用了 <strong>1×1×2 超胞</strong>：沿 c 轴两层叠加，透视时四方变形和 Ti—O 八面体都更清楚。',
               note: '1×1×2 超胞；c/a ≈ 0.645，x ≈ 0.305。'
             },
+            corundum: {
+              name: 'Al₂O₃ 刚玉型',
+              tag: 'A₂B₃ · 三方 R-3c',
+              cn_cation: '6',
+              cn_anion: '4',
+              formula: '6',
+              crystal: '三方 R-3c（六方设置）',
+              examples: 'Al₂O₃、Fe₂O₃、Cr₂O₃',
+              desc: 'O²⁻ 近似六方最密堆积（18e，6 层）；Al³⁺ 填进 <strong>2/3 的八面体空隙</strong>（12c）。相邻 AlO₆ 八面体沿 c 轴<strong>共面</strong>连成柱，Al—Al 只有 2.65 Å——共面连接带来的强排斥正是刚玉硬度高、熔点高的结构原因。a ≈ 4.76 Å，c ≈ 12.99 Å，Z = 6。',
+              note: '六方晶胞（菱形底面）：18 O + 12 Al；Al 占 2/3 八面体空隙，沿 c 轴共面连成柱；边界上的原子按周期性补全显示。'
+            },
             perovskite: {
               name: 'CaTiO₃ 钙钛矿型',
               tag: 'ABO₃ · 立方 Pm-3m',
@@ -942,6 +1025,7 @@
             zns: [[TEAL, 'Zn²⁺ 阳离子'], [ORANGE, 'S²⁻ 阴离子']],
             caf2: [[TEAL, 'Ca²⁺ 阳离子'], [ORANGE, 'F⁻ 阴离子']],
             tio2: [[TEAL, 'Ti⁴⁺ 阳离子'], [ORANGE, 'O²⁻ 阴离子']],
+            corundum: [[PURPLE, 'Al³⁺ 阳离子'], [ORANGE, 'O²⁻ 阴离子']],
             perovskite: [[TEAL, 'Ca²⁺'], [PURPLE, 'Ti⁴⁺'], [ORANGE, 'O²⁻']],
             spinel: [[TEAL, 'Mg²⁺ 四面体'], [PURPLE, 'Al³⁺ 八面体'], [ORANGE, 'O²⁻']]
           };
