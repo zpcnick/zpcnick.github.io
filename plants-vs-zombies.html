@@ -469,13 +469,13 @@
     cherry: { name: '樱桃炸弹', cost: 150, hp: 1, cooldown: 18 }
   };
   const ZOMBIES = {
-    normal: { hp: 170, speed: 17, bite: 42, color: '#82957a' },
-    cone: { hp: 340, speed: 16, bite: 46, color: '#82957a' },
-    bucket: { hp: 560, speed: 14, bite: 50, color: '#7d9076' },
-    football: { hp: 780, speed: 24, bite: 68, color: '#8a7f6f' },
-    gargantuar: { hp: 1600, speed: 8, bite: 420, size: 1.6, color: '#6f7f68' }
+    normal: { hp: 180, speed: 17, bite: 42, color: '#82957a' },
+    cone: { hp: 360, speed: 16, bite: 46, color: '#82957a' },
+    bucket: { hp: 600, speed: 14, bite: 50, color: '#7d9076' },
+    football: { hp: 850, speed: 24, bite: 68, color: '#8a7f6f' },
+    gargantuar: { hp: 1700, speed: 8, bite: 420, size: 1.6, color: '#6f7f68' }
   };
-  const WAVES = [6, 8, 10, 12, 14, 16, 18, 20, 23, 26];
+  const WAVES = [7, 9, 12, 14, 16, 19, 22, 25, 28, 31];
   const INTERVALS = [4.5, 4.2, 3.9, 3.6, 3.35, 3.1, 2.85, 2.6, 2.35, 2.1];
   const $ = id => document.getElementById(id);
   const cards = [...document.querySelectorAll('.seed-card')];
@@ -540,47 +540,71 @@
       src.connect(filter); filter.connect(gain); gain.connect(master);
       src.start(t0); src.stop(t0 + dur + .03);
     }
-    const MELODY = [67, 64, 67, 69, 72, 69, 67, 64, 69, 72, 69, 67, 64, 62, 60, 0,
-                    65, 69, 72, 69, 65, 67, 69, 0, 67, 71, 74, 71, 67, 69, 67, 0];
-    const BASS = [48, 45, 41, 43, 48, 45, 41, 43];
-    const EIGHTH = .27;
+    const TEMPO = .25;
+    const PROG = [
+      { root: 48, chord: [60, 64, 67] },
+      { root: 45, chord: [57, 60, 64] },
+      { root: 41, chord: [57, 60, 65] },
+      { root: 43, chord: [55, 59, 62] }
+    ];
+    const MELODY = [
+      67, 0, 72, 76, 72, 74, 72, 69,
+      69, 0, 72, 76, 81, 79, 76, 72,
+      69, 0, 72, 77, 72, 74, 72, 69,
+      67, 71, 74, 79, 77, 74, 71, 0
+    ];
     const midi = n => 440 * Math.pow(2, (n - 69) / 12);
 
-    function musicPluck(note, t) {
+    function musicLead(note, t) {
+      const osc = ac.createOscillator(), filter = ac.createBiquadFilter(), g = ac.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(midi(note), t);
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(2600, t);
+      g.gain.setValueAtTime(.0001, t);
+      g.gain.exponentialRampToValueAtTime(.048, t + .015);
+      g.gain.exponentialRampToValueAtTime(.0001, t + .24);
+      osc.connect(filter); filter.connect(g); g.connect(musicGain);
+      osc.start(t); osc.stop(t + .28);
+    }
+
+    function musicBass(note, t, dur) {
       const osc = ac.createOscillator(), g = ac.createGain();
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(midi(note), t);
       g.gain.setValueAtTime(.0001, t);
-      g.gain.exponentialRampToValueAtTime(.055, t + .012);
-      g.gain.exponentialRampToValueAtTime(.0001, t + .3);
+      g.gain.exponentialRampToValueAtTime(.085, t + .02);
+      g.gain.exponentialRampToValueAtTime(.0001, t + dur);
       osc.connect(g); g.connect(musicGain);
-      osc.start(t); osc.stop(t + .34);
+      osc.start(t); osc.stop(t + dur + .03);
     }
 
-    function musicBass(note, t) {
-      const osc = ac.createOscillator(), g = ac.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(midi(note), t);
-      g.gain.setValueAtTime(.0001, t);
-      g.gain.exponentialRampToValueAtTime(.075, t + .02);
-      g.gain.exponentialRampToValueAtTime(.0001, t + .5);
-      osc.connect(g); g.connect(musicGain);
-      osc.start(t); osc.stop(t + .55);
+    function musicStab(notes, t) {
+      notes.forEach(note => {
+        const osc = ac.createOscillator(), g = ac.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(midi(note), t);
+        g.gain.setValueAtTime(.0001, t);
+        g.gain.exponentialRampToValueAtTime(.024, t + .012);
+        g.gain.exponentialRampToValueAtTime(.0001, t + .13);
+        osc.connect(g); g.connect(musicGain);
+        osc.start(t); osc.stop(t + .15);
+      });
     }
 
-    function musicHat(t) {
-      const len = Math.floor(ac.sampleRate * .05);
+    function musicNoise(dur, freq, type, gain, t) {
+      const len = Math.max(1, Math.floor(ac.sampleRate * dur));
       const buffer = ac.createBuffer(1, len, ac.sampleRate);
       const data = buffer.getChannelData(0);
       for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / len);
       const src = ac.createBufferSource(), filter = ac.createBiquadFilter(), g = ac.createGain();
       src.buffer = buffer;
-      filter.type = 'highpass';
-      filter.frequency.value = 5200;
-      g.gain.value = .018;
-      g.gain.exponentialRampToValueAtTime(.0001, t + .06);
+      filter.type = type;
+      filter.frequency.value = freq;
+      g.gain.setValueAtTime(gain, t);
+      g.gain.exponentialRampToValueAtTime(.0001, t + dur);
       src.connect(filter); filter.connect(g); g.connect(musicGain);
-      src.start(t); src.stop(t + .07);
+      src.start(t); src.stop(t + dur + .02);
     }
 
     function scheduleMusic() {
@@ -588,11 +612,17 @@
       if (musicNext < ac.currentTime) musicNext = ac.currentTime + .05;
       while (musicNext < ac.currentTime + .25) {
         const s = musicStep % 32;
-        if (MELODY[s]) musicPluck(MELODY[s], musicNext);
-        if (s % 4 === 0) musicBass(BASS[s / 4], musicNext);
-        if (s % 2 === 1) musicHat(musicNext);
+        const bar = Math.floor(s / 8);
+        const beat = s % 8;
+        const t = musicNext + (beat % 2 ? .025 : 0);
+        if (MELODY[s]) musicLead(MELODY[s], t);
+        if (beat === 0 || beat === 4) musicBass(PROG[bar].root, t, .2);
+        if (beat === 2 || beat === 6) musicBass(PROG[bar].root + 7, t, .18);
+        if (beat === 1 || beat === 5) musicStab(PROG[bar].chord, t);
+        if (beat === 2 || beat === 6) musicNoise(.09, 1700, 'bandpass', .03, t);
+        if (beat % 2 === 1) musicNoise(.04, 5600, 'highpass', .012, t);
         musicStep++;
-        musicNext += EIGHTH;
+        musicNext += TEMPO;
       }
     }
 
@@ -819,7 +849,7 @@
     const type = pickZombieType(wave, state.spawned);
     const row = Math.floor(Math.random() * ROWS);
     const def = ZOMBIES[type];
-    const hpScale = 1 + wave * .04 + Math.max(0, wave - 5) * .03;
+    const hpScale = 1 + wave * .05 + Math.max(0, wave - 5) * .03;
     const speedScale = 1 + wave * .015;
     const hp = def.hp * hpScale;
     state.zombies.push({
@@ -997,7 +1027,7 @@
       if (state.spawnTimer <= 0) {
         spawnZombie();
         // 后期波次成对刷新，压迫感更强
-        if (state.wave >= WAVES.length - 3 && state.spawned < WAVES[state.wave] && Math.random() < .5) spawnZombie();
+        if (state.wave >= WAVES.length - 4 && state.spawned < WAVES[state.wave] && Math.random() < .55) spawnZombie();
         state.spawnTimer = INTERVALS[state.wave] * (.85 + Math.random() * .3);
       }
     } else if (state.zombies.length === 0) {
