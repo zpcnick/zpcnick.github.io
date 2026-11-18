@@ -381,6 +381,9 @@
         <div class="progress" aria-hidden="true"><div class="progress-fill" id="waveProgress"></div></div>
       </div>
       <div class="hud-group">
+        <button class="icon-btn" id="musicBtn" type="button" aria-label="切换背景音乐">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path id="musicIcon" d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg><span class="btn-text" id="musicText">音乐</span>
+        </button>
         <button class="icon-btn" id="muteBtn" type="button" aria-label="切换音效">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path id="muteIcon" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg><span class="btn-text" id="muteText">音效</span>
         </button>
@@ -443,7 +446,7 @@
     </div>
 
     <div class="game-footer">
-      <div class="tips"><b>操作</b> 点击植物卡片，再点击草坪种植 · 点击阳光收集 · 数字键 1–5 选植物 · 空格暂停</div>
+      <div class="tips"><b>操作</b> 点击植物卡片，再点击草坪种植 · 点击阳光收集 · 数字键 1–5 选植物 · 空格暂停 · 后期警惕橄榄球与巨人僵尸</div>
       <div class="best">最佳纪录 <strong id="bestValue">尚未出战</strong></div>
     </div>
   </section>
@@ -466,9 +469,11 @@
     cherry: { name: '樱桃炸弹', cost: 150, hp: 1, cooldown: 18 }
   };
   const ZOMBIES = {
-    normal: { hp: 160, speed: 14, color: '#82957a' },
-    cone: { hp: 320, speed: 13, color: '#82957a' },
-    bucket: { hp: 540, speed: 11, color: '#7d9076' }
+    normal: { hp: 170, speed: 17, bite: 42, color: '#82957a' },
+    cone: { hp: 340, speed: 16, bite: 46, color: '#82957a' },
+    bucket: { hp: 560, speed: 14, bite: 50, color: '#7d9076' },
+    football: { hp: 780, speed: 24, bite: 68, color: '#8a7f6f' },
+    gargantuar: { hp: 1600, speed: 8, bite: 420, size: 1.6, color: '#6f7f68' }
   };
   const WAVES = [6, 8, 10, 12, 14, 16, 18, 20, 23, 26];
   const INTERVALS = [4.5, 4.2, 3.9, 3.6, 3.35, 3.1, 2.85, 2.6, 2.35, 2.1];
@@ -480,6 +485,7 @@
 
   const Sound = (() => {
     let ac = null, master = null, muted = false;
+    let musicGain = null, musicTimer = null, musicOn = false, musicEnabled = true, musicNext = 0, musicStep = 0;
     const marks = {};
     function audio() {
       if (!ac) {
@@ -489,6 +495,9 @@
         master = ac.createGain();
         master.gain.value = muted ? 0 : .9;
         master.connect(ac.destination);
+        musicGain = ac.createGain();
+        musicGain.gain.value = 0;
+        musicGain.connect(ac.destination);
       }
       if (ac.state === 'suspended') ac.resume();
       return ac;
@@ -531,8 +540,88 @@
       src.connect(filter); filter.connect(gain); gain.connect(master);
       src.start(t0); src.stop(t0 + dur + .03);
     }
+    const MELODY = [67, 64, 67, 69, 72, 69, 67, 64, 69, 72, 69, 67, 64, 62, 60, 0,
+                    65, 69, 72, 69, 65, 67, 69, 0, 67, 71, 74, 71, 67, 69, 67, 0];
+    const BASS = [48, 45, 41, 43, 48, 45, 41, 43];
+    const EIGHTH = .27;
+    const midi = n => 440 * Math.pow(2, (n - 69) / 12);
+
+    function musicPluck(note, t) {
+      const osc = ac.createOscillator(), g = ac.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(midi(note), t);
+      g.gain.setValueAtTime(.0001, t);
+      g.gain.exponentialRampToValueAtTime(.055, t + .012);
+      g.gain.exponentialRampToValueAtTime(.0001, t + .3);
+      osc.connect(g); g.connect(musicGain);
+      osc.start(t); osc.stop(t + .34);
+    }
+
+    function musicBass(note, t) {
+      const osc = ac.createOscillator(), g = ac.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(midi(note), t);
+      g.gain.setValueAtTime(.0001, t);
+      g.gain.exponentialRampToValueAtTime(.075, t + .02);
+      g.gain.exponentialRampToValueAtTime(.0001, t + .5);
+      osc.connect(g); g.connect(musicGain);
+      osc.start(t); osc.stop(t + .55);
+    }
+
+    function musicHat(t) {
+      const len = Math.floor(ac.sampleRate * .05);
+      const buffer = ac.createBuffer(1, len, ac.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / len);
+      const src = ac.createBufferSource(), filter = ac.createBiquadFilter(), g = ac.createGain();
+      src.buffer = buffer;
+      filter.type = 'highpass';
+      filter.frequency.value = 5200;
+      g.gain.value = .018;
+      g.gain.exponentialRampToValueAtTime(.0001, t + .06);
+      src.connect(filter); filter.connect(g); g.connect(musicGain);
+      src.start(t); src.stop(t + .07);
+    }
+
+    function scheduleMusic() {
+      if (!musicOn || !ac) return;
+      if (musicNext < ac.currentTime) musicNext = ac.currentTime + .05;
+      while (musicNext < ac.currentTime + .25) {
+        const s = musicStep % 32;
+        if (MELODY[s]) musicPluck(MELODY[s], musicNext);
+        if (s % 4 === 0) musicBass(BASS[s / 4], musicNext);
+        if (s % 2 === 1) musicHat(musicNext);
+        musicStep++;
+        musicNext += EIGHTH;
+      }
+    }
+
+    function startMusic() {
+      if (!musicEnabled) return;
+      const c = audio(); if (!c) return;
+      musicOn = true;
+      musicNext = c.currentTime + .08;
+      if (!musicTimer) musicTimer = setInterval(scheduleMusic, 60);
+      musicGain.gain.setTargetAtTime(.5, c.currentTime, .35);
+    }
+
+    function pauseMusic() {
+      musicOn = false;
+      if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
+      if (ac && musicGain) musicGain.gain.setTargetAtTime(0, ac.currentTime, .2);
+    }
+
     return {
       unlock() { audio(); },
+      startMusic,
+      pauseMusic,
+      toggleMusic() {
+        musicEnabled = !musicEnabled;
+        if (musicEnabled) startMusic(); else pauseMusic();
+        return musicEnabled;
+      },
+      get musicEnabled() { return musicEnabled; },
+      get musicPlaying() { return musicOn; },
       toggle() {
         muted = !muted;
         const c = audio();
@@ -627,6 +716,7 @@
     setSelected(null);
     Sound.unlock();
     Sound.wave();
+    Sound.startMusic();
     announce('第 1 波', '僵尸正在靠近');
     updateUI(true);
   }
@@ -652,6 +742,7 @@
     state.mode = won ? 'won' : 'lost';
     setSelected(null);
     saveRecord(won);
+    Sound.pauseMusic();
     if (won) Sound.win(); else Sound.lose();
     showOverlay(won ? 'won' : 'lost');
     updateUI(true);
@@ -661,10 +752,12 @@
     if (state.mode === 'playing') {
       state.mode = 'paused';
       setSelected(null);
+      Sound.pauseMusic();
       showOverlay('paused');
     } else if (state.mode === 'paused') {
       state.mode = 'playing';
       $('overlay').classList.add('hidden');
+      Sound.startMusic();
     }
     updateUI(true);
   }
@@ -709,11 +802,15 @@
 
   function pickZombieType(wave, index) {
     if (wave === 0) return index > 2 && index % 4 === 3 ? 'cone' : 'normal';
+    // 后期固定出现的巨人僵尸
+    if (wave >= 7 && (wave === WAVES.length - 1 ? (index === 4 || index === 17) : index === 5)) return 'gargantuar';
     const roll = Math.random();
-    const bucketChance = wave < 2 ? 0 : Math.min(.5, .1 + (wave - 1) * .06);
-    const coneChance = Math.min(.62, .28 + wave * .045);
-    if (roll < bucketChance) return 'bucket';
-    if (roll < bucketChance + coneChance) return 'cone';
+    const footballChance = wave < 4 ? 0 : Math.min(.3, .06 + (wave - 4) * .05);
+    const bucketChance = wave < 2 ? 0 : Math.min(.4, .08 + (wave - 1) * .05);
+    const coneChance = Math.min(.55, .28 + wave * .04);
+    if (roll < footballChance) return 'football';
+    if (roll < footballChance + bucketChance) return 'bucket';
+    if (roll < footballChance + bucketChance + coneChance) return 'cone';
     return 'normal';
   }
 
@@ -722,14 +819,16 @@
     const type = pickZombieType(wave, state.spawned);
     const row = Math.floor(Math.random() * ROWS);
     const def = ZOMBIES[type];
-    const hpScale = 1 + wave * .045 + Math.max(0, wave - 4) * .03;
-    const speedScale = 1 + wave * .012;
+    const hpScale = 1 + wave * .04 + Math.max(0, wave - 5) * .03;
+    const speedScale = 1 + wave * .015;
+    const hp = def.hp * hpScale;
     state.zombies.push({
       type, row, x: W + 35 + Math.random() * 25, y: GY + row * CH + 68,
-      hp: def.hp * hpScale, maxHp: def.hp * hpScale, speed: def.speed * speedScale, biteTimer: 0,
+      hp, maxHp: hp, speed: def.speed * speedScale, size: def.size || 1, biteTimer: 0,
       slow: 0, phase: Math.random() * 6.28, eating: false, dead: false
     });
     state.spawned++;
+    if (type === 'gargantuar') toast('巨人僵尸出现了！');
   }
 
   function burst(x, y, color, count = 8, force = 80) {
@@ -817,13 +916,13 @@
       z.phase += dt * 5;
       let target = null;
       for (const p of state.plants) {
-        if (p.type !== 'cherry' && p.row === z.row && p.hp > 0 && z.x > p.x - 18 && z.x < p.x + 58) {
+        if (p.type !== 'cherry' && p.row === z.row && p.hp > 0 && z.x > p.x - 18 && z.x < p.x + 30 + 28 * z.size) {
           if (!target || p.x > target.x) target = p;
         }
       }
       z.eating = !!target;
       if (target) {
-        target.hp -= 42 * dt;
+        target.hp -= (ZOMBIES[z.type].bite || 42) * dt;
         target.flash = .08;
         z.biteTimer += dt;
         Sound.bite();
@@ -916,7 +1015,7 @@
 
   function waveSubtitle(wave) {
     if (wave === WAVES.length - 1) return '最终进攻 · 全力以赴';
-    if (wave >= 7) return '大批铁桶僵尸正在逼近';
+    if (wave >= 7) return '巨人僵尸压境，守住防线';
     if (wave >= 4) return '僵尸潮升级，稳住防线';
     return '更强的僵尸来了';
   }
@@ -1115,8 +1214,10 @@
 
   function drawZombie(z, t) {
     const walk = Math.sin(z.phase) * (z.eating ? .15 : 1);
+    const size = z.size || 1;
     ctx.save();
     ctx.translate(z.x, z.y + Math.abs(Math.sin(z.phase)) * 1.5);
+    if (size !== 1) { ctx.translate(0, -(size - 1) * 30); ctx.scale(size, size); }
     if (z.slow > 0) ctx.globalAlpha = .88;
     ctx.fillStyle = 'rgba(34,59,31,.23)';
     ctx.beginPath(); ctx.ellipse(0, 30, 27, 8, 0, 0, Math.PI * 2); ctx.fill();
@@ -1167,14 +1268,36 @@
       ctx.fillStyle = '#aab2aa'; ctx.fillRect(-26,-63,46,6);
       ctx.strokeStyle = '#65736c'; ctx.beginPath(); ctx.arc(-5,-84,25,Math.PI,Math.PI*2); ctx.stroke();
     }
+    if (z.type === 'football') {
+      ctx.fillStyle = '#b74132';
+      ctx.beginPath(); ctx.ellipse(-15,-16,13,8,-.25,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(9,-15,13,8,.25,0,Math.PI*2); ctx.fill();
+      const helm = ctx.createLinearGradient(-24,-66,12,-36);
+      helm.addColorStop(0,'#d95a45'); helm.addColorStop(1,'#8d2c24');
+      ctx.fillStyle = helm;
+      ctx.beginPath(); ctx.arc(-6,-48,22,Math.PI*.95,Math.PI*2.05); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = '#f3e5bc'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(-6,-48,22,Math.PI*1.08,Math.PI*1.92); ctx.stroke();
+      ctx.strokeStyle = '#e8e4d0'; ctx.lineWidth = 2.4;
+      ctx.beginPath(); ctx.moveTo(-24,-44); ctx.lineTo(-24,-32); ctx.moveTo(-26,-38); ctx.lineTo(-13,-35); ctx.stroke();
+    }
+    if (z.type === 'gargantuar') {
+      ctx.strokeStyle = '#8a6b46'; ctx.lineWidth = 10; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(-32,-8); ctx.lineTo(-58,-64); ctx.stroke();
+      ctx.fillStyle = '#6f5437';
+      ctx.beginPath(); ctx.ellipse(-61,-72,11,19,-.35,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#ff5a3c';
+      ctx.beginPath(); ctx.arc(-14,-50,3,0,Math.PI*2); ctx.arc(1,-51,3,0,Math.PI*2); ctx.fill();
+    }
     if (z.slow > 0) {
       ctx.fillStyle = 'rgba(159,232,238,.22)'; ctx.beginPath(); ctx.arc(-4,-25,43,0,Math.PI*2); ctx.fill();
     }
     ctx.restore();
     if (z.hp < z.maxHp) {
-      ctx.fillStyle = 'rgba(20,35,25,.42)'; rounded(ctx,z.x-27,z.y-112,54,5,3); ctx.fill();
+      const bw = 54 * size, by = z.y - 112 * size;
+      ctx.fillStyle = 'rgba(20,35,25,.42)'; rounded(ctx, z.x - bw/2, by, bw, 5, 3); ctx.fill();
       ctx.fillStyle = z.hp / z.maxHp > .35 ? '#d9e589' : '#e77d63';
-      rounded(ctx,z.x-27,z.y-112,54*Math.max(0,z.hp/z.maxHp),5,3); ctx.fill();
+      rounded(ctx, z.x - bw/2, by, bw * Math.max(0, z.hp / z.maxHp), 5, 3); ctx.fill();
     }
   }
 
@@ -1356,6 +1479,11 @@
     $('muteIcon').setAttribute('d', muted ? SPEAKER_OFF : SPEAKER_ON);
     $('muteText').textContent = muted ? '静音' : '音效';
     $('muteBtn').classList.toggle('off', muted);
+  });
+  $('musicBtn').addEventListener('click', () => {
+    const on = Sound.toggleMusic();
+    $('musicText').textContent = on ? '音乐' : '音乐关';
+    $('musicBtn').classList.toggle('off', !on);
   });
   $('startBtn').addEventListener('click', () => state.mode === 'paused' ? togglePause() : startGame());
   $('pauseBtn').addEventListener('click', togglePause);
