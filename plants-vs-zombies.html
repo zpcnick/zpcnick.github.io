@@ -475,8 +475,8 @@
     football: { hp: 850, speed: 24, bite: 68, color: '#8a7f6f' },
     gargantuar: { hp: 1700, speed: 8, bite: 420, size: 1.6, color: '#6f7f68' }
   };
-  const WAVES = [7, 9, 12, 14, 16, 19, 22, 25, 28, 31];
-  const INTERVALS = [4.5, 4.2, 3.9, 3.6, 3.35, 3.1, 2.85, 2.6, 2.35, 2.1];
+  const WAVES = [8, 11, 14, 18, 22, 26, 30, 35, 40, 46];
+  const INTERVALS = [4.2, 3.9, 3.6, 3.35, 3.1, 2.85, 2.65, 2.45, 2.2, 1.95];
   const $ = id => document.getElementById(id);
   const cards = [...document.querySelectorAll('.seed-card')];
   const SPEAKER_ON = 'M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z';
@@ -540,18 +540,18 @@
       src.connect(filter); filter.connect(gain); gain.connect(master);
       src.start(t0); src.stop(t0 + dur + .03);
     }
-    const TEMPO = .25;
+    const TEMPO = .245;
     const PROG = [
-      { root: 48, chord: [60, 64, 67] },
-      { root: 45, chord: [57, 60, 64] },
-      { root: 41, chord: [57, 60, 65] },
-      { root: 43, chord: [55, 59, 62] }
+      { root: 50, chord: [65, 69, 74] },
+      { root: 46, chord: [62, 65, 70] },
+      { root: 43, chord: [62, 67, 70] },
+      { root: 45, chord: [61, 64, 69] }
     ];
     const MELODY = [
-      67, 0, 72, 76, 72, 74, 72, 69,
-      69, 0, 72, 76, 81, 79, 76, 72,
-      69, 0, 72, 77, 72, 74, 72, 69,
-      67, 71, 74, 79, 77, 74, 71, 0
+      74, 77, 81, 77, 76, 74, 72, 69,
+      70, 74, 77, 74, 72, 70, 69, 0,
+      67, 70, 74, 79, 77, 76, 74, 0,
+      69, 73, 76, 79, 77, 76, 73, 0
     ];
     const midi = n => 440 * Math.pow(2, (n - 69) / 12);
 
@@ -563,9 +563,9 @@
       filter.frequency.setValueAtTime(2600, t);
       g.gain.setValueAtTime(.0001, t);
       g.gain.exponentialRampToValueAtTime(.048, t + .015);
-      g.gain.exponentialRampToValueAtTime(.0001, t + .24);
+      g.gain.exponentialRampToValueAtTime(.0001, t + .2);
       osc.connect(filter); filter.connect(g); g.connect(musicGain);
-      osc.start(t); osc.stop(t + .28);
+      osc.start(t); osc.stop(t + .24);
     }
 
     function musicBass(note, t, dur) {
@@ -614,13 +614,12 @@
         const s = musicStep % 32;
         const bar = Math.floor(s / 8);
         const beat = s % 8;
-        const t = musicNext + (beat % 2 ? .025 : 0);
+        const t = musicNext + (beat % 2 ? .03 : 0);
         if (MELODY[s]) musicLead(MELODY[s], t);
-        if (beat === 0 || beat === 4) musicBass(PROG[bar].root, t, .2);
-        if (beat === 2 || beat === 6) musicBass(PROG[bar].root + 7, t, .18);
-        if (beat === 1 || beat === 5) musicStab(PROG[bar].chord, t);
-        if (beat === 2 || beat === 6) musicNoise(.09, 1700, 'bandpass', .03, t);
-        if (beat % 2 === 1) musicNoise(.04, 5600, 'highpass', .012, t);
+        if (beat === 0 || beat === 4) musicBass(PROG[bar].root, t, .3);
+        if (beat === 2 || beat === 6) musicStab(PROG[bar].chord, t);
+        if (beat === 2 || beat === 6) musicNoise(.08, 1600, 'bandpass', .022, t);
+        if (beat % 2 === 1) musicNoise(.035, 6000, 'highpass', .009, t);
         musicStep++;
         musicNext += TEMPO;
       }
