@@ -147,6 +147,7 @@
   }
   .icon-btn:hover:not(:disabled) { background: #e9eedf; border-color: rgba(47,107,79,.3); }
   .icon-btn:disabled { opacity: .4; cursor: default; }
+  .icon-btn.off { color: #9aa495; background: #f1f1e9; }
   .icon-btn svg { width: 15px; height: 15px; fill: currentColor; }
   .seed-bar {
     display: flex;
@@ -376,10 +377,13 @@
         </div>
       </div>
       <div class="wave-center">
-        <div class="wave-line"><span>关卡进度</span><strong id="waveValue">第 1 / 3 波</strong></div>
+        <div class="wave-line"><span>关卡进度</span><strong id="waveValue">第 1 / 10 波</strong></div>
         <div class="progress" aria-hidden="true"><div class="progress-fill" id="waveProgress"></div></div>
       </div>
       <div class="hud-group">
+        <button class="icon-btn" id="muteBtn" type="button" aria-label="切换音效">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path id="muteIcon" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg><span class="btn-text" id="muteText">音效</span>
+        </button>
         <button class="icon-btn" id="pauseBtn" type="button" disabled aria-label="暂停游戏">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path id="pauseIcon" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg><span class="btn-text" id="pauseText">暂停</span>
         </button>
@@ -425,7 +429,7 @@
       <div class="toast" id="toast" role="status"></div>
       <div class="overlay" id="overlay">
         <div class="overlay-card">
-          <div class="overlay-eyebrow" id="overlayEyebrow">三波进攻 · 一座花园</div>
+          <div class="overlay-eyebrow" id="overlayEyebrow">十波进攻 · 一座花园</div>
           <h2 id="overlayTitle">守住这片草坪</h2>
           <p id="overlayText">收集阳光，种下植物。先种向日葵积累资源，再用豌豆射手与坚果墙组织防线。</p>
           <div class="overlay-stats" id="overlayStats">
@@ -466,11 +470,126 @@
     cone: { hp: 320, speed: 13, color: '#82957a' },
     bucket: { hp: 540, speed: 11, color: '#7d9076' }
   };
-  const WAVES = [7, 10, 14];
-  const INTERVALS = [4.5, 3.8, 3.15];
+  const WAVES = [6, 8, 10, 12, 14, 16, 18, 20, 23, 26];
+  const INTERVALS = [4.5, 4.2, 3.9, 3.6, 3.35, 3.1, 2.85, 2.6, 2.35, 2.1];
   const $ = id => document.getElementById(id);
   const cards = [...document.querySelectorAll('.seed-card')];
+  const SPEAKER_ON = 'M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z';
+  const SPEAKER_OFF = 'M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zM19 12c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.8 8.8 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 0 0 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z';
   let state, toastTimer, bannerTimer, lastUi = 0;
+
+  const Sound = (() => {
+    let ac = null, master = null, muted = false;
+    const marks = {};
+    function audio() {
+      if (!ac) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return null;
+        ac = new AC();
+        master = ac.createGain();
+        master.gain.value = muted ? 0 : .9;
+        master.connect(ac.destination);
+      }
+      if (ac.state === 'suspended') ac.resume();
+      return ac;
+    }
+    function gate(key, gap) {
+      const now = performance.now();
+      if (marks[key] && now - marks[key] < gap) return false;
+      marks[key] = now;
+      return true;
+    }
+    function tone(freq, dur, opts = {}) {
+      const c = audio(); if (!c) return;
+      const t0 = c.currentTime + (opts.delay || 0);
+      const osc = c.createOscillator(), gain = c.createGain();
+      osc.type = opts.type || 'sine';
+      osc.frequency.setValueAtTime(freq, t0);
+      if (opts.to) osc.frequency.exponentialRampToValueAtTime(Math.max(24, opts.to), t0 + dur);
+      const vol = Math.max(.001, opts.gain == null ? .1 : opts.gain);
+      gain.gain.setValueAtTime(.0001, t0);
+      gain.gain.exponentialRampToValueAtTime(vol, t0 + .014);
+      gain.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+      osc.connect(gain); gain.connect(master);
+      osc.start(t0); osc.stop(t0 + dur + .03);
+    }
+    function noise(dur, opts = {}) {
+      const c = audio(); if (!c) return;
+      const t0 = c.currentTime + (opts.delay || 0);
+      const len = Math.max(1, Math.floor(c.sampleRate * dur));
+      const buffer = c.createBuffer(1, len, c.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / len);
+      const src = c.createBufferSource(), filter = c.createBiquadFilter(), gain = c.createGain();
+      src.buffer = buffer;
+      filter.type = opts.filter || 'lowpass';
+      filter.frequency.setValueAtTime(opts.freq || 900, t0);
+      if (opts.to) filter.frequency.exponentialRampToValueAtTime(Math.max(40, opts.to), t0 + dur);
+      const vol = Math.max(.001, opts.gain == null ? .12 : opts.gain);
+      gain.gain.setValueAtTime(vol, t0);
+      gain.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+      src.connect(filter); filter.connect(gain); gain.connect(master);
+      src.start(t0); src.stop(t0 + dur + .03);
+    }
+    return {
+      unlock() { audio(); },
+      toggle() {
+        muted = !muted;
+        const c = audio();
+        if (c && master) master.gain.setTargetAtTime(muted ? 0 : .9, c.currentTime, .03);
+        return muted;
+      },
+      get muted() { return muted; },
+      plant() {
+        if (!gate('plant', 70)) return;
+        tone(320, .12, { to: 190, type: 'triangle', gain: .16 });
+        noise(.1, { freq: 700, to: 250, gain: .08 });
+      },
+      dig() {
+        if (!gate('dig', 90)) return;
+        tone(240, .13, { to: 110, type: 'triangle', gain: .13 });
+        noise(.12, { freq: 520, gain: .08 });
+      },
+      shoot(cold) {
+        if (!gate(cold ? 'snow' : 'shoot', 70)) return;
+        if (cold) tone(920, .09, { to: 620, type: 'sine', gain: .045 });
+        else tone(560, .07, { to: 300, type: 'square', gain: .035 });
+      },
+      sun() {
+        tone(880, .12, { type: 'sine', gain: .09 });
+        tone(1320, .18, { type: 'sine', gain: .07, delay: .07 });
+      },
+      bite() {
+        if (!gate('bite', 300)) return;
+        noise(.08, { freq: 520, to: 180, gain: .07 });
+      },
+      down() {
+        if (!gate('down', 90)) return;
+        tone(170, .22, { to: 60, type: 'sawtooth', gain: .05 });
+        noise(.2, { freq: 900, to: 180, gain: .1 });
+      },
+      boom() {
+        noise(.55, { freq: 1700, to: 90, gain: .3 });
+        tone(110, .5, { to: 38, type: 'sine', gain: .2 });
+      },
+      mower() {
+        tone(180, .6, { to: 420, type: 'square', gain: .06 });
+        noise(.5, { freq: 1100, to: 300, gain: .12 });
+      },
+      wave() {
+        tone(392, .22, { type: 'sawtooth', gain: .07 });
+        tone(523, .3, { type: 'sawtooth', gain: .06, delay: .16 });
+        noise(.3, { freq: 400, to: 200, gain: .05 });
+      },
+      win() {
+        [523, 659, 784, 1047].forEach((f, i) => tone(f, .28, { type: 'triangle', gain: .1, delay: i * .16 }));
+      },
+      lose() {
+        tone(420, .5, { to: 130, type: 'sawtooth', gain: .12 });
+        tone(210, .7, { to: 70, type: 'sine', gain: .1, delay: .12 });
+      }
+    };
+  })();
 
   function freshState(mode = 'ready') {
     return {
@@ -506,6 +625,8 @@
     $('overlay').classList.add('hidden');
     $('overlayStats').classList.remove('visible');
     setSelected(null);
+    Sound.unlock();
+    Sound.wave();
     announce('第 1 波', '僵尸正在靠近');
     updateUI(true);
   }
@@ -517,7 +638,7 @@
     $('overlayTitle').textContent = paused ? '游戏已暂停' : won ? '守卫成功' : '僵尸进屋了';
     $('overlayText').textContent = paused
       ? '植物和僵尸都在原地待命，准备好后继续。'
-      : won ? '三波僵尸全部击退。合理分配阳光与火力，是守住花园的关键。' : '调整植物布局，再试一次。向日葵要安全，坚果墙要顶在火力前面。';
+      : won ? '十波僵尸全部击退。合理分配阳光与火力，是守住花园的关键。' : '调整植物布局，再试一次。向日葵要安全，坚果墙要顶在火力前面。';
     $('startBtn').textContent = paused ? '继续游戏' : '再守一次';
     $('statKills').textContent = state.kills;
     $('statWave').textContent = state.wave + 1;
@@ -531,6 +652,7 @@
     state.mode = won ? 'won' : 'lost';
     setSelected(null);
     saveRecord(won);
+    if (won) Sound.win(); else Sound.lose();
     showOverlay(won ? 'won' : 'lost');
     updateUI(true);
   }
@@ -585,20 +707,26 @@
     state.suns.push({ x, y, targetY, age: 0, life: 11, spin: Math.random() * 6.28 });
   }
 
+  function pickZombieType(wave, index) {
+    if (wave === 0) return index > 2 && index % 4 === 3 ? 'cone' : 'normal';
+    const roll = Math.random();
+    const bucketChance = wave < 2 ? 0 : Math.min(.5, .1 + (wave - 1) * .06);
+    const coneChance = Math.min(.62, .28 + wave * .045);
+    if (roll < bucketChance) return 'bucket';
+    if (roll < bucketChance + coneChance) return 'cone';
+    return 'normal';
+  }
+
   function spawnZombie() {
-    const index = state.spawned;
-    let type = 'normal';
-    if (state.wave === 0 && index > 2 && index % 4 === 3) type = 'cone';
-    if (state.wave === 1 && index % 3 === 2) type = 'cone';
-    if (state.wave === 2) {
-      if (index % 4 === 3) type = 'bucket';
-      else if (index % 2 === 1) type = 'cone';
-    }
+    const wave = state.wave;
+    const type = pickZombieType(wave, state.spawned);
     const row = Math.floor(Math.random() * ROWS);
     const def = ZOMBIES[type];
+    const hpScale = 1 + wave * .045 + Math.max(0, wave - 4) * .03;
+    const speedScale = 1 + wave * .012;
     state.zombies.push({
       type, row, x: W + 35 + Math.random() * 25, y: GY + row * CH + 68,
-      hp: def.hp, maxHp: def.hp, speed: def.speed, biteTimer: 0,
+      hp: def.hp * hpScale, maxHp: def.hp * hpScale, speed: def.speed * speedScale, biteTimer: 0,
       slow: 0, phase: Math.random() * 6.28, eating: false, dead: false
     });
     state.spawned++;
@@ -622,6 +750,7 @@
     state.kills++;
     state.waveKills++;
     burst(z.x, z.y - 20, '#718368', 13, 105);
+    Sound.down();
   }
 
   function update(dt) {
@@ -653,12 +782,14 @@
         burst(p.x, p.y - 25, '#ffb23f', 30, 210);
         burst(p.x, p.y - 25, '#d94a36', 18, 135);
         floater(p.x, p.y - 72, '轰！', '#fff1a8');
+        Sound.boom();
         p.hp = 0;
       }
       if ((p.type === 'peashooter' || p.type === 'snowpea') && p.timer <= 0) {
         const hasTarget = state.zombies.some(z => !z.dead && z.row === p.row && z.x > p.x && z.x < W + 55);
         if (hasTarget) {
           state.bullets.push({ x: p.x + 29, y: p.y - 30, row: p.row, type: p.type, dead: false });
+          Sound.shoot(p.type === 'snowpea');
           p.flash = .15;
           p.timer = p.type === 'snowpea' ? 1.55 : 1.3;
         }
@@ -695,6 +826,7 @@
         target.hp -= 42 * dt;
         target.flash = .08;
         z.biteTimer += dt;
+        Sound.bite();
         if (target.hp <= 0) {
           burst(target.x, target.y, '#557c39', 12, 85);
           target.hp = 0;
@@ -707,6 +839,7 @@
         if (!mower.used) {
           mower.used = true;
           mower.active = true;
+          Sound.mower();
           announce('小推车出动', `第 ${z.row + 1} 行最后防线`);
         } else {
           endGame(false);
@@ -757,12 +890,15 @@
         state.waveKills = 0;
         state.spawnTimer = 2;
         state.intermission = false;
-        announce(`第 ${state.wave + 1} 波`, state.wave === 2 ? '最终进攻，守住防线' : '更强的僵尸来了');
+        Sound.wave();
+        announce(`第 ${state.wave + 1} 波`, waveSubtitle(state.wave));
       }
     } else if (state.spawned < WAVES[state.wave]) {
       state.spawnTimer -= dt;
       if (state.spawnTimer <= 0) {
         spawnZombie();
+        // 后期波次成对刷新，压迫感更强
+        if (state.wave >= WAVES.length - 3 && state.spawned < WAVES[state.wave] && Math.random() < .5) spawnZombie();
         state.spawnTimer = INTERVALS[state.wave] * (.85 + Math.random() * .3);
       }
     } else if (state.zombies.length === 0) {
@@ -770,11 +906,19 @@
         endGame(true);
         return;
       }
+      const reward = 50 + state.wave * 10;
       state.intermission = true;
       state.intermissionTimer = 4;
-      state.sun += 50;
-      announce(`第 ${state.wave + 1} 波已守住`, '奖励 50 阳光，准备下一波');
+      state.sun += reward;
+      announce(`第 ${state.wave + 1} 波已守住`, `奖励 ${reward} 阳光，准备下一波`);
     }
+  }
+
+  function waveSubtitle(wave) {
+    if (wave === WAVES.length - 1) return '最终进攻 · 全力以赴';
+    if (wave >= 7) return '大批铁桶僵尸正在逼近';
+    if (wave >= 4) return '僵尸潮升级，稳住防线';
+    return '更强的僵尸来了';
   }
 
   function rounded(c, x, y, w, h, r) {
@@ -1151,6 +1295,7 @@
         state.sun += 25;
         floater(s.x,s.y-18,'+25');
         burst(s.x,s.y,'#ffe471',8,65);
+        Sound.sun();
         updateUI(true);
         return true;
       }
@@ -1174,6 +1319,7 @@
       if (!existing) return toast('这个格子没有植物');
       burst(existing.x,existing.y,'#876443',9,70);
       state.plants = state.plants.filter(p => p !== existing);
+      Sound.dig();
       setSelected(null);
       return;
     }
@@ -1196,6 +1342,7 @@
     });
     state.planted++;
     burst(GX + cell.col * CW + CW/2,GY + cell.row * CH + 77,'#d2bd83',8,55);
+    Sound.plant();
     setSelected(null);
     updateUI(true);
   });
@@ -1203,6 +1350,12 @@
   cards.forEach(card => card.addEventListener('click', () => selectPlant(card.dataset.plant)));
   $('shovelBtn').addEventListener('click', () => {
     if (state.mode === 'playing') setSelected(state.selected === 'shovel' ? null : 'shovel');
+  });
+  $('muteBtn').addEventListener('click', () => {
+    const muted = Sound.toggle();
+    $('muteIcon').setAttribute('d', muted ? SPEAKER_OFF : SPEAKER_ON);
+    $('muteText').textContent = muted ? '静音' : '音效';
+    $('muteBtn').classList.toggle('off', muted);
   });
   $('startBtn').addEventListener('click', () => state.mode === 'paused' ? togglePause() : startGame());
   $('pauseBtn').addEventListener('click', togglePause);
