@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+  <meta name="theme-color" content="#222">
+  <meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zpcnick.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the query","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+  <meta name="description" content="汇总无机化学中物质的量、气体、热力学、化学平衡、酸碱、沉淀溶解、电化学、动力学、原子结构与晶体配位等常用公式，并给出简要解释。">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="无机化学常用公式速查">
+  <meta property="og:url" content="https://zpcnick.github.io/2026/11/24/inorganic-chemistry-formulas/">
+  <meta property="og:site_name" content="ZPC&#39;s homepage">
+  <meta property="og:description" content="汇总物质的量、气体、热力学、平衡、酸碱、沉淀、电化学、动力学、原子结构与晶体配位中的常用公式，并给出简要解释。">
+  <meta property="og:locale">
+  <meta property="article:published_time" content="2026-11-24T02:00:00.000Z">
+  <meta property="article:modified_time" content="2026-11-24T02:00:00.000Z">
+  <meta property="article:author" content="zpc">
+  <meta name="twitter:card" content="summary">
+  <link rel="canonical" href="https://zpcnick.github.io/2026/11/24/inorganic-chemistry-formulas/">
+  <script id="page-configurations">
+    CONFIG.page = { sidebar: "", isHome: false, isPost: true, lang: 'ch' };
+  </script>
+  <title>无机化学常用公式速查 | ZPC's homepage</title>
+  <noscript>
+    <style>
+      .use-motion .brand,.use-motion .menu-item,.sidebar-inner,.use-motion .post-block,.use-motion .pagination,.use-motion .comments,.use-motion .post-header,.use-motion .post-body,.use-motion .collection-header{opacity:initial}.use-motion .site-title,.use-motion .site-subtitle{opacity:initial;top:initial}.use-motion .logo-line-before i{left:initial}.use-motion .logo-line-after i{right:initial}
+    </style>
+  </noscript>
+  <style>
+    .chem-lead { color: #4a5f57; }
+    .chem-toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 30px; padding: 0; list-style: none; }
+    .chem-toc a { border: 1px solid rgba(44,122,123,.35); border-radius: 999px; padding: 3px 13px; font-size: .82em; line-height: 1.9; background: rgba(255,255,255,.8); }
+    .chem-toc a:hover { background: var(--card-bg-color); }
+    .chem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; margin: 0 0 30px; }
+    .chem-card { border: 1px solid #d7e8e2; border-left: 4px solid #2c7a7b; border-radius: 10px; background: linear-gradient(180deg, #ffffff, #f7fbf9); padding: 14px 16px 15px; box-shadow: 0 2px 8px rgba(44,122,123,.06); }
+    .chem-card h3 { margin: 0 0 10px; font-size: .98em; color: #2c7a7b; }
+    .chem-formula { font-family: "Cambria Math", "Latin Modern Math", "Times New Roman", serif; font-size: 1.12em; color: #1a5959; background: #eef7f3; border-radius: 8px; padding: 10px 12px; margin: 0 0 10px; text-align: center; overflow-wrap: break-word; }
+    .chem-formula sub, .chem-formula sup { font-size: .68em; }
+    .chem-desc { font-size: .9em; line-height: 1.8; color: #4a5f57; margin: 0; }
+    .chem-desc b { color: #2c7a7b; }
+    .chem-note { border-left: 4px solid #9ccfc4; background: rgba(232,245,240,.6); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 0 0 30px; font-size: .9em; color: #4a5f57; }
+    .chem-table-wrap { overflow-x: auto; margin: 0 0 30px; }
+    .chem-table-wrap table { font-size: .85em; }
+    .chem-table-wrap th { background: var(--card-bg-color); color: #1a5959; text-align: left; }
+    .chem-table-wrap td, .chem-table-wrap th { border-bottom: 1px solid #d7e8e2; vertical-align: top; }
+    .chem-table-wrap sub, .chem-table-wrap sup { font-size: .7em; }
+    @media (max-width: 767px) {
+      .chem-grid { grid-template-columns: 1fr; }
+      .chem-formula { font-size: 1.02em; }
+    }
+  </style>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+        <div class="site-brand-container">
+          <div class="site-nav-toggle"><div class="toggle" aria-label="Toggle navigation bar"><span class="toggle-line toggle-line-first"></span><span class="toggle-line toggle-line-middle"></span><span class="toggle-line toggle-line-last"></span></div></div>
+          <div class="site-meta">
+            <a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span><h1 class="site-title">ZPC's homepage</h1><span class="logo-line-after"><i></i></span></a>
+          </div>
+          <div class="site-nav-right"><div class="toggle popup-trigger"></div></div>
+        </div>
+        <nav class="site-nav">
+          <ul id="menu" class="main-menu menu">
+            <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
+            <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+            <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+            <li class="menu-item menu-item-schedule"><a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="back-to-top"><i class="fa fa-arrow-up"></i><span>0%</span></div>
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div class="content post posts-expand">
+            <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="ch">
+              <link itemprop="mainEntityOfPage" href="https://zpcnick.github.io/2026/11/24/inorganic-chemistry-formulas/">
+              <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/images/avatar.gif"><meta itemprop="name" content="zpc"><meta itemprop="description" content=""></span>
+              <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/WPOrganization"><meta itemprop="name" content="ZPC's homepage"></span>
+              <header class="post-header">
+                <h1 class="post-title" itemprop="name headline">无机化学常用公式速查</h1>
+                <div class="post-meta">
+                  <span class="post-meta-item"><span class="post-meta-item-icon"><i class="far fa-calendar"></i></span><span class="post-meta-item-text">Posted on</span><time title="Created: 2026-11-24 10:00:00" itemprop="dateCreated datePublished" datetime="2026-11-24T10:00:00+08:00">2026-11-24</time></span>
+                  <span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span><span class="post-meta-item-text">分类于</span><span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/#section-tools" itemprop="url" rel="index"><span itemprop="name">教研工具</span></a></span></span>
+                </div>
+              </header>
+
+              <div class="post-body" itemprop="articleBody">
+                <p class="chem-lead">无机化学的公式散落在各章，考前翻书常常找不到。这里按「物质的量 → 气体 → 热力学 → 平衡 → 酸碱 → 沉淀 → 电化学 → 动力学 → 原子结构 → 晶体与配位」的顺序整理成一张速查表，每条公式后面配一句解释，说明它在算什么、什么时候用。</p>
+
+                <nav class="chem-toc" aria-label="本页目录">
+                  <a href="#amount">物质的量</a>
+                  <a href="#gas">气体</a>
+                  <a href="#thermo">热力学</a>
+                  <a href="#equilibrium">化学平衡</a>
+                  <a href="#acid">酸碱平衡</a>
+                  <a href="#precipitate">沉淀溶解</a>
+                  <a href="#electro">电化学</a>
+                  <a href="#kinetics">化学动力学</a>
+                  <a href="#atom">原子结构</a>
+                  <a href="#crystal">晶体与配位</a>
+                </nav>
+
+                <div class="chem-note">
+                  <b>使用约定：</b>浓度一律用物质的量浓度 <i>c</i>（mol·L<sup>−1</sup>），热力学量取标准态（<i>p</i><sup>°</sup> = 100 kPa，<i>c</i><sup>°</sup> = 1 mol·L<sup>−1</sup>）；带 <sup>°</sup> 的表示标准状态，涉及 25 ℃（298 K）的近似值会单独注明。
+                </div>
+
+                <h2 id="amount"><a href="#amount" class="headerlink" title="一、物质的量与浓度"></a>一、物质的量与浓度</h2>
+                <div class="chem-grid">
+                  <div class="chem-card">
+                    <h3>物质的量的三个入口</h3>
+                    <div class="chem-formula"><i>n</i> = <i>m</i> / <i>M</i> = <i>N</i> / <i>N</i><sub>A</sub> = <i>V</i> / <i>V</i><sub>m</sub></div>
+                    <p class="chem-desc">把质量、微粒数和气体体积都换算成物质的量。<b>摩尔质量</b> <i>M</i> 单位 g·mol<sup>−1</sup>，<b>阿伏加德罗常数</b> <i>N</i><sub>A</sub> ≈ 6.022×10<sup>23</sup> mol<sup>−1</sup>，标准状况下 <i>V</i><sub>m</sub> ≈ 22.4 L·mol<sup>−1</sup>。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>物质的量浓度</h3>
+                    <div class="chem-formula"><i>c</i><sub>B</sub> = <i>n</i><sub>B</sub> / <i>V</i></div>
+                    <p class="chem-desc">单位体积溶液中所含溶质 B 的物质的量，<i>V</i> 是<b>溶液体积</b>而不是溶剂体积，单位 mol·L<sup>−1</sup>。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>质量分数与质量摩尔浓度</h3>
+                    <div class="chem-formula"><i>w</i><sub>B</sub> = <i>m</i><sub>B</sub> / <i>m</i><sub>总</sub>　　<i>b</i><sub>B</sub> = <i>n</i><sub>B</sub> / <i>m</i><sub>A</sub></div>
+                    <p class="chem-desc">质量分数无单位，常用于市售试剂（如浓硫酸 98%）；质量摩尔浓度以 <b>1 kg 溶剂</b>为基准，单位 mol·kg<sup>−1</sup>，不随温度变化。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>摩尔分数与稀释</h3>
+                    <div class="chem-formula"><i>x</i><sub>B</sub> = <i>n</i><sub>B</sub> / <i>n</i><sub>总</sub>　　<i>c</i><sub>1</sub><i>V</i><sub>1</sub> = <i>c</i><sub>2</sub><i>V</i><sub>2</sub></div>
+                    <p class="chem-desc">摩尔分数用于分压、活度等计算；稀释式说明<b>稀释前后溶质的物质的量不变</b>，注意体积单位一致。</p>
+                  </div>
+                </div>
+
+                <h2 id="gas"><a href="#gas" class="headerlink" title="二、气体"></a>二、气体</h2>
+                <div class="chem-grid">
+                  <div class="chem-card">
+                    <h3>理想气体状态方程</h3>
+                    <div class="chem-formula"><i>pV</i> = <i>nRT</i></div>
+                    <p class="chem-desc">联系压强、体积、温度和物质的量。<i>R</i> = 8.314 J·mol<sup>−1</sup>·K<sup>−1</sup>，此时 <i>p</i> 用 Pa、<i>V</i> 用 m<sup>3</sup>；若 <i>p</i> 用 kPa、<i>V</i> 用 L，则 <i>R</i> = 8.314 kPa·L·mol<sup>−1</sup>·K<sup>−1</sup>。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>分压定律（Dalton）</h3>
+                    <div class="chem-formula"><i>p</i><sub>i</sub> = <i>x</i><sub>i</sub><i>p</i><sub>总</sub>，　<i>p</i><sub>总</sub> = Σ<i>p</i><sub>i</sub></div>
+                    <p class="chem-desc">混合气体中某组分的分压等于其摩尔分数乘以总压；排水集气时总压 = 气体分压 + 饱和水蒸气压。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>分体积与密度</h3>
+                    <div class="chem-formula"><i>V</i><sub>i</sub> = <i>x</i><sub>i</sub><i>V</i><sub>总</sub>，　<i>ρ</i> = <i>pM</i> / (<i>RT</i>)</div>
+                    <p class="chem-desc">分体积是组分在总压下单独占有的体积；密度式由 <i>pV</i> = <i>nRT</i> 与 <i>n</i> = <i>m</i>/<i>M</i> 推出，可用于估测气体摩尔质量。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>扩散定律（Graham）</h3>
+                    <div class="chem-formula"><i>r</i><sub>1</sub> / <i>r</i><sub>2</sub> = √(<i>M</i><sub>2</sub> / <i>M</i><sub>1</sub>)</div>
+                    <p class="chem-desc">同温同压下，气体扩散速率与摩尔质量的平方根成反比，轻的气体扩散得更快。</p>
+                  </div>
+                </div>
+
+                <h2 id="thermo"><a href="#thermo" class="headerlink" title="三、化学热力学"></a>三、化学热力学</h2>
+                <div class="chem-grid">
+                  <div class="chem-card">
+                    <h3>反应焓变（由生成焓计算）</h3>
+                    <div class="chem-formula">Δ<sub>r</sub><i>H</i><sup>°</sup> = Σ<i>ν</i><sub>i</sub>Δ<sub>f</sub><i>H</i><sup>°</sup><sub>i</sub></div>
+                    <p class="chem-desc">产物的标准生成焓乘系数求和，减去反应物的对应求和；<b>稳定单质的 Δ<sub>f</sub><i>H</i><sup>°</sup> 规定为零</b>。同理可算 Δ<sub>r</sub><i>G</i><sup>°</sup> 和 Δ<sub>r</sub><i>S</i><sup>°</sup>。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>吉布斯自由能判据</h3>
+                    <div class="chem-formula">Δ<i>G</i> = Δ<i>H</i> − <i>T</i>Δ<i>S</i></div>
+                    <p class="chem-desc">恒温恒压下，Δ<i>G</i> &lt; 0 反应自发，Δ<i>G</i> = 0 处于平衡，Δ<i>G</i> &gt; 0 非自发。焓减、熵增都有利于自发，温度通过 <i>T</i>Δ<i>S</i> 项起作用。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>标准自由能与平衡常数</h3>
+                    <div class="chem-formula">Δ<sub>r</sub><i>G</i><sup>°</sup> = −<i>RT</i> ln <i>K</i><sup>°</sup></div>
+                    <p class="chem-desc">把热力学和平衡连起来：<i>K</i><sup>°</sup> 很大说明反应在标准态下进行得彻底，Δ<sub>r</sub><i>G</i><sup>°</sup> 越负。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>任意状态下的自由能</h3>
+                    <div class="chem-formula">Δ<sub>r</sub><i>G</i> = Δ<sub>r</sub><i>G</i><sup>°</sup> + <i>RT</i> ln <i>Q</i></div>
+                    <p class="chem-desc"><i>Q</i> 是反应商，形式与平衡常数相同但用当前浓度／分压。它把「标准态是否自发」修正为「实际状态下是否自发」。</p>
+                  </div>
+                </div>
+
+                <h2 id="equilibrium"><a href="#equilibrium" class="headerlink" title="四、化学平衡"></a>四、化学平衡</h2>
+                <div class="chem-grid">
+                  <div class="chem-card">
+                    <h3>标准平衡常数</h3>
+                    <div class="chem-formula"><i>K</i><sup>°</sup> = Π(<i>p</i><sub>i</sub>/<i>p</i><sup>°</sup>)<sup><i>ν</i><sub>i</sub></sup>　或　Π(<i>c</i><sub>i</sub>/<i>c</i><sup>°</sup>)<sup><i>ν</i><sub>i</sub></sup></div>
+                    <p class="chem-desc">生成物项在分子、反应物项在分母，指数为化学计量数；纯固体、纯液体和稀溶液中的溶剂不写入表达式。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>K<sub>p</sub> 与 K<sub>c</sub> 的换算</h3>
+                    <div class="chem-formula"><i>K</i><sub>p</sub> = <i>K</i><sub>c</sub>(<i>RT</i>)<sup>Δ<i>n</i></sup></div>
+                    <p class="chem-desc">Δ<i>n</i> 是气态生成物与气态反应物的计量数之差；Δ<i>n</i> = 0 时两者数值相等。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>反应方向判据</h3>
+                    <div class="chem-formula"><i>Q</i> &lt; <i>K</i> 正向　<i>Q</i> = <i>K</i> 平衡　<i>Q</i> &gt; <i>K</i> 逆向</div>
+                    <p class="chem-desc">比较反应商与平衡常数的相对大小即可判断移动方向，这就是勒夏特列原理的定量版本。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>温度对平衡的影响（van't Hoff）</h3>
+                    <div class="chem-formula">ln(<i>K</i><sub>2</sub>/<i>K</i><sub>1</sub>) = −(Δ<i>H</i><sup>°</sup>/<i>R</i>)(1/<i>T</i><sub>2</sub> − 1/<i>T</i><sub>1</sub>)</div>
+                    <p class="chem-desc">吸热反应升温 <i>K</i> 增大，放热反应升温 <i>K</i> 减小；在 Δ<i>H</i><sup>°</sup> 近似不变的前提下成立。</p>
+                  </div>
+                </div>
+
+                <h2 id="acid"><a href="#acid" class="headerlink" title="五、酸碱平衡"></a>五、酸碱平衡</h2>
+                <div class="chem-grid">
+                  <div class="chem-card">
+                    <h3>pH 与水的离子积</h3>
+                    <div class="chem-formula">pH = −lg[<i>H</i><sup>+</sup>]　　<i>K</i><sub>w</sub> = [<i>H</i><sup>+</sup>][<i>OH</i><sup>−</sup>] = 1.0×10<sup>−14</sup></div>
+                    <p class="chem-desc">pH 是氢离子浓度的负对数（严格说是活度）；298 K 时 <i>K</i><sub>w</sub> = 10<sup>−14</sup>，故 pH + pOH = 14，温度升高 <i>K</i><sub>w</sub> 增大。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>共轭酸碱对</h3>
+                    <div class="chem-formula"><i>K</i><sub>a</sub>·<i>K</i><sub>b</sub> = <i>K</i><sub>w</sub></div>
+                    <p class="chem-desc">酸越强其共轭碱越弱；已知 <i>K</i><sub>a</sub> 可直接求共轭碱的 <i>K</i><sub>b</sub>，反之亦然。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>一元弱酸的近似 pH</h3>
+                    <div class="chem-formula">pH ≈ ½(p<i>K</i><sub>a</sub> − lg <i>c</i>)</div>
+                    <p class="chem-desc">当 <i>c</i>/<i>K</i><sub>a</sub> ≥ 500 且忽略水的电离时使用；本质是解 <i>K</i><sub>a</sub> = <i>x</i><sup>2</sup>/(<i>c</i> − <i>x</i>) 的近似结果。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>缓冲溶液（Henderson–Hasselbalch）</h3>
+                    <div class="chem-formula">pH = p<i>K</i><sub>a</sub> + lg(<i>c</i><sub>共轭碱</sub>/<i>c</i><sub>弱酸</sub>)</div>
+                    <p class="chem-desc">缓冲溶液的 pH 由 <i>K</i><sub>a</sub> 和共轭酸碱对的浓度比决定，稀释时比值不变、pH 基本不变。</p>
+                  </div>
+                </div>
+
+                <h2 id="precipitate"><a href="#precipitate" class="headerlink" title="六、沉淀溶解平衡"></a>六、沉淀溶解平衡</h2>
+                <div class="chem-grid">
+                  <div class="chem-card">
+                    <h3>溶度积与溶解度</h3>
+                    <div class="chem-formula">AB：<i>K</i><sub>sp</sub> = <i>s</i><sup>2</sup>　AB<sub>2</sub>：<i>K</i><sub>sp</sub> = 4<i>s</i><sup>3</sup></div>
+                    <p class="chem-desc">难溶电解质饱和溶液中各离子浓度（以计量数为指数）的乘积。<i>s</i> 为溶解度（mol·L<sup>−1</sup>），同类型物质才能直接比较 <i>K</i><sub>sp</sub> 大小。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>溶度积规则</h3>
+                    <div class="chem-formula"><i>Q</i> &lt; <i>K</i><sub>sp</sub> 不沉淀　<i>Q</i> = <i>K</i><sub>sp</sub> 饱和　<i>Q</i> &gt; <i>K</i><sub>sp</sub> 沉淀</div>
+                    <p class="chem-desc">把实际离子积 <i>Q</i> 与 <i>K</i><sub>sp</sub> 比较即可判断是否生成沉淀，也是分步沉淀和沉淀转化的依据。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>同离子效应</h3>
+                    <div class="chem-formula">加入共同离子后 <i>s</i> 减小</div>
+                    <p class="chem-desc">例如在 AgCl 饱和液中加 NaCl，Cl<sup>−</sup> 浓度升高使平衡左移，AgCl 溶解度下降；洗涤沉淀时常用含共同离子的稀溶液。</p>
+                  </div>
+                </div>
+
+                <h2 id="electro"><a href="#electro" class="headerlink" title="七、电化学"></a>七、电化学</h2>
+                <div class="chem-grid">
+                  <div class="chem-card">
+                    <h3>电池电动势与自由能</h3>
+                    <div class="chem-formula">Δ<sub>r</sub><i>G</i><sup>°</sup> = −<i>nFE</i><sup>°</sup>　　<i>E</i><sup>°</sup><sub>池</sub> = <i>E</i><sup>°</sup><sub>正</sub> − <i>E</i><sup>°</sup><sub>负</sub></div>
+                    <p class="chem-desc"><i>n</i> 为转移电子数，<i>F</i> = 96485 C·mol<sup>−1</sup>；<i>E</i><sup>°</sup><sub>池</sub> &gt; 0 表示标准态下反应自发。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>能斯特方程（298 K）</h3>
+                    <div class="chem-formula"><i>E</i> = <i>E</i><sup>°</sup> − (0.0592/<i>n</i>) lg <i>Q</i></div>
+                    <p class="chem-desc">浓度或分压偏离标准态时对电极电势的修正；0.0592 V 是 2.303<i>RT</i>/<i>F</i> 在 298 K 的数值。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>电动势与平衡常数</h3>
+                    <div class="chem-formula">lg <i>K</i><sup>°</sup> = <i>nE</i><sup>°</sup>/0.0592</div>
+                    <p class="chem-desc">由 Δ<i>G</i><sup>°</sup> = −<i>nFE</i><sup>°</sup> 和 Δ<i>G</i><sup>°</sup> = −<i>RT</i> ln <i>K</i><sup>°</sup> 联立得到，说明电池电动势越大，反应平衡常数越大。</p>
+                  </div>
+                </div>
+
+                <h2 id="kinetics"><a href="#kinetics" class="headerlink" title="八、化学动力学"></a>八、化学动力学</h2>
+                <div class="chem-table-wrap">
+                  <table>
+                    <thead>
+                      <tr><th>反应级数</th><th>速率方程</th><th>积分式</th><th>半衰期</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>零级</td><td><i>v</i> = <i>k</i></td><td><i>c</i> = <i>c</i><sub>0</sub> − <i>kt</i></td><td><i>t</i><sub>1/2</sub> = <i>c</i><sub>0</sub>/(2<i>k</i>)</td></tr>
+                      <tr><td>一级</td><td><i>v</i> = <i>kc</i></td><td>ln <i>c</i> = ln <i>c</i><sub>0</sub> − <i>kt</i></td><td><i>t</i><sub>1/2</sub> = 0.693/<i>k</i></td></tr>
+                      <tr><td>二级</td><td><i>v</i> = <i>kc</i><sup>2</sup></td><td>1/<i>c</i> − 1/<i>c</i><sub>0</sub> = <i>kt</i></td><td><i>t</i><sub>1/2</sub> = 1/(<i>k</i><i>c</i><sub>0</sub>)</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="chem-grid">
+                  <div class="chem-card">
+                    <h3>半衰期的含义</h3>
+                    <div class="chem-formula">一级反应：<i>t</i><sub>1/2</sub> 与初始浓度无关</div>
+                    <p class="chem-desc">一级反应每经过一个半衰期浓度减半，这是放射性衰变和一级水解的共同特征；零级、二级的半衰期则依赖初始浓度。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>阿伦尼乌斯方程</h3>
+                    <div class="chem-formula"><i>k</i> = <i>A</i> e<sup>−<i>E</i><sub>a</sub>/<i>RT</i></sup></div>
+                    <p class="chem-desc">速率常数随温度升高而增大，<i>E</i><sub>a</sub> 是活化能，<i>A</i> 是指前因子；活化能越大，温度影响越明显。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>由两个温度求活化能</h3>
+                    <div class="chem-formula">ln(<i>k</i><sub>2</sub>/<i>k</i><sub>1</sub>) = (<i>E</i><sub>a</sub>/<i>R</i>)(1/<i>T</i><sub>1</sub> − 1/<i>T</i><sub>2</sub>)</div>
+                    <p class="chem-desc">已知两个温度下的速率常数即可反算活化能，是实验测定 <i>E</i><sub>a</sub> 的常用方法。</p>
+                  </div>
+                </div>
+
+                <h2 id="atom"><a href="#atom" class="headerlink" title="九、原子结构与周期律"></a>九、原子结构与周期律</h2>
+                <div class="chem-grid">
+                  <div class="chem-card">
+                    <h3>氢原子能级</h3>
+                    <div class="chem-formula"><i>E</i><sub>n</sub> = −13.6 <i>Z</i><sup>2</sup>/<i>n</i><sup>2</sup> (eV)</div>
+                    <p class="chem-desc">类氢离子的能级只由主量子数 <i>n</i> 和核电荷 <i>Z</i> 决定，<i>n</i> 越大能量越高、越靠近 0；负号表示电子被束缚。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>里德伯公式</h3>
+                    <div class="chem-formula">1/<i>λ</i> = <i>R</i><sub>H</sub>(1/<i>n</i><sub>1</sub><sup>2</sup> − 1/<i>n</i><sub>2</sub><sup>2</sup>)</div>
+                    <p class="chem-desc">计算氢原子光谱线的波长，<i>R</i><sub>H</sub> ≈ 1.097×10<sup>7</sup> m<sup>−1</sup>；<i>n</i><sub>1</sub> 决定谱线系（如 <i>n</i><sub>1</sub> = 2 为巴尔末系）。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>有效核电荷</h3>
+                    <div class="chem-formula"><i>Z</i>* = <i>Z</i> − <i>σ</i></div>
+                    <p class="chem-desc">内层电子对外层电子的屏蔽使核电荷「打折」，<i>σ</i> 为屏蔽常数；同周期从左到右 <i>Z</i>* 增大，原子半径减小、电离能增大。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>电负性（Mulliken）</h3>
+                    <div class="chem-formula"><i>χ</i> ≈ (<i>I</i> + <i>A</i>)/2</div>
+                    <p class="chem-desc">电离能 <i>I</i> 与电子亲和能 <i>A</i> 的平均值，衡量原子在分子中吸引电子的能力；<i>χ</i> 越大非金属性越强。</p>
+                  </div>
+                </div>
+
+                <h2 id="crystal"><a href="#crystal" class="headerlink" title="十、晶体结构与配位化学"></a>十、晶体结构与配位化学</h2>
+                <div class="chem-grid">
+                  <div class="chem-card">
+                    <h3>晶胞密度</h3>
+                    <div class="chem-formula"><i>ρ</i> = <i>ZM</i> / (<i>N</i><sub>A</sub><i>V</i>)</div>
+                    <p class="chem-desc"><i>Z</i> 为晶胞内化学式单元数，<i>M</i> 为摩尔质量，<i>V</i> 为晶胞体积；已知密度可反推晶胞参数或 <i>Z</i>。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>半径比规则</h3>
+                    <div class="chem-formula"><i>r</i><sub>+</sub>/<i>r</i><sub>−</sub>：0.225–0.414 四面体（4）　0.414–0.732 八面体（6）　0.732–1.0 立方体（8）</div>
+                    <p class="chem-desc">用阳离子与阴离子的半径比预测配位数，比值越大能容纳的阴离子越多；这是判断离子晶体结构的经验规则。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>配位稳定常数</h3>
+                    <div class="chem-formula"><i>β</i><sub>n</sub> = [ML<sub>n</sub>] / ([M][L]<sup>n</sup>)　　<i>K</i><sub>不稳</sub> = 1/<i>K</i><sub>稳</sub></div>
+                    <p class="chem-desc">稳定常数越大，配合物越稳定；逐级稳定常数相乘得到总稳定常数 <i>β</i><sub>n</sub>，可用于判断配位反应的方向。</p>
+                  </div>
+                  <div class="chem-card">
+                    <h3>磁矩与未成对电子</h3>
+                    <div class="chem-formula"><i>μ</i> = √(<i>n</i>(<i>n</i> + 2)) <i>μ</i><sub>B</sub></div>
+                    <p class="chem-desc"><i>n</i> 为未成对电子数，<i>μ</i><sub>B</sub> 为玻尔磁子；实测磁矩可帮助判断配合物是内轨型还是外轨型、中心离子是否高自旋。</p>
+                  </div>
+                </div>
+
+                <h2 id="space"><a href="#space" class="headerlink" title="附：金属堆积的空间利用率"></a>附：金属堆积的空间利用率</h2>
+                <div class="chem-table-wrap">
+                  <table>
+                    <thead>
+                      <tr><th>堆积方式</th><th>配位数</th><th>晶胞原子数</th><th>空间利用率</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>简单立方（SC）</td><td>6</td><td>1</td><td>52%</td></tr>
+                      <tr><td>体心立方（BCC）</td><td>8</td><td>2</td><td>68%</td></tr>
+                      <tr><td>面心立方最密堆积（FCC）</td><td>12</td><td>4</td><td>74%</td></tr>
+                      <tr><td>六方最密堆积（HCP）</td><td>12</td><td>6（六方晶胞）</td><td>74%</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p>空间利用率可以由「晶胞中原子总体积 ÷ 晶胞体积」推导，结合<a href="/2026/11/17/metal-crystal-packing/">金属晶体的四种堆积方式</a>的交互模型一起看，配位数和层序会更直观。</p>
+
+                <hr>
+                <p>公式只是工具，真正要记住的是每个符号的含义、适用条件和单位。做题时先判断属于哪一类平衡（酸碱、沉淀、配位、氧化还原），再选对应的式子，能少走很多弯路。</p>
+              </div>
+
+            </article>
+          </div>
+
+          <script>
+            window.addEventListener('tabs:register', () => {
+              let { activeClass } = CONFIG.comments;
+              if (CONFIG.comments.storage) activeClass = localStorage.getItem('comments_active') || activeClass;
+              if (activeClass) {
+                let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+                if (activeTab) activeTab.click();
+              }
+            });
+          </script>
+        </div>
+
+        <div class="toggle sidebar-toggle"><span class="toggle-line toggle-line-first"></span><span class="toggle-line toggle-line-middle"></span><span class="toggle-line toggle-line-last"></span></div>
+        <aside class="sidebar">
+          <div class="sidebar-inner">
+            <ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc">Table of Contents</li><li class="sidebar-nav-overview">Overview</li></ul>
+            <div class="post-toc-wrap sidebar-panel"></div>
+            <div class="site-overview-wrap sidebar-panel">
+              <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"><p class="site-author-name" itemprop="name">zpc</p><div class="site-description" itemprop="description"></div></div>
+              <div class="site-state-wrap motion-element"><nav class="site-state"><div class="site-state-item site-state-posts"><a href="/archives/"><span class="site-state-item-count">17</span><span class="site-state-item-name">posts</span></a></div></nav></div>
+            </div>
+          </div>
+        </aside>
+        <div id="sidebar-dimmer"></div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2026</span> <span class="with-love"><i class="fa fa-heart"></i></span> <span class="author" itemprop="copyrightHolder">zpc</span></div>
+        <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> &amp; <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a></div>
+      </div>
+    </footer>
+  </div>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/motion.js"></script>
+  <script src="/js/schemes/pisces.js"></script>
+  <script src="/js/next-boot.js"></script>
+</body>
+</html>
