@@ -49,6 +49,7 @@
     .chem-formula mjx-container svg { max-width: 100%; height: auto; }
     .chem-subhead { grid-column: 1 / -1; margin: 2px 0 -4px; padding-bottom: 6px; border-bottom: 1px dashed #cfe3dc; font-weight: bold; font-size: .95em; color: #1a5959; letter-spacing: .5px; }
     .chem-subhead:not(:first-child) { margin-top: 10px; }
+    .chem-intro { grid-column: 1 / -1; margin: -2px 0 2px; font-size: .9em; line-height: 1.8; color: #4a5f57; }
     .chem-desc { font-size: .9em; line-height: 1.8; color: #4a5f57; margin: 0; }
     .chem-desc b { color: #2c7a7b; }
     .chem-note { border-left: 4px solid #9ccfc4; background: rgba(232,245,240,.6); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 0 0 30px; font-size: .9em; color: #4a5f57; }
@@ -108,8 +109,7 @@
                 <p class="chem-lead">无机化学的公式散落在各章，考前翻书常常找不到。这里用 LaTeX 排版，按「浓度与依数性 → 气体 → 热力学 → 平衡 → 酸碱 → 沉淀 → 电化学 → 动力学 → 原子结构 → 晶体与配位」的顺序整理成一张速查表，每条公式后面配一句解释，说明它在算什么、什么时候用。</p>
 
                 <nav class="chem-toc" aria-label="本页目录">
-                  <a href="#concentration">浓度</a>
-                  <a href="#colligative">依数性</a>
+                  <a href="#concentration">浓度与依数性</a>
                   <a href="#gas">气体</a>
                   <a href="#thermo">热力学</a>
                   <a href="#equilibrium">化学平衡</a>
@@ -125,8 +125,9 @@
                   <b>使用约定：</b>浓度一律用物质的量浓度 <i>c</i>（mol·L<sup>−1</sup>），热力学量取标准态（<i>p</i><sup>⊖</sup> = 100 kPa，<i>c</i><sup>⊖</sup> = 1 mol·L<sup>−1</sup>）；带 <sup>⊖</sup> 的表示标准状态，涉及 25 ℃（298 K）的近似值会单独注明。
                 </div>
 
-                <h2 id="concentration"><a href="#concentration" class="headerlink" title="一、浓度"></a>一、浓度</h2>
+                <h2 id="concentration"><a href="#concentration" class="headerlink" title="一、浓度与稀溶液的依数性"></a>一、浓度与稀溶液的依数性</h2>
                 <div class="chem-grid">
+                  <div class="chem-subhead">浓度</div>
                   <div class="chem-card">
                     <h3>物质的量浓度</h3>
                     <div class="chem-formula" data-tex="c_{\mathrm{B}} = \frac{n_{\mathrm{B}}}{V}"><mjx-container class="MathJax" jax="SVG" display="true"><svg style="vertical-align: -1.602ex;" xmlns="http://www.w3.org/2000/svg" width="8.991ex" height="4.131ex" role="img" focusable="false" viewBox="0 -1118 3973.8 1826" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><path id="MJX-1-TEX-I-1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path><path id="MJX-1-TEX-N-42" d="M131 622Q124 629 120 631T104 634T61 637H28V683H229H267H346Q423 683 459 678T531 651Q574 627 599 590T624 512Q624 461 583 419T476 360L466 357Q539 348 595 302T651 187Q651 119 600 67T469 3Q456 1 242 0H28V46H61Q103 47 112 49T131 61V622ZM511 513Q511 560 485 594T416 636Q415 636 403 636T371 636T333 637Q266 637 251 636T232 628Q229 624 229 499V374H312L396 375L406 377Q410 378 417 380T442 393T474 417T499 456T511 513ZM537 188Q537 239 509 282T430 336L329 337H229V200V116Q229 57 234 52Q240 47 334 47H383Q425 47 443 53Q486 67 511 104T537 188Z"></path><path id="MJX-1-TEX-N-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path><path id="MJX-1-TEX-I-1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path><path id="MJX-1-TEX-I-1D449" d="M52 648Q52 670 65 683H76Q118 680 181 680Q299 680 320 683H330Q336 677 336 674T334 656Q329 641 325 637H304Q282 635 274 635Q245 630 242 620Q242 618 271 369T301 118L374 235Q447 352 520 471T595 594Q599 601 599 609Q599 633 555 637Q537 637 537 648Q537 649 539 661Q542 675 545 679T558 683Q560 683 570 683T604 682T668 681Q737 681 755 683H762Q769 676 769 672Q769 655 760 640Q757 637 743 637Q730 636 719 635T698 630T682 623T670 615T660 608T652 599T645 592L452 282Q272 -9 266 -16Q263 -18 259 -21L241 -22H234Q216 -22 216 -15Q213 -9 177 305Q139 623 138 626Q133 637 76 637H59Q52 642 52 648Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><use data-c="1D450" xlink:href="#MJX-1-TEX-I-1D450"></use></g><g data-mml-node="TeXAtom" transform="translate(466,-150) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="TeXAtom" data-mjx-texclass="ORD"><g data-mml-node="mi"><use data-c="42" xlink:href="#MJX-1-TEX-N-42"></use></g></g></g></g><g data-mml-node="mo" transform="translate(1294.4,0)"><use data-c="3D" xlink:href="#MJX-1-TEX-N-3D"></use></g><g data-mml-node="mfrac" transform="translate(2350.2,0)"><g data-mml-node="msub" transform="translate(220,676)"><g data-mml-node="mi"><use data-c="1D45B" xlink:href="#MJX-1-TEX-I-1D45B"></use></g><g data-mml-node="TeXAtom" transform="translate(633,-150) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="TeXAtom" data-mjx-texclass="ORD"><g data-mml-node="mi"><use data-c="42" xlink:href="#MJX-1-TEX-N-42"></use></g></g></g></g><g data-mml-node="mi" transform="translate(427.3,-686)"><use data-c="1D449" xlink:href="#MJX-1-TEX-I-1D449"></use></g><rect width="1383.6" height="60" x="120" y="220"></rect></g></g></g></svg></mjx-container></div>
@@ -142,11 +143,8 @@
                     <div class="chem-formula" data-tex="x_{\mathrm{B}} = \frac{n_{\mathrm{B}}}{n_{\mathrm{tot}}}, \qquad c_1 V_1 = c_2 V_2"><mjx-container class="MathJax" jax="SVG" display="true"><svg style="vertical-align: -1.907ex;" xmlns="http://www.w3.org/2000/svg" width="27.313ex" height="4.437ex" role="img" focusable="false" viewBox="0 -1118 12072.3 1961.1" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><path id="MJX-3-TEX-I-1D465" d="M52 289Q59 331 106 386T222 442Q257 442 286 424T329 379Q371 442 430 442Q467 442 494 420T522 361Q522 332 508 314T481 292T458 288Q439 288 427 299T415 328Q415 374 465 391Q454 404 425 404Q412 404 406 402Q368 386 350 336Q290 115 290 78Q290 50 306 38T341 26Q378 26 414 59T463 140Q466 150 469 151T485 153H489Q504 153 504 145Q504 144 502 134Q486 77 440 33T333 -11Q263 -11 227 52Q186 -10 133 -10H127Q78 -10 57 16T35 71Q35 103 54 123T99 143Q142 143 142 101Q142 81 130 66T107 46T94 41L91 40Q91 39 97 36T113 29T132 26Q168 26 194 71Q203 87 217 139T245 247T261 313Q266 340 266 352Q266 380 251 392T217 404Q177 404 142 372T93 290Q91 281 88 280T72 278H58Q52 284 52 289Z"></path><path id="MJX-3-TEX-N-42" d="M131 622Q124 629 120 631T104 634T61 637H28V683H229H267H346Q423 683 459 678T531 651Q574 627 599 590T624 512Q624 461 583 419T476 360L466 357Q539 348 595 302T651 187Q651 119 600 67T469 3Q456 1 242 0H28V46H61Q103 47 112 49T131 61V622ZM511 513Q511 560 485 594T416 636Q415 636 403 636T371 636T333 637Q266 637 251 636T232 628Q229 624 229 499V374H312L396 375L406 377Q410 378 417 380T442 393T474 417T499 456T511 513ZM537 188Q537 239 509 282T430 336L329 337H229V200V116Q229 57 234 52Q240 47 334 47H383Q425 47 443 53Q486 67 511 104T537 188Z"></path><path id="MJX-3-TEX-N-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path><path id="MJX-3-TEX-I-1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path><path id="MJX-3-TEX-N-74" d="M27 422Q80 426 109 478T141 600V615H181V431H316V385H181V241Q182 116 182 100T189 68Q203 29 238 29Q282 29 292 100Q293 108 293 146V181H333V146V134Q333 57 291 17Q264 -10 221 -10Q187 -10 162 2T124 33T105 68T98 100Q97 107 97 248V385H18V422H27Z"></path><path id="MJX-3-TEX-N-6F" d="M28 214Q28 309 93 378T250 448Q340 448 405 380T471 215Q471 120 407 55T250 -10Q153 -10 91 57T28 214ZM250 30Q372 30 372 193V225V250Q372 272 371 288T364 326T348 362T317 390T268 410Q263 411 252 411Q222 411 195 399Q152 377 139 338T126 246V226Q126 130 145 91Q177 30 250 30Z"></path><path id="MJX-3-TEX-N-2C" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path><path id="MJX-3-TEX-I-1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path><path id="MJX-3-TEX-N-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path id="MJX-3-TEX-I-1D449" d="M52 648Q52 670 65 683H76Q118 680 181 680Q299 680 320 683H330Q336 677 336 674T334 656Q329 641 325 637H304Q282 635 274 635Q245 630 242 620Q242 618 271 369T301 118L374 235Q447 352 520 471T595 594Q599 601 599 609Q599 633 555 637Q537 637 537 648Q537 649 539 661Q542 675 545 679T558 683Q560 683 570 683T604 682T668 681Q737 681 755 683H762Q769 676 769 672Q769 655 760 640Q757 637 743 637Q730 636 719 635T698 630T682 623T670 615T660 608T652 599T645 592L452 282Q272 -9 266 -16Q263 -18 259 -21L241 -22H234Q216 -22 216 -15Q213 -9 177 305Q139 623 138 626Q133 637 76 637H59Q52 642 52 648Z"></path><path id="MJX-3-TEX-N-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><use data-c="1D465" xlink:href="#MJX-3-TEX-I-1D465"></use></g><g data-mml-node="TeXAtom" transform="translate(605,-150) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="TeXAtom" data-mjx-texclass="ORD"><g data-mml-node="mi"><use data-c="42" xlink:href="#MJX-3-TEX-N-42"></use></g></g></g></g><g data-mml-node="mo" transform="translate(1433.4,0)"><use data-c="3D" xlink:href="#MJX-3-TEX-N-3D"></use></g><g data-mml-node="mfrac" transform="translate(2489.2,0)"><g data-mml-node="msub" transform="translate(421.5,676)"><g data-mml-node="mi"><use data-c="1D45B" xlink:href="#MJX-3-TEX-I-1D45B"></use></g><g data-mml-node="TeXAtom" transform="translate(633,-150) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="TeXAtom" data-mjx-texclass="ORD"><g data-mml-node="mi"><use data-c="42" xlink:href="#MJX-3-TEX-N-42"></use></g></g></g></g><g data-mml-node="msub" transform="translate(220,-686)"><g data-mml-node="mi"><use data-c="1D45B" xlink:href="#MJX-3-TEX-I-1D45B"></use></g><g data-mml-node="TeXAtom" transform="translate(633,-150) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="TeXAtom" data-mjx-texclass="ORD"><g data-mml-node="mi"><use data-c="74" xlink:href="#MJX-3-TEX-N-74"></use><use data-c="6F" xlink:href="#MJX-3-TEX-N-6F" transform="translate(389,0)"></use><use data-c="74" xlink:href="#MJX-3-TEX-N-74" transform="translate(889,0)"></use></g></g></g></g><rect width="1786.7" height="60" x="120" y="220"></rect></g><g data-mml-node="mo" transform="translate(4515.9,0)"><use data-c="2C" xlink:href="#MJX-3-TEX-N-2C"></use></g><g data-mml-node="mstyle" transform="translate(4793.9,0)"><g data-mml-node="mspace"></g></g><g data-mml-node="msub" transform="translate(6960.5,0)"><g data-mml-node="mi"><use data-c="1D450" xlink:href="#MJX-3-TEX-I-1D450"></use></g><g data-mml-node="mn" transform="translate(466,-150) scale(0.707)"><use data-c="31" xlink:href="#MJX-3-TEX-N-31"></use></g></g><g data-mml-node="msub" transform="translate(7830.1,0)"><g data-mml-node="mi"><use data-c="1D449" xlink:href="#MJX-3-TEX-I-1D449"></use></g><g data-mml-node="mn" transform="translate(616,-150) scale(0.707)"><use data-c="31" xlink:href="#MJX-3-TEX-N-31"></use></g></g><g data-mml-node="mo" transform="translate(9127.4,0)"><use data-c="3D" xlink:href="#MJX-3-TEX-N-3D"></use></g><g data-mml-node="msub" transform="translate(10183.2,0)"><g data-mml-node="mi"><use data-c="1D450" xlink:href="#MJX-3-TEX-I-1D450"></use></g><g data-mml-node="mn" transform="translate(466,-150) scale(0.707)"><use data-c="32" xlink:href="#MJX-3-TEX-N-32"></use></g></g><g data-mml-node="msub" transform="translate(11052.8,0)"><g data-mml-node="mi"><use data-c="1D449" xlink:href="#MJX-3-TEX-I-1D449"></use></g><g data-mml-node="mn" transform="translate(616,-150) scale(0.707)"><use data-c="32" xlink:href="#MJX-3-TEX-N-32"></use></g></g></g></g></svg></mjx-container></div>
                     <p class="chem-desc">摩尔分数用于分压、活度等计算；稀释式说明<b>稀释前后溶质的物质的量不变</b>，注意体积单位一致。</p>
                   </div>
-                </div>
-
-                <h2 id="colligative"><a href="#colligative" class="headerlink" title="二、稀溶液的依数性"></a>二、稀溶液的依数性</h2>
-                <p>稀溶液中，蒸气压下降、沸点升高、凝固点降低和渗透压这四类性质只取决于溶质粒子的数目，而与溶质本性无关，统称<b>依数性</b>。它们都以质量摩尔浓度 <i>b</i><sub>B</sub> 或物质的量浓度 <i>c</i><sub>B</sub> 为标度，是测摩尔质量、判断溶液性质的基础。</p>
-                <div class="chem-grid">
+                  <div class="chem-subhead">稀溶液的依数性</div>
+                  <p class="chem-intro">稀溶液中，蒸气压下降、沸点升高、凝固点降低和渗透压这四类性质只取决于溶质粒子的数目，而与溶质本性无关，统称<b>依数性</b>。它们都以质量摩尔浓度 <i>b</i><sub>B</sub> 或物质的量浓度 <i>c</i><sub>B</sub> 为标度，是测摩尔质量、判断溶液性质的基础。</p>
                   <div class="chem-card">
                     <h3>蒸气压下降（Raoult 定律）</h3>
                     <div class="chem-formula" data-tex="\Delta p = p^{\ominus} x_{\mathrm{B}}, \qquad p = p^{\ominus} x_{\mathrm{A}}"><mjx-container class="MathJax" jax="SVG" display="true"><svg style="vertical-align: -0.439ex;" xmlns="http://www.w3.org/2000/svg" width="26.163ex" height="2.306ex" role="img" focusable="false" viewBox="0 -825.2 11564 1019.2" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><path id="MJX-4-TEX-N-394" d="M51 0Q46 4 46 7Q46 9 215 357T388 709Q391 716 416 716Q439 716 444 709Q447 705 616 357T786 7Q786 4 781 0H51ZM507 344L384 596L137 92L383 91H630Q630 93 507 344Z"></path><path id="MJX-4-TEX-I-1D45D" d="M23 287Q24 290 25 295T30 317T40 348T55 381T75 411T101 433T134 442Q209 442 230 378L240 387Q302 442 358 442Q423 442 460 395T497 281Q497 173 421 82T249 -10Q227 -10 210 -4Q199 1 187 11T168 28L161 36Q160 35 139 -51T118 -138Q118 -144 126 -145T163 -148H188Q194 -155 194 -157T191 -175Q188 -187 185 -190T172 -194Q170 -194 161 -194T127 -193T65 -192Q-5 -192 -24 -194H-32Q-39 -187 -39 -183Q-37 -156 -26 -148H-6Q28 -147 33 -136Q36 -130 94 103T155 350Q156 355 156 364Q156 405 131 405Q109 405 94 377T71 316T59 280Q57 278 43 278H29Q23 284 23 287ZM178 102Q200 26 252 26Q282 26 310 49T356 107Q374 141 392 215T411 325V331Q411 405 350 405Q339 405 328 402T306 393T286 380T269 365T254 350T243 336T235 326L232 322Q232 321 229 308T218 264T204 212Q178 106 178 102Z"></path><path id="MJX-4-TEX-N-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path><path id="MJX-4-TEX-N-2296" d="M56 250Q56 394 156 488T384 583Q530 583 626 485T722 250Q722 110 625 14T390 -83Q249 -83 153 14T56 250ZM681 278Q669 385 591 463T381 542Q283 542 196 471T96 278V270H681V278ZM275 -42T388 -42T585 32T681 222V230H96V222Q108 107 191 33Z"></path><path id="MJX-4-TEX-I-1D465" d="M52 289Q59 331 106 386T222 442Q257 442 286 424T329 379Q371 442 430 442Q467 442 494 420T522 361Q522 332 508 314T481 292T458 288Q439 288 427 299T415 328Q415 374 465 391Q454 404 425 404Q412 404 406 402Q368 386 350 336Q290 115 290 78Q290 50 306 38T341 26Q378 26 414 59T463 140Q466 150 469 151T485 153H489Q504 153 504 145Q504 144 502 134Q486 77 440 33T333 -11Q263 -11 227 52Q186 -10 133 -10H127Q78 -10 57 16T35 71Q35 103 54 123T99 143Q142 143 142 101Q142 81 130 66T107 46T94 41L91 40Q91 39 97 36T113 29T132 26Q168 26 194 71Q203 87 217 139T245 247T261 313Q266 340 266 352Q266 380 251 392T217 404Q177 404 142 372T93 290Q91 281 88 280T72 278H58Q52 284 52 289Z"></path><path id="MJX-4-TEX-N-42" d="M131 622Q124 629 120 631T104 634T61 637H28V683H229H267H346Q423 683 459 678T531 651Q574 627 599 590T624 512Q624 461 583 419T476 360L466 357Q539 348 595 302T651 187Q651 119 600 67T469 3Q456 1 242 0H28V46H61Q103 47 112 49T131 61V622ZM511 513Q511 560 485 594T416 636Q415 636 403 636T371 636T333 637Q266 637 251 636T232 628Q229 624 229 499V374H312L396 375L406 377Q410 378 417 380T442 393T474 417T499 456T511 513ZM537 188Q537 239 509 282T430 336L329 337H229V200V116Q229 57 234 52Q240 47 334 47H383Q425 47 443 53Q486 67 511 104T537 188Z"></path><path id="MJX-4-TEX-N-2C" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path><path id="MJX-4-TEX-N-41" d="M255 0Q240 3 140 3Q48 3 39 0H32V46H47Q119 49 139 88Q140 91 192 245T295 553T348 708Q351 716 366 716H376Q396 715 400 709Q402 707 508 390L617 67Q624 54 636 51T687 46H717V0H708Q699 3 581 3Q458 3 437 0H427V46H440Q510 46 510 64Q510 66 486 138L462 209H229L209 150Q189 91 189 85Q189 72 209 59T259 46H264V0H255ZM447 255L345 557L244 256Q244 255 345 255H447Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><use data-c="394" xlink:href="#MJX-4-TEX-N-394"></use></g><g data-mml-node="mi" transform="translate(833,0)"><use data-c="1D45D" xlink:href="#MJX-4-TEX-I-1D45D"></use></g><g data-mml-node="mo" transform="translate(1613.8,0)"><use data-c="3D" xlink:href="#MJX-4-TEX-N-3D"></use></g><g data-mml-node="msup" transform="translate(2669.6,0)"><g data-mml-node="mi"><use data-c="1D45D" xlink:href="#MJX-4-TEX-I-1D45D"></use></g><g data-mml-node="TeXAtom" transform="translate(536,413) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="mo"><use data-c="2296" xlink:href="#MJX-4-TEX-N-2296"></use></g></g></g><g data-mml-node="msub" transform="translate(3805.7,0)"><g data-mml-node="mi"><use data-c="1D465" xlink:href="#MJX-4-TEX-I-1D465"></use></g><g data-mml-node="TeXAtom" transform="translate(605,-150) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="TeXAtom" data-mjx-texclass="ORD"><g data-mml-node="mi"><use data-c="42" xlink:href="#MJX-4-TEX-N-42"></use></g></g></g></g><g data-mml-node="mo" transform="translate(4961.3,0)"><use data-c="2C" xlink:href="#MJX-4-TEX-N-2C"></use></g><g data-mml-node="mstyle" transform="translate(5239.3,0)"><g data-mml-node="mspace"></g></g><g data-mml-node="mi" transform="translate(7406,0)"><use data-c="1D45D" xlink:href="#MJX-4-TEX-I-1D45D"></use></g><g data-mml-node="mo" transform="translate(8186.8,0)"><use data-c="3D" xlink:href="#MJX-4-TEX-N-3D"></use></g><g data-mml-node="msup" transform="translate(9242.5,0)"><g data-mml-node="mi"><use data-c="1D45D" xlink:href="#MJX-4-TEX-I-1D45D"></use></g><g data-mml-node="TeXAtom" transform="translate(536,413) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="mo"><use data-c="2296" xlink:href="#MJX-4-TEX-N-2296"></use></g></g></g><g data-mml-node="msub" transform="translate(10378.7,0)"><g data-mml-node="mi"><use data-c="1D465" xlink:href="#MJX-4-TEX-I-1D465"></use></g><g data-mml-node="TeXAtom" transform="translate(605,-152.7) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="TeXAtom" data-mjx-texclass="ORD"><g data-mml-node="mi"><use data-c="41" xlink:href="#MJX-4-TEX-N-41"></use></g></g></g></g></g></g></svg></mjx-container></div>
@@ -179,7 +177,7 @@
                   </div>
                 </div>
 
-                <h2 id="gas"><a href="#gas" class="headerlink" title="三、气体"></a>三、气体</h2>
+                <h2 id="gas"><a href="#gas" class="headerlink" title="二、气体"></a>二、气体</h2>
                 <div class="chem-grid">
                   <div class="chem-card">
                     <h3>理想气体状态方程</h3>
@@ -203,7 +201,9 @@
                   </div>
                 </div>
 
-                <h2 id="thermo"><a href="#thermo" class="headerlink" title="四、化学热力学"></a>四、化学热力学</h2>
+                <div class="chem-note"><b>R 与 <i>k</i><sub>B</sub>：</b><i>R</i> = <i>N</i><sub>A</sub><i>k</i><sub>B</sub> = 8.314 J·mol<sup>−1</sup>·K<sup>−1</sup>。<i>k</i><sub>B</sub> 是「每个分子」的气体常数，乘上阿伏加德罗常数即得「每摩尔」的 <i>R</i>，因此 <i>pV</i> = <i>Nk</i><sub>B</sub><i>T</i> 与 <i>pV</i> = <i>nRT</i> 完全等价。</div>
+
+                <h2 id="thermo"><a href="#thermo" class="headerlink" title="三、化学热力学"></a>三、化学热力学</h2>
                 <div class="chem-note"><b>记号说明：</b>下标 m 表示「每摩尔反应进度」（molar），即 Δ<sub>r</sub><i>X</i><sub>m</sub> = Δ<sub>r</sub><i>X</i>/<i>ξ</i>，单位 kJ·mol<sup>−1</sup>。本页热力学量均指摩尔反应量。</div>
                 <div class="chem-grid">
                   <div class="chem-subhead">第一定律与热化学</div>
@@ -288,7 +288,7 @@
                   </div>
                 </div>
 
-                <h2 id="equilibrium"><a href="#equilibrium" class="headerlink" title="五、化学平衡"></a>五、化学平衡</h2>
+                <h2 id="equilibrium"><a href="#equilibrium" class="headerlink" title="四、化学平衡"></a>四、化学平衡</h2>
                 <div class="chem-grid">
                   <div class="chem-card">
                     <h3>标准平衡常数</h3>
@@ -312,7 +312,7 @@
                   </div>
                 </div>
 
-                <h2 id="acid"><a href="#acid" class="headerlink" title="六、酸碱平衡"></a>六、酸碱平衡</h2>
+                <h2 id="acid"><a href="#acid" class="headerlink" title="五、酸碱平衡"></a>五、酸碱平衡</h2>
                 <div class="chem-grid">
                   <div class="chem-card">
                     <h3>pH 与水的离子积</h3>
@@ -336,7 +336,7 @@
                   </div>
                 </div>
 
-                <h2 id="precipitate"><a href="#precipitate" class="headerlink" title="七、沉淀溶解平衡"></a>七、沉淀溶解平衡</h2>
+                <h2 id="precipitate"><a href="#precipitate" class="headerlink" title="六、沉淀溶解平衡"></a>六、沉淀溶解平衡</h2>
                 <div class="chem-grid">
                   <div class="chem-card">
                     <h3>溶度积与溶解度</h3>
@@ -355,7 +355,7 @@
                   </div>
                 </div>
 
-                <h2 id="electro"><a href="#electro" class="headerlink" title="八、电化学"></a>八、电化学</h2>
+                <h2 id="electro"><a href="#electro" class="headerlink" title="七、电化学"></a>七、电化学</h2>
                 <div class="chem-grid">
                   <div class="chem-card">
                     <h3>电池电动势与自由能</h3>
@@ -384,7 +384,7 @@
                   </div>
                 </div>
 
-                <h2 id="kinetics"><a href="#kinetics" class="headerlink" title="九、化学动力学"></a>九、化学动力学</h2>
+                <h2 id="kinetics"><a href="#kinetics" class="headerlink" title="八、化学动力学"></a>八、化学动力学</h2>
                 <div class="chem-table-wrap">
                   <table>
                     <thead>
@@ -420,7 +420,7 @@
                   </div>
                 </div>
 
-                <h2 id="atom"><a href="#atom" class="headerlink" title="十、原子结构与周期律"></a>十、原子结构与周期律</h2>
+                <h2 id="atom"><a href="#atom" class="headerlink" title="九、原子结构与周期律"></a>九、原子结构与周期律</h2>
                 <div class="chem-grid">
                   <div class="chem-card">
                     <h3>氢原子能级</h3>
@@ -444,7 +444,7 @@
                   </div>
                 </div>
 
-                <h2 id="crystal"><a href="#crystal" class="headerlink" title="十一、晶体结构与配位化学"></a>十一、晶体结构与配位化学</h2>
+                <h2 id="crystal"><a href="#crystal" class="headerlink" title="十、晶体结构与配位化学"></a>十、晶体结构与配位化学</h2>
                 <div class="chem-grid">
                   <div class="chem-card">
                     <h3>晶胞密度</h3>
