@@ -108,7 +108,7 @@
     <div id="kda">击杀 0 / 死亡 0 / 助攻 0</div>
   </div>
 
-  <div id="help">右键/右键拖动：移动 &nbsp;|&nbsp; 左键：普攻/技能目标 &nbsp;|&nbsp; Q W E R：技能 &nbsp;|&nbsp; B：回城 &nbsp;|&nbsp; P/商店：装备</div>
+  <div id="help">右键/左键点地面：移动（可按住拖动）&nbsp;|&nbsp; 方向键：移动 &nbsp;|&nbsp; 左键点敌人：攻击 &nbsp;|&nbsp; Q W E R：技能（朝鼠标释放）&nbsp;|&nbsp; B：回城 &nbsp;|&nbsp; P：商店 &nbsp;|&nbsp; 1-4：技能升级</div>
 
   <div id="killFeed"></div>
   <div id="centerTip"></div>
@@ -411,21 +411,20 @@ const __navIndex = new Map();
   for (const a of attach) link(node(a), nearestLaneNode(a));
 })();
 
-const WALK_HALF = 140; // 走廊半宽（世界单位）
+// 开放式地图：全图可行走，操作顺滑；仅在两个空角落放置不可穿越的岩石障碍
+const ROCKS = [
+  { x:250,  y:720,  r:600 },
+  { x:3950, y:3480, r:600 },
+];
 function pointSegDist(px,py,x1,y1,x2,y2){
   const dx=x2-x1, dy=y2-y1, L2=dx*dx+dy*dy||1;
   let t=((px-x1)*dx+(py-y1)*dy)/L2; t=clamp(t,0,1);
   return Math.hypot(px-(x1+t*dx), py-(y1+t*dy));
 }
 function isWalkable(x,y){
-  if (x<30||y<30||x>WORLD.w-30||y>WORLD.h-30) return false;
-  if (Math.hypot(x-MAP.blueFountain.x,y-MAP.blueFountain.y) < 300) return true;
-  if (Math.hypot(x-MAP.redFountain.x,y-MAP.redFountain.y) < 300) return true;
-  for (let i=0;i<MAP.walkSegs.length;i++){
-    const s=MAP.walkSegs[i];
-    if (pointSegDist(x,y,s.x1,s.y1,s.x2,s.y2) <= WALK_HALF) return true;
-  }
-  return false;
+  if (x<40||y<40||x>WORLD.w-40||y>WORLD.h-40) return false;
+  for (let i=0;i<ROCKS.length;i++){ const r=ROCKS[i]; if (Math.hypot(x-r.x,y-r.y) < r.r) return false; }
+  return true;
 }
 function lineWalkable(x1,y1,x2,y2){
   const d=Math.hypot(x2-x1,y2-y1);
@@ -831,7 +830,11 @@ class Hero extends Entity {
     this.items = []; // 装备实例
     // 技能实例（深拷贝）
     this.skills = proto.skills.map(id => Object.assign({}, SKILLS[id]));
-    this.skills[1].level = 1; this.skills[1].unlocked = true; // 初始 Q
+    // 开局即解锁全部主动技能（Q/W/E，鲁班额外R），让对局立刻可玩
+    for (let i=1;i<=4;i++){
+      const sk = this.skills[i];
+      if (sk && !(sk.id.endsWith('_r') && sk.cd===1)){ sk.level = 1; sk.unlocked = true; }
+    }
     this.skillPoints = 0;
     // 被动计数
     this.passiveStack = 0;
@@ -1504,15 +1507,15 @@ function buildMapCache(){
   for (const c of [...MAP.blueCamps,...MAP.redCamps]){
     g.fillStyle='rgba(0,0,0,0.25)'; g.beginPath(); g.arc(c.x,c.y,55,0,TAU); g.fill();
   }
-  // 地形墙：走廊以外的丛林/岩壁（不可通行）
-  const TS = 32;
-  for (let y=0; y<WORLD.h; y+=TS){
-    for (let x=0; x<WORLD.w; x+=TS){
-      if (!isWalkable(x+TS/2, y+TS/2)){
-        const shade = 0.70 + Math.random()*0.10;
-        g.fillStyle = `rgba(${22+Math.random()*16|0},${34+Math.random()*18|0},${20+Math.random()*12|0},${shade})`;
-        g.fillRect(x,y,TS+1,TS+1);
-      }
+  // 岩石障碍（边角，不可穿越）
+  for (const r of ROCKS){
+    const grd = g.createRadialGradient(r.x-r.r*0.3, r.y-r.r*0.3, r.r*0.15, r.x, r.y, r.r);
+    grd.addColorStop(0,'#5a5541'); grd.addColorStop(0.75,'#343126'); grd.addColorStop(1,'rgba(28,32,24,0)');
+    g.fillStyle=grd; g.beginPath(); g.arc(r.x,r.y,r.r,0,TAU); g.fill();
+    for (let i=0;i<46;i++){
+      const a=Math.random()*TAU, rr=Math.random()*r.r*0.78;
+      g.fillStyle = `rgba(${78+Math.random()*30|0},${72+Math.random()*26|0},${56+Math.random()*20|0},0.55)`;
+      g.beginPath(); g.arc(r.x+Math.cos(a)*rr, r.y+Math.sin(a)*rr, 5+Math.random()*14,0,TAU); g.fill();
     }
   }
   // 边界
@@ -2102,6 +2105,12 @@ function loop(now){
       cam.x = lerp(cam.x, game.player.x, 0.12);
       cam.y = lerp(cam.y, game.player.y, 0.12);
     }
+    // 相机限制在地图内，避免看到黑色空白
+    const halfW = W()/2, halfH = H()/2;
+    if (WORLD.w > W()) cam.x = clamp(cam.x, halfW, WORLD.w-halfW);
+    else cam.x = WORLD.w/2;
+    if (WORLD.h > H()) cam.y = clamp(cam.y, halfH, WORLD.h-halfH);
+    else cam.y = WORLD.h/2;
     // 兵线
     minionTimer -= dt;
     if (minionTimer<=0){ minionTimer = 30; spawnMinionWave(); if(game.t<1) minionTimer=3; }
