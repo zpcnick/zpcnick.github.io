@@ -8,7 +8,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: 100%; height: 100%; overflow: hidden; background: #0a0a0a; font-family: "Microsoft YaHei", sans-serif; color: #eee; user-select: none; }
   #gameWrap { position: relative; width: 100vw; height: 100vh; }
-  canvas { display: block; position: absolute; top: 0; left: 0; cursor: crosshair; }
+  canvas { display: block; position: absolute; top: 0; left: 0; cursor: crosshair; touch-action: none; }
 
   /* 顶部状态栏 */
   #topBar { position: absolute; top: 0; left: 0; right: 0; height: 44px; background: linear-gradient(180deg, rgba(20,20,30,.95), rgba(20,20,30,.6)); display: flex; align-items: center; padding: 0 18px; z-index: 10; gap: 24px; border-bottom: 1px solid #333; }
@@ -345,32 +345,159 @@ MAP.lanes.topRed = [...MAP.lanes.top].reverse();
 MAP.lanes.midRed = [...MAP.lanes.mid].reverse();
 MAP.lanes.botRed = [...MAP.lanes.bot].reverse();
 
-// 防御塔布局（蓝方，红方镜像）。lane: top/mid/bot, tier: outer/inner
+// 防御塔布局（蓝方，红方镜像）。所有塔都坐落于兵线上，便于推进与防守
 MAP.blueTowers = [
-  { lane:'top', tier:'outer', x:800,  y:2300 },
-  { lane:'top', tier:'inner', x:520,  y:3100 },
-  { lane:'mid', tier:'outer', x:1450, y:2750 },
-  { lane:'mid', tier:'inner', x:850,  y:3350 },
-  { lane:'bot', tier:'outer', x:2650, y:3400 },
-  { lane:'bot', tier:'inner', x:3200, y:3700 },
+  { lane:'top', tier:'inner', x:450,  y:3150 },
+  { lane:'top', tier:'outer', x:1150, y:1935 },
+  { lane:'mid', tier:'inner', x:820,  y:3380 },
+  { lane:'mid', tier:'outer', x:1550, y:2653 },
+  { lane:'bot', tier:'inner', x:760,  y:3750 },
+  { lane:'bot', tier:'outer', x:1800, y:3450 },
 ];
 MAP.redTowers = MAP.blueTowers.map(t => ({ lane:t.lane, tier:t.tier, ...MAP.mirror({x:t.x,y:t.y}) }));
 MAP.blueCrystal = { x:450, y:3750 };
 MAP.redCrystal  = MAP.mirror(MAP.blueCrystal);
 
-// 野怪营地（蓝方；红方镜像）
+// 野怪营地（蓝方；红方镜像）——位于野区支路上
 MAP.blueCamps = [
-  { type:'blueBuff', x:1050, y:3150 },  // 蓝buff
-  { type:'redBuff',  x:1250, y:3500 },  // 红buff
-  { type:'small',    x:2050, y:3350 },  // 小野（靠近中路）
-  { type:'small',    x:1700, y:2950 },  // 小野
+  { type:'blueBuff', x:1150, y:3200 },
+  { type:'redBuff',  x:1450, y:3550 },
+  { type:'small',    x:1750, y:3500 },
+  { type:'small',    x:850,  y:2700 },
 ];
 MAP.redCamps = MAP.blueCamps.map(c => ({ type:c.type, ...MAP.mirror({x:c.x,y:c.y}) }));
 // 河道：主宰（上）、暴君（下）
 MAP.dragon = { type:'dragon', x:2550, y:1650 };  // 主宰
 MAP.tyrant = { type:'tyrant', x:1650, y:2550 };  // 暴君
 
-// 碰撞/墙体（简化：矩形障碍，单位不能穿过）
+/* ============================================================
+   地形：可行走走廊（车道 + 野区支路）与导航图
+   走廊以外为岩石/丛林，不可通行 —— 让"路线"真正生效
+   ============================================================ */
+MAP.walkSegs = [];   // 线段集合，表示可行走走廊
+MAP.navNodes = [];   // 导航图节点 {x,y,edges:[node,...]}
+const __navIndex = new Map();
+(function buildTerrain(){
+  const laneSets = [MAP.lanes.top, MAP.lanes.mid, MAP.lanes.bot];
+  const nkey = (x,y)=> Math.round(x/12)+','+Math.round(y/12);
+  function node(p){
+    const k=nkey(p.x,p.y);
+    if (__navIndex.has(k)) return __navIndex.get(k);
+    const n={x:p.x,y:p.y,edges:[]};
+    MAP.navNodes.push(n); __navIndex.set(k,n); return n;
+  }
+  function seg(a,b){ MAP.walkSegs.push({x1:a.x,y1:a.y,x2:b.x,y2:b.y}); }
+  function link(a,b){
+    if (a===b) return;
+    seg(a,b);
+    if (!a.edges.includes(b)) a.edges.push(b);
+    if (!b.edges.includes(a)) b.edges.push(a);
+  }
+  // 三条兵线相邻点相连
+  for (const pts of laneSets){
+    let prev=null;
+    for (const p of pts){ const n=node(p); if(prev) link(prev,n); prev=n; }
+  }
+  // 塔 / 野怪 / 龙 / 泉水 / 水晶 -> 最近兵线点，形成支路
+  function nearestLaneNode(p){
+    let best=null,bd=1e18;
+    for (const pts of laneSets) for (const q of pts){ const d=(p.x-q.x)**2+(p.y-q.y)**2; if(d<bd){bd=d;best=q;} }
+    return node(best);
+  }
+  const attach=[];
+  for (const t of [...MAP.blueTowers,...MAP.redTowers]) attach.push({x:t.x,y:t.y});
+  for (const c of [...MAP.blueCamps,...MAP.redCamps]) attach.push({x:c.x,y:c.y});
+  attach.push(MAP.dragon, MAP.tyrant, MAP.blueFountain, MAP.redFountain, MAP.blueCrystal, MAP.redCrystal);
+  for (const a of attach) link(node(a), nearestLaneNode(a));
+})();
+
+const WALK_HALF = 140; // 走廊半宽（世界单位）
+function pointSegDist(px,py,x1,y1,x2,y2){
+  const dx=x2-x1, dy=y2-y1, L2=dx*dx+dy*dy||1;
+  let t=((px-x1)*dx+(py-y1)*dy)/L2; t=clamp(t,0,1);
+  return Math.hypot(px-(x1+t*dx), py-(y1+t*dy));
+}
+function isWalkable(x,y){
+  if (x<30||y<30||x>WORLD.w-30||y>WORLD.h-30) return false;
+  if (Math.hypot(x-MAP.blueFountain.x,y-MAP.blueFountain.y) < 300) return true;
+  if (Math.hypot(x-MAP.redFountain.x,y-MAP.redFountain.y) < 300) return true;
+  for (let i=0;i<MAP.walkSegs.length;i++){
+    const s=MAP.walkSegs[i];
+    if (pointSegDist(x,y,s.x1,s.y1,s.x2,s.y2) <= WALK_HALF) return true;
+  }
+  return false;
+}
+function lineWalkable(x1,y1,x2,y2){
+  const d=Math.hypot(x2-x1,y2-y1);
+  const steps=Math.max(1,Math.ceil(d/55));
+  for (let i=1;i<=steps;i++){ const t=i/steps; if(!isWalkable(x1+(x2-x1)*t, y1+(y2-y1)*t)) return false; }
+  return true;
+}
+function nearestNavNode(x,y){
+  let best=null,bd=1e18;
+  for (const n of MAP.navNodes){ const d=(n.x-x)**2+(n.y-y)**2; if(d<bd){bd=d;best=n;} }
+  return best;
+}
+function findPath(x,y,tx,ty){
+  const start=nearestNavNode(x,y), goal=nearestNavNode(tx,ty);
+  if (!start||!goal) return null;
+  if (start===goal) return [{x:tx,y:ty}];
+  const distMap=new Map([[start,0]]), prev=new Map(), closed=new Set();
+  const open=[start];
+  while(open.length){
+    open.sort((a,b)=>(distMap.get(a)-distMap.get(b)));
+    const n=open.shift();
+    if (closed.has(n)) continue;
+    closed.add(n);
+    if (n===goal) break;
+    for (const m of n.edges){
+      const nd=distMap.get(n)+Math.hypot(m.x-n.x,m.y-n.y);
+      if (nd < (distMap.has(m)?distMap.get(m):Infinity)){
+        distMap.set(m,nd); prev.set(m,n); if(!closed.has(m)) open.push(m);
+      }
+    }
+  }
+  if (!distMap.has(goal)) return null;
+  const path=[]; let cur=goal;
+  while(cur){ path.unshift({x:cur.x,y:cur.y}); cur=prev.get(cur); }
+  // 末尾替换为真实目标点
+  if (path.length) path[path.length-1]={x:tx,y:ty};
+  return path;
+}
+// 带墙体碰撞的移动：贴墙滑动
+function moveTowardSafe(e, tx, ty, spd, dt){
+  const d=Math.hypot(tx-e.x, ty-e.y);
+  if (d<1) return true;
+  const step=Math.min(d, spd*dt);
+  const nx=e.x+(tx-e.x)/d*step, ny=e.y+(ty-e.y)/d*step;
+  e.facing=Math.atan2(ty-e.y, tx-e.x);
+  if (isWalkable(nx,ny)){ e.x=nx; e.y=ny; return false; }
+  if (isWalkable(nx,e.y)){ e.x=nx; return false; }
+  if (isWalkable(e.x,ny)){ e.y=ny; return false; }
+  return false;
+}
+// 沿导航图自动寻路移动
+function navMove(e, tx, ty, spd, dt){
+  const far = (e.navGoalX==null) || Math.hypot(e.navGoalX-tx, e.navGoalY-ty) > 100;
+  if (far || e.navDirty){
+    e.navGoalX=tx; e.navGoalY=ty;
+    e.navPath = lineWalkable(e.x,e.y,tx,ty) ? null : findPath(e.x,e.y,tx,ty);
+    e.navDirty=false; e.navTimer=0.7;
+  }
+  e.navTimer=(e.navTimer||0.7)-dt;
+  if (e.navTimer<=0){ e.navDirty=true; }
+  // 直线可达：直接走
+  if (!e.navPath){ return moveTowardSafe(e,tx,ty,spd,dt); }
+  // 沿路径点前进
+  let wp=e.navPath[0];
+  while (wp && Math.hypot(wp.x-e.x, wp.y-e.y) < 38){ e.navPath.shift(); wp=e.navPath[0]; }
+  if (!wp){ e.navPath=null; return moveTowardSafe(e,tx,ty,spd,dt); }
+  if (lineWalkable(e.x,e.y,tx,ty)){ e.navPath=null; return moveTowardSafe(e,tx,ty,spd,dt); }
+  moveTowardSafe(e, wp.x, wp.y, spd, dt);
+  return false;
+}
+
+// 碰撞墙体占位（旧接口保留）
 MAP.walls = [];
 
 /* ============================================================
@@ -577,7 +704,14 @@ class Minion extends Entity {
   }
   die(killer){
     this.alive=false;
-    if (killer && killer.isHero){ killer.gold += this.bounty; killer.exp += this.exp; spawnFloat('+'+this.bounty+'💰', this.x, this.y, '#ffd54f'); }
+    const myTeam = this.team;
+    // 补刀英雄拿全额金币
+    if (killer && killer.isHero){ killer.gold += this.bounty; spawnFloat('+'+this.bounty+'💰', this.x, this.y, '#ffd54f'); }
+    // 附近击杀方英雄共享经验（贴近王者荣耀的经验共享机制）
+    for (const h of game.heroes){
+      if (!h.alive || h.team===myTeam) continue;
+      if (dist(h,this) < 1100) h.gainExp(h===killer ? this.exp : Math.floor(this.exp*0.65));
+    }
     game.effects.push(new Effect({type:'death',x:this.x,y:this.y,life:0.3,color:'#888',r:14}));
   }
 }
@@ -585,8 +719,8 @@ class Minion extends Entity {
 /* ---------- 防御塔 / 水晶 ---------- */
 class Tower extends Entity {
   constructor(o){
-    super(Object.assign({ type:'tower', radius:34, atk:220, atkRange:780, atkSpeed:0.8, atkCd:0, armor:200, mr:200, target:null, tier:'outer' }, o));
-    this.maxHp = this.hp = o.tier==='crystal'?4500 : (o.tier==='inner'?3000:2500);
+    super(Object.assign({ type:'tower', radius:34, atk:220, atkRange:780, atkSpeed:0.8, atkCd:0, armor:70, mr:70, target:null, tier:'outer' }, o));
+    this.maxHp = this.hp = o.tier==='crystal'?4200 : (o.tier==='inner'?2600:2200);
     this.isCrystal = o.tier==='crystal';
   }
   update(dt){
@@ -719,6 +853,9 @@ class Hero extends Entity {
     this.aiMoveTarget = null;
     this.aiTimer = 0;
     this.aiRetreat = false;
+    // 导航/自动寻路
+    this.navPath = null; this.navGoalX = null; this.navGoalY = null; this.navTimer = 0; this.navDirty = true;
+    this.moveTarget = null; this.attackTarget = null;
     this.noMana = proto.id==='yase'||proto.id==='lianpo'; // 无蓝条英雄
     this.maxMp = proto.base.mp; this.mp = proto.base.mp;
     this.recalcStats();
@@ -965,6 +1102,15 @@ function enemyUnits(hero){ return [...game.heroes,...game.minions,...game.monste
 function nearestEnemy(hero, range=9999){ let b=null,bd=range; for(const e of enemyUnits(hero)){const d=dist(hero,e); if(d<bd){bd=d;b=e;}} return b; }
 function nearestEnemyHero(hero, range=9999){ let b=null,bd=range; for(const e of enemyHeroes(hero)){const d=dist(hero,e); if(d<bd){bd=d;b=e;}} return b; }
 function enemiesInAOE(hero, x, y, r){ return enemyUnits(hero).filter(e=>dist2(e.x,e.y,x,y)<=r); }
+function snapToWalkable(e){
+  if (isWalkable(e.x,e.y)) return;
+  for (let r=30; r<=460; r+=30){
+    for (let a=0;a<16;a++){
+      const nx=e.x+Math.cos(a/16*TAU)*r, ny=e.y+Math.sin(a/16*TAU)*r;
+      if (isWalkable(nx,ny)){ e.x=nx; e.y=ny; return; }
+    }
+  }
+}
 function dashTo(hero, tx, ty, maxDist){
   const d = Math.hypot(tx-hero.x, ty-hero.y);
   if (d < 1) return;
@@ -974,6 +1120,7 @@ function dashTo(hero, tx, ty, maxDist){
   hero.facing = Math.atan2(ty-hero.y, tx-hero.x);
   hero.x = clamp(hero.x, 40, WORLD.w-40);
   hero.y = clamp(hero.y, 40, WORLD.h-40);
+  snapToWalkable(hero); // 位移后若落入墙体，贴回最近道路，避免卡死
 }
 function aoeDamage(hero, x, y, r, dmg, type, opts={}){
   for (const e of enemiesInAOE(hero,x,y,r)){
@@ -1188,24 +1335,24 @@ function laneEnemies(hero){
   });
 }
 
+function baseLaneOf(hero){ return hero.aiLane==='top'?'top':hero.aiLane==='bot'?'bot':'mid'; }
+
 Hero.prototype.updateAI = function(dt){
   this.aiTimer -= dt;
-  const decide = this.aiTimer <= 0;
-  if (decide) this.aiTimer = 0.35;
+  if (this.aiTimer <= 0) this.aiTimer = 0.35;
 
   const f = this.team==='blue'?MAP.blueFountain:MAP.redFountain;
   const inFountain = dist2(this.x,this.y,f.x,f.y)<300;
 
-  // 残血处理
+  // 残血回城
   if (this.hp < this.maxHp*0.22 && !inFountain){
     if (this.combatTimer<=0){ this.recallT = 6; this.aiState='recall'; }
-    else { moveToward(this, f.x, f.y, this.moveSpeed*0.9, dt); }
+    else { navMove(this, f.x, f.y, this.moveSpeed*0.9, dt); }
     return;
   }
   if (this.hp < this.maxHp*0.4 && inFountain){ return; } // 泉水补血
   if (this.recallT>0) return;
 
-  // 视野内最近敌方英雄
   const nearHero = nearestEnemyHero(this, 900);
   const allies = game.heroes.filter(h=>h.alive && h.team===this.team && dist(h,this)<700);
   const foes = enemyHeroes(this).filter(h=>dist(h,this)<900);
@@ -1216,28 +1363,21 @@ Hero.prototype.updateAI = function(dt){
     if (shouldFight){
       this.aiState = 'fight';
       this.aiTarget = nearHero;
-      // 释放技能
       this.aiCastSkills(nearHero);
-      // 移动到攻击距离
-      if (dist(this, nearHero) > this.atkRange*0.9){
-        moveToward(this, nearHero.x, nearHero.y, this.moveSpeed, dt);
-      } else {
-        this.basicAttack(nearHero);
-      }
+      if (dist(this, nearHero) > this.atkRange*0.9){ navMove(this, nearHero.x, nearHero.y, this.moveSpeed, dt); }
+      else { this.basicAttack(nearHero); }
       return;
     }
   }
 
   // 打野英雄
   if (this.aiLane==='jungle'){
-    // 找最近的活着的己方野怪
     const camps = this.team==='blue'?MAP.blueCamps:MAP.redCamps;
     let target=null, bd=1e9;
     for (const c of camps){
       const m = game.monsters.find(mm=>mm.alive && mm.buffType===c.type && dist2(mm.x,mm.y,c.x,c.y)<50);
       if (m){ const d=dist(this,m); if(d<bd){bd=d;target=m;} }
     }
-    // 也考虑河道龙（中后期）
     if (this.lv>=4 && game.t>180){
       for (const c of [MAP.dragon, MAP.tyrant]){
         const m = game.monsters.find(mm=>mm.alive && mm.buffType===c.type);
@@ -1246,64 +1386,57 @@ Hero.prototype.updateAI = function(dt){
     }
     if (target){
       this.aiTarget = target;
-      if (dist(this,target) > this.atkRange*0.9){ moveToward(this,target.x,target.y,this.moveSpeed,dt); }
+      if (dist(this,target) > this.atkRange*0.9){ navMove(this,target.x,target.y,this.moveSpeed,dt); }
       else { this.aiCastSkills(target); this.basicAttack(target); }
       return;
     }
-    // 无野可刷 → 去最近的兵线支援（选最近的 lane front）
   }
 
-  // 游走英雄：去人数劣势的路支援，否则跟随最近友军
+  // 游走英雄：跟随最近友军
   if (this.aiLane==='roam'){
-    const weakLane = ['top','mid','bot'].map(l=>{
-      const enemies = laneEnemies(this).filter(e=>e.lane===l || e.type==='hero');
-      return {l, n: enemies.length};
-    }).sort((a,b)=>b.n-a.n)[0];
-    // 简化：跟随最近的己方英雄
     let ally=null,bd=1e9;
     for (const h of game.heroes){ if(h.alive && h.team===this.team && h!==this){ const d=dist(this,h); if(d<bd){bd=d;ally=h;} } }
-    if (ally && bd>150){ moveToward(this, ally.x, ally.y, this.moveSpeed, dt); }
-    // 攻击附近敌人
+    if (ally && bd>150){ navMove(this, ally.x, ally.y, this.moveSpeed, dt); }
     if (nearHero){ this.aiCastSkills(nearHero); if(dist(this,nearHero)<=this.atkRange) this.basicAttack(nearHero); }
     return;
   }
 
-  // 对线英雄：清兵 + 推塔
-  // 本路敌方单位
-  const enemies = laneEnemies(this);
+  // 对线：清本路小兵 → 推本路敌方塔 → 无则向敌方推进
+  const myLane = baseLaneOf(this);
+  const enemies = enemyUnits(this);
   let target=null, bd=1e9;
   for (const e of enemies){
-    const d = dist(this,e);
-    // 优先攻击敌方英雄（如果够近且安全），否则小兵
-    if (e.type==='hero' && d<600){ if (d<bd){bd=d;target=e;} }
+    if (e.type==='hero'){ const d=dist(this,e); if (d<520 && d<bd){bd=d;target=e;} }
   }
   if (!target){
-    for (const e of enemies){ if(e.type==='minion'){ const d=dist(this,e); if(d<bd){bd=d;target=e;} } }
+    for (const e of enemies){
+      if (e.type==='minion' && e.lane===myLane){ const d=dist(this,e); if (d<bd){bd=d;target=e;} }
+    }
   }
-  // 若无敌人，看能否推塔
   if (!target){
-    const enemyTowers = game.towers.filter(t=>t.alive && t.team!==this.team && !t.isCrystal);
-    // 选本路或最近的塔
-    for (const t of enemyTowers){ const d=dist(this,t); if(d<bd){bd=d;target=t;} }
+    const laneTowers = game.towers.filter(t=>t.alive && t.team!==this.team && !t.isCrystal && t.lane===myLane);
+    for (const t of laneTowers){ const d=dist(this,t); if (d<bd){bd=d;target=t;} }
+  }
+  if (!target){
+    const crystals = game.towers.filter(t=>t.alive && t.team!==this.team && t.isCrystal);
+    if (crystals.length) target = crystals[0];
   }
 
   if (target){
     this.aiTarget = target;
     if (target.type==='tower'){
-      // 推塔：需要有己方小兵扛塔，否则不硬上
-      const ownMinions = game.minions.filter(m=>m.alive && m.team===this.team && dist(m,target)<260);
-      if (ownMinions.length || this.hp>this.maxHp*0.7){
-        if (dist(this,target) > this.atkRange*0.9){ moveToward(this,target.x,target.y,this.moveSpeed,dt); }
-        else { this.aiCastSkills(target); this.basicAttack(target); }
-        return;
+      // 无小兵扛塔且血量不健康时不硬上，退守己方塔
+      const ownMin = game.minions.filter(m=>m.alive && m.team===this.team && dist(m,target)<300).length;
+      if (ownMin===0 && this.hp < this.maxHp*0.6){
+        const ownTower = game.towers.find(t=>t.alive && t.team===this.team && t.lane===myLane && !t.isCrystal);
+        if (ownTower){ navMove(this, ownTower.x, ownTower.y, this.moveSpeed, dt); return; }
       }
     }
-    if (dist(this,target) > this.atkRange*0.9){ moveToward(this,target.x,target.y,this.moveSpeed,dt); }
+    if (dist(this, target) > this.atkRange*0.9){ navMove(this, target.x, target.y, this.moveSpeed, dt); }
     else { this.aiCastSkills(target); this.basicAttack(target); }
   } else {
-    // 向本路前线移动
     const front = laneFront(this);
-    moveToward(this, front.x, front.y, this.moveSpeed, dt);
+    navMove(this, front.x, front.y, this.moveSpeed, dt);
   }
 };
 
@@ -1370,6 +1503,17 @@ function buildMapCache(){
   // 营地位置提示（小图标底）
   for (const c of [...MAP.blueCamps,...MAP.redCamps]){
     g.fillStyle='rgba(0,0,0,0.25)'; g.beginPath(); g.arc(c.x,c.y,55,0,TAU); g.fill();
+  }
+  // 地形墙：走廊以外的丛林/岩壁（不可通行）
+  const TS = 32;
+  for (let y=0; y<WORLD.h; y+=TS){
+    for (let x=0; x<WORLD.w; x+=TS){
+      if (!isWalkable(x+TS/2, y+TS/2)){
+        const shade = 0.70 + Math.random()*0.10;
+        g.fillStyle = `rgba(${22+Math.random()*16|0},${34+Math.random()*18|0},${20+Math.random()*12|0},${shade})`;
+        g.fillRect(x,y,TS+1,TS+1);
+      }
+    }
   }
   // 边界
   g.strokeStyle='#111'; g.lineWidth=8; g.strokeRect(0,0,WORLD.w,WORLD.h);
@@ -1622,39 +1766,73 @@ function renderMinimap(){
 /* ============================================================
    输入
    ============================================================ */
-function getMouseEntity(){
-  let best=null, bd=40;
+// 依据世界坐标拾取单位（敌方可选中）
+function entityAt(wx,wy){
+  if (!game.player) return null;
+  let best=null, bd=1e9;
   for (const e of [...game.heroes,...game.minions,...game.monsters,...game.towers]){
     if (!e.alive || e.team===game.player.team) continue;
-    const s = worldToScreen(e.x,e.y);
-    const d = Math.hypot(s.x-mouse.x, s.y-mouse.y);
-    if (d < Math.max(bd, e.radius+8)){ bd=d; best=e; }
+    const d = Math.hypot(e.x-wx, e.y-wy);
+    if (d < e.radius + 26 && d < bd){ bd=d; best=e; }
   }
   return best;
 }
 
+let pointerHeld = false;
+function setMoveTargetFromEvent(e, force){
+  if (!game.running || !game.player || !game.player.alive) return;
+  const w = screenToWorld(e.clientX, e.clientY);
+  mouse.x = e.clientX; mouse.y = e.clientY;
+  mouse.worldX = w.x; mouse.worldY = w.y;
+  // 目标点若在墙内，吸附到最近的可行走点，避免点进岩石不动
+  let tx = w.x, ty = w.y;
+  if (!isWalkable(tx,ty)){
+    // 沿指向方向回退到最近可行走点
+    let ok=false;
+    for (let k=1;k<=12;k++){
+      const nx = lerp(game.player.x, tx, 1-k/13), ny = lerp(game.player.y, ty, 1-k/13);
+      if (isWalkable(nx,ny)){ tx=nx; ty=ny; ok=true; break; }
+    }
+    if (!ok){ tx = w.x; ty = w.y; }
+  }
+  game.player.moveTarget = { x:tx, y:ty };
+  game.player.attackTarget = null;
+  game.player.navPath = null; game.player.navDirty = true;
+}
+
 function setupInput(){
-  cvs.addEventListener('mousemove', e=>{
+  cvs.addEventListener('pointermove', e=>{
     mouse.x = e.clientX; mouse.y = e.clientY;
     const w = screenToWorld(e.clientX, e.clientY);
     mouse.worldX = w.x; mouse.worldY = w.y;
-  });
-  cvs.addEventListener('mousedown', e=>{
-    if (!game.running || !game.player || !game.player.alive) return;
-    if (e.button===2){
-      // 右键移动
-      game.player.moveTarget = { x: mouse.worldX, y: mouse.worldY };
-      game.player.attackTarget = null;
-    } else if (e.button===0){
-      const ent = getMouseEntity();
-      if (ent){ game.player.attackTarget = ent; game.player.moveTarget = null; }
-      else { game.player.moveTarget = { x: mouse.worldX, y: mouse.worldY }; game.player.attackTarget = null; }
+    // 按住拖动持续移动
+    if (pointerHeld && game.running && game.player && game.player.alive){
+      setMoveTargetFromEvent(e);
     }
   });
+  cvs.addEventListener('pointerdown', e=>{
+    if (!game.running || !game.player || !game.player.alive) return;
+    e.preventDefault();
+    const w = screenToWorld(e.clientX, e.clientY);
+    mouse.x = e.clientX; mouse.y = e.clientY;
+    mouse.worldX = w.x; mouse.worldY = w.y;
+    if (e.button===2 || e.pointerType==='touch'){
+      // 右键 / 触屏：点哪走哪
+      setMoveTargetFromEvent(e);
+      pointerHeld = true;
+    } else if (e.button===0){
+      const ent = entityAt(w.x, w.y);
+      if (ent){ game.player.attackTarget = ent; game.player.moveTarget = null; game.player.navPath=null; }
+      else { setMoveTargetFromEvent(e); pointerHeld = true; }
+    }
+  });
+  window.addEventListener('pointerup', ()=>{ pointerHeld = false; });
   cvs.addEventListener('contextmenu', e=>e.preventDefault());
+
   window.addEventListener('keydown', e=>{
+    const k = e.key.toLowerCase ? e.key.toLowerCase() : e.key;
+    if (k.startsWith('arrow')){ keys[k]=true; e.preventDefault(); }
     if (!game.running) return;
-    const k = e.key.toLowerCase();
     if (k==='q') tryCastPlayer(1);
     else if (k==='w') tryCastPlayer(2);
     else if (k==='e') tryCastPlayer(3);
@@ -1662,6 +1840,10 @@ function setupInput(){
     else if (k==='b'){ if (game.player.alive && game.player.combatTimer<=0){ game.player.recallT=6; showTip('回城中...'); } }
     else if (k==='p'){ toggleShop(); }
     else if (k>='1'&&k<='4'){ const idx=parseInt(k); if(game.player) game.player.upgradeSkill(idx); }
+  });
+  window.addEventListener('keyup', e=>{
+    const k = e.key.toLowerCase ? e.key.toLowerCase() : e.key;
+    if (k.startsWith('arrow')) keys[k]=false;
   });
   // 技能栏点击 = 升级
   for (let i=1;i<=4;i++){
@@ -1675,18 +1857,38 @@ function tryCastPlayer(idx){
   if (!sk || sk.id.endsWith('_r') && sk.cd===1){ showTip('该技能不可用'); return; }
   if (!p.canCast(idx)){ if (sk.cdLeft>0) showTip('冷却中'); else if (sk.cost>0 && p.mp<sk.cost) showTip('法力不足'); return; }
   game.skillPreview = { idx, t:0.4 };
-  const ent = getMouseEntity();
+  const ent = entityAt(mouse.worldX, mouse.worldY);
   p.castSkill(idx, { x: mouse.worldX, y: mouse.worldY, entity: ent });
 }
 
 /* ============================================================
    玩家控制（每帧）
    ============================================================ */
+const keys = {};
 function playerControl(dt){
   const p = game.player; if (!p) return;
   if (!p.alive) return;
   if (p.stunT>0 || p.knockupT>0 || p.recallT>0) return;
   const spd = p.moveSpeed * (p.slowT>0 ? (1-p.slowPct/100):1);
+
+  // 键盘方向键移动（优先，取消点击目标）
+  let kx = 0, ky = 0;
+  if (keys['arrowleft']) kx -= 1;
+  if (keys['arrowright']) kx += 1;
+  if (keys['arrowup']) ky -= 1;
+  if (keys['arrowdown']) ky += 1;
+  if (kx || ky){
+    p.moveTarget = null; p.attackTarget = null; p.navPath = null;
+    const len = Math.hypot(kx,ky);
+    const nx = p.x + kx/len * spd * dt;
+    const ny = p.y + ky/len * spd * dt;
+    p.facing = Math.atan2(ky, kx);
+    if (isWalkable(nx,ny)){ p.x = nx; p.y = ny; }
+    else if (isWalkable(nx,p.y)){ p.x = nx; }
+    else if (isWalkable(p.x,ny)){ p.y = ny; }
+    return;
+  }
+
   // 攻击目标
   if (p.attackTarget && p.attackTarget.alive){
     const d = dist(p, p.attackTarget);
@@ -1694,14 +1896,17 @@ function playerControl(dt){
       p.facing = angleTo(p, p.attackTarget);
       p.basicAttack(p.attackTarget);
     } else {
-      moveToward(p, p.attackTarget.x, p.attackTarget.y, spd, dt);
+      navMove(p, p.attackTarget.x, p.attackTarget.y, spd, dt);
     }
     return;
+  } else if (p.attackTarget && !p.attackTarget.alive){
+    p.attackTarget = null;
   }
-  // 移动
+  // 点击移动（自动寻路）
   if (p.moveTarget){
-    if (moveToward(p, p.moveTarget.x, p.moveTarget.y, spd, dt)){
-      p.moveTarget = null;
+    const reached = navMove(p, p.moveTarget.x, p.moveTarget.y, spd, dt);
+    if (reached || dist2(p.x,p.y,p.moveTarget.x,p.moveTarget.y) < 14){
+      p.moveTarget = null; p.navPath = null;
     } else {
       return; // 移动中不自动攻击
     }
