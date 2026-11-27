@@ -256,28 +256,28 @@ defSkill('daji_passive', { name:'失心', icon:'💜', desc:'技能命中降低�
 defSkill('daji_q', { name:'灵魂冲击', icon:'🌀', cd:6, cost:60, range:560, desc:'扇形法术伤害' });
 defSkill('daji_w', { name:'偶像魅力', icon:'💖', cd:10, cost:70, range:500, desc:'指向爱心，造成法术伤害+眩晕' });
 defSkill('daji_e', { name:'女王崇拜', icon:'👑', cd:8, cost:90, range:520, desc:'释放5团狐火，优先攻击英雄，造成法术伤害' });
-defSkill('daji_r', { name:'——', icon:'', cd:1, cost:0, range:0, desc:'无' }); // 妲己3技能，R留空占位
+defSkill('daji_r', { name:'倾国倾城', icon:'💃', cd:45, cost:120, range:320, desc:'自身周围爆发法术伤害并眩晕敌人' });
 
 /* ----- 亚瑟 (战士/坦克) ----- */
 defSkill('yase_passive', { name:'圣光守护', icon:'🛡️', desc:'脱战回复生命，受击打断' });
 defSkill('yase_q', { name:'誓约之盾', icon:'⚡', cd:8, cost:0, range:300, desc:'加速，下一次普攻沉默目标' });
-defSkill('yase_w', { name:'回旋打击', icon:'🌀', cd:6, cost:40, range:320, desc:'召唤圣盾围绕自身，持续范围物理伤害' });
-defSkill('yase_e', { name:'圣剑裁决', icon:'⚔️', cd:20, cost:80, range:450, desc:'跳向目标区域，造成范围物理伤害+击飞' });
-defSkill('yase_r', { name:'——', icon:'', cd:1, cost:0, range:0, desc:'无' });
+defSkill('yase_w', { name:'回旋打击', icon:'🌀', cd:6, cost:0, range:320, desc:'召唤圣盾围绕自身，持续范围物理伤害' });
+defSkill('yase_e', { name:'圣剑裁决', icon:'⚔️', cd:20, cost:0, range:450, desc:'跳向目标区域，造成范围物理伤害+击飞' });
+defSkill('yase_r', { name:'裁决之剑', icon:'🗡️', cd:40, cost:0, range:500, desc:'跳向目标区域，造成已损生命真实伤害(斩杀)+击飞' });
 
 /* ----- 韩信 (刺客) ----- */
 defSkill('hanxin_passive', { name:'杀意之枪', icon:'🔱', desc:'第4次普攻击飞目标，技能命中提升攻速' });
 defSkill('hanxin_q', { name:'无情冲锋', icon:'💨', cd:9, cost:40, range:420, desc:'两段位移冲锋，造成物理伤害，命中击飞' });
 defSkill('hanxin_w', { name:'背水一战', icon:'🔙', cd:8, cost:50, range:380, desc:'后撤并横扫，造成物理伤害' });
 defSkill('hanxin_e', { name:'国士无双', icon:'🎯', cd:24, cost:100, range:500, desc:'长枪乱舞，范围物理伤害+击飞，期间免控' });
-defSkill('hanxin_r', { name:'——', icon:'', cd:1, cost:0, range:0, desc:'无' });
+defSkill('hanxin_r', { name:'破阵突击', icon:'🌪️', cd:40, cost:100, range:600, desc:'向目标突进，沿途造成多段物理伤害+击飞' });
 
 /* ----- 廉颇 (坦克) ----- */
 defSkill('lianpo_passive', { name:'勇士之魄', icon:'💪', desc:'释放技能获得护盾，受到伤害减少' });
 defSkill('lianpo_q', { name:'豪情突进', icon:'🦏', cd:9, cost:0, range:400, desc:'向前冲锋，造成物理伤害+击飞' });
-defSkill('lianpo_w', { name:'激情迸发', icon:'🟫', cd:7, cost:50, range:300, desc:'蓄力获得护盾，下次普攻范围伤害' });
-defSkill('lianpo_e', { name:'正义豪腕', icon:'💥', cd:22, cost:90, range:460, desc:'三段重击，逐次扩大范围并造成伤害' });
-defSkill('lianpo_r', { name:'——', icon:'', cd:1, cost:0, range:0, desc:'无' });
+defSkill('lianpo_w', { name:'激情迸发', icon:'🟫', cd:7, cost:0, range:300, desc:'蓄力获得护盾，下次普攻范围伤害' });
+defSkill('lianpo_e', { name:'正义豪腕', icon:'💥', cd:22, cost:0, range:460, desc:'三段重击，逐次扩大范围并造成伤害' });
+defSkill('lianpo_r', { name:'山崩地裂', icon:'⛰️', cd:45, cost:0, range:300, desc:'猛砸地面，大范围物理伤害+击飞，获得护盾' });
 
 /* ----- 英雄原型 ----- */
 const HEROES = [
@@ -980,7 +980,8 @@ class Hero extends Entity {
     if (!sk || !sk.unlocked || sk.level<=0) return false;
     if (sk.cdLeft>0) return false;
     if (this.silenceT>0) return false;
-    if (sk.cost>0 && this.mp < sk.cost) return false;
+    // 无蓝条英雄（亚瑟/廉颇）不消耗法力，跳过法力检查
+    if (!this.noMana && sk.cost>0 && this.mp < sk.cost) return false;
     return true;
   }
 
@@ -988,7 +989,7 @@ class Hero extends Entity {
   castSkill(idx, target){
     if (!this.canCast(idx)) return false;
     const sk = this.skills[idx];
-    this.mp -= sk.cost || 0;
+    if (!this.noMana) this.mp -= sk.cost || 0;
     const baseCd = sk.cd || 1;
     sk.cdLeft = baseCd;
     if (this.isPlayer) updateSkillUI();
@@ -1231,6 +1232,13 @@ SKILL_CAST['daji_e'] = function(hero, target, sk){
     }));
   }
 };
+SKILL_CAST['daji_r'] = function(hero, target, sk){
+  const lv = sk.level;
+  game.effects.push(new Effect({type:'explosion',x:hero.x,y:hero.y,r:320,color:'#e040fb',life:0.6}));
+  aoeDamage(hero, hero.x, hero.y, 320, 450+lv*180 + hero.totalAp*1.5, 'magic', {stun:1.5});
+  for (const e of enemyUnits(hero)) if (dist(hero,e)<=320) applyDajiPassive(hero,e);
+  game.camShake = Math.max(game.camShake, 0.4);
+};
 
 /* ---- 亚瑟 ---- */
 SKILL_CAST['yase_q'] = function(hero, target, sk){
@@ -1254,6 +1262,19 @@ SKILL_CAST['yase_e'] = function(hero, target, sk){
   game.effects.push(new Effect({type:'explosion',x:hero.x,y:hero.y,r:200,color:'#42a5f5',life:0.5}));
   aoeDamage(hero, hero.x, hero.y, 200, 280+lv*120 + hero.totalAtk*1.4, 'phys', {knockup:0.8});
   game.camShake = Math.max(game.camShake, 0.3);
+};
+SKILL_CAST['yase_r'] = function(hero, target, sk){
+  const lv = sk.level;
+  dashTo(hero, target.x, target.y, sk.range);
+  game.effects.push(new Effect({type:'explosion',x:hero.x,y:hero.y,r:220,color:'#1e88e5',life:0.5}));
+  const enemies = enemiesInAOE(hero, hero.x, hero.y, 220);
+  for (const e of enemies){
+    const missing = Math.max(0, (e.maxHp||0) - e.hp);
+    const dmg = 300 + lv*120 + hero.totalAtk*1.0 + missing*0.15;
+    dealDamage(hero, e, dmg, 'true');
+    e.knockupT = Math.max(e.knockupT||0, 1.0);
+  }
+  game.camShake = Math.max(game.camShake, 0.4);
 };
 
 /* ---- 韩信 ---- */
@@ -1286,6 +1307,15 @@ SKILL_CAST['hanxin_e'] = function(hero, target, sk){
   }));
   game.camShake = Math.max(game.camShake, 0.3);
 };
+SKILL_CAST['hanxin_r'] = function(hero, target, sk){
+  const lv = sk.level;
+  const oldX=hero.x, oldY=hero.y;
+  dashTo(hero, target.x, target.y, sk.range);
+  game.effects.push(new Effect({type:'line',x1:oldX,y1:oldY,x2:hero.x,y2:hero.y,life:0.4,color:'#b71c1c'}));
+  const enemies = enemyUnits(hero).filter(e=>circleSeg(e.x,e.y,e.radius,oldX,oldY,hero.x,hero.y));
+  for (const e of enemies){ dealDamage(hero, e, 250+lv*100+hero.totalAtk*1.2, 'phys'); e.knockupT=Math.max(e.knockupT||0,0.8); }
+  game.camShake = Math.max(game.camShake, 0.35);
+};
 
 /* ---- 廉颇 ---- */
 SKILL_CAST['lianpo_q'] = function(hero, target, sk){
@@ -1316,6 +1346,14 @@ SKILL_CAST['lianpo_e'] = function(hero, target, sk){
     }, i*400);
   }
   game.camShake = Math.max(game.camShake, 0.3);
+};
+SKILL_CAST['lianpo_r'] = function(hero, target, sk){
+  const lv = sk.level;
+  game.effects.push(new Effect({type:'explosion',x:hero.x,y:hero.y,r:300,color:'#6d4c41',life:0.6}));
+  aoeDamage(hero, hero.x, hero.y, 300, 350+lv*140+hero.totalAtk*1.3, 'phys', {knockup:1.2});
+  hero.buffs.shield = 3;
+  hero.shieldHp = 600 + lv*300;
+  game.camShake = Math.max(game.camShake, 0.5);
 };
 
 /* ============================================================
