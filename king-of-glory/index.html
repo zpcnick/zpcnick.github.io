@@ -20,24 +20,38 @@
   #kda { font-size: 13px; color: #ccc; }
 
   /* 小地图 */
-  #minimap { position: absolute; right: 12px; bottom: 120px; width: 200px; height: 200px; background: rgba(10,20,10,.85); border: 2px solid #555; border-radius: 6px; z-index: 10; }
+  #minimap { position: absolute; right: 12px; bottom: 162px; width: 200px; height: 200px; background: rgba(10,20,10,.85); border: 2px solid #555; border-radius: 6px; z-index: 10; }
   #minimap canvas { position: relative; width: 100%; height: 100%; border-radius: 4px; }
 
   /* 底部技能栏 */
-  #bottomBar { position: absolute; bottom: 0; left: 0; right: 0; height: 110px; background: linear-gradient(0deg, rgba(20,20,30,.96), rgba(20,20,30,.4)); display: flex; align-items: center; justify-content: center; gap: 10px; z-index: 10; padding-bottom: 6px; }
-  .skill { position: relative; width: 62px; height: 62px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #3a3a4a, #15151f); border: 2px solid #666; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; }
-  .skill.ready { border-color: #ffd54f; box-shadow: 0 0 10px rgba(255,213,79,.5); }
-  .skill .key { position: absolute; top: 2px; left: 4px; font-size: 11px; color: #ffd54f; font-weight: bold; text-shadow: 1px 1px 2px #000; }
-  .skill .icon { font-size: 28px; }
-  .skill .cdMask { position: absolute; inset: 0; background: rgba(0,0,0,.65); display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; }
-  .skill .lv { position: absolute; bottom: 2px; right: 4px; font-size: 11px; color: #69f0ae; font-weight: bold; }
-  .skill.upgrade { border-color: #69f0ae; box-shadow: 0 0 12px rgba(105,240,174,.7); animation: pulse 1s infinite; }
+  #bottomBar { position: absolute; bottom: 0; left: 0; right: 0; height: 140px; background: linear-gradient(0deg, rgba(20,20,30,.96), rgba(20,20,30,.35)); display: flex; align-items: flex-end; justify-content: center; gap: 16px; z-index: 10; padding-bottom: 14px; }
+  .skill { position: relative; width: 78px; height: 78px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #3a3a4a, #15151f); border: 3px solid #777; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .skill.ready { border-color: #ffd54f; box-shadow: 0 0 12px rgba(255,213,79,.55); }
+  .skill .key { position: absolute; top: -8px; left: -6px; font-size: 16px; font-weight: bold; color: #222; background: #ffd54f; border-radius: 9px; padding: 0 8px; line-height: 20px; box-shadow: 0 2px 4px rgba(0,0,0,.5); }
+  .skill .icon { font-size: 38px; }
+  .skill .cdMask { position: absolute; inset: 0; border-radius: 50%; background: rgba(0,0,0,.68); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: bold; color: #fff; }
+  .skill .lv { position: absolute; bottom: 1px; right: 8px; font-size: 14px; color: #69f0ae; font-weight: bold; text-shadow: 1px 1px 2px #000; }
+  .skill .plus { position: absolute; top: -6px; right: -6px; width: 24px; height: 24px; border-radius: 50%; background: #69f0ae; color: #053b1e; font-weight: bold; font-size: 17px; display: none; align-items: center; justify-content: center; border: 2px solid #0a7d3f; cursor: pointer; z-index: 3; }
+  .skill.upgrade { border-color: #69f0ae; box-shadow: 0 0 14px rgba(105,240,174,.8); animation: pulse 1s infinite; }
   @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.06);} }
-  .skill.ult { width: 68px; height: 68px; border-color: #e040fb; }
-  .skill.ult.ready { border-color: #e040fb; box-shadow: 0 0 14px rgba(224,64,251,.6); }
+  .skill.ult { width: 92px; height: 92px; border-color: #e040fb; }
+  .skill.ult.ready { border-color: #e040fb; box-shadow: 0 0 16px rgba(224,64,251,.65); }
+  /* 普攻按钮 */
+  .atkBtn { width: 104px; height: 82px; border-radius: 12px; background: linear-gradient(180deg,#ff9d4d,#e64a19); border: 3px solid #ffcc80; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; margin-right: 10px; box-shadow: 0 0 14px rgba(255,138,61,.5); user-select: none; }
+  .atkBtn .aicon { font-size: 30px; line-height: 1.1; }
+  .atkBtn .aname { font-size: 17px; font-weight: bold; color: #fff; text-shadow: 1px 1px 2px #000; }
+  .atkBtn .akey { font-size: 11px; color: #ffe0b2; }
+  .atkBtn:active { transform: scale(.94); }
+  /* 技能图例 */
+  #skillLegend { position: absolute; bottom: 152px; left: 50%; transform: translateX(-50%); z-index: 11; font-size: 14px; color: #e8f0e0; background: rgba(0,0,0,.6); padding: 5px 16px; border-radius: 8px; white-space: nowrap; border: 1px solid #333; }
+  #skillLegend b { color: #ffd54f; font-size: 15px; }
+  /* 技能悬浮说明 */
+  #skillTip { position: fixed; display: none; max-width: 260px; background: rgba(10,10,18,.98); border: 1px solid #ffd54f; border-radius: 8px; padding: 9px 12px; font-size: 12px; color: #ddd; z-index: 45; pointer-events: none; line-height: 1.6; box-shadow: 0 4px 16px rgba(0,0,0,.6); }
+  #skillTip .tt-name { color: #ffd54f; font-weight: bold; font-size: 15px; margin-bottom: 3px; }
+  #skillTip .tt-row { color: #9fe0c0; margin-top: 4px; font-size: 11px; }
 
   /* 英雄面板 */
-  #heroPanel { position: absolute; bottom: 118px; left: 12px; width: 230px; background: rgba(15,15,25,.9); border: 1px solid #444; border-radius: 6px; padding: 8px 10px; z-index: 10; font-size: 12px; }
+  #heroPanel { position: absolute; bottom: 162px; left: 12px; width: 230px; background: rgba(15,15,25,.9); border: 1px solid #444; border-radius: 6px; padding: 8px 10px; z-index: 10; font-size: 12px; }
   #heroPanel .name { font-size: 15px; font-weight: bold; color: #ffd54f; }
   .bar { height: 8px; background: #222; border-radius: 4px; margin: 4px 0; overflow: hidden; position: relative; }
   .bar .fill { height: 100%; transition: width .15s; }
@@ -48,10 +62,10 @@
   .stat b { color: #fff; }
 
   /* 金币 */
-  #goldPanel { position: absolute; bottom: 118px; right: 224px; background: rgba(15,15,25,.92); border: 1px solid #555; border-radius: 6px; padding: 6px 12px; z-index: 10; font-size: 14px; color: #ffd54f; font-weight: bold; }
+  #goldPanel { position: absolute; bottom: 162px; right: 224px; background: rgba(15,15,25,.92); border: 1px solid #555; border-radius: 6px; padding: 6px 12px; z-index: 10; font-size: 14px; color: #ffd54f; font-weight: bold; }
 
   /* 商店 */
-  #shopBtn { position: absolute; bottom: 118px; right: 224px; margin-bottom: 36px; background: linear-gradient(180deg,#ffd54f,#ffa000); color: #222; border: none; border-radius: 4px; padding: 5px 14px; font-weight: bold; cursor: pointer; z-index: 11; }
+  #shopBtn { position: absolute; bottom: 162px; right: 224px; margin-bottom: 36px; background: linear-gradient(180deg,#ffd54f,#ffa000); color: #222; border: none; border-radius: 4px; padding: 5px 14px; font-weight: bold; cursor: pointer; z-index: 11; }
   #shopPanel { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 560px; max-height: 76vh; background: rgba(18,18,28,.97); border: 2px solid #ffd54f; border-radius: 8px; padding: 14px; z-index: 30; display: none; overflow-y: auto; }
   #shopPanel h3 { color: #ffd54f; margin-bottom: 8px; }
   .shopGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -108,7 +122,7 @@
     <div id="kda">击杀 0 / 死亡 0 / 助攻 0</div>
   </div>
 
-  <div id="help">右键/左键点地面：移动（可按住拖动）&nbsp;|&nbsp; 方向键：移动 &nbsp;|&nbsp; 左键点敌人：攻击 &nbsp;|&nbsp; Q W E R：技能（朝鼠标释放）&nbsp;|&nbsp; B：回城 &nbsp;|&nbsp; P：商店 &nbsp;|&nbsp; 1-4：技能升级</div>
+  <div id="help">移动：右键/左键点地面 或 方向键　·　普攻：左键点敌人 或 空格　·　技能：Q W E R（朝鼠标放）　·　升级技能：1-4 或 技能右上角＋　·　回城：B　·　商店：P</div>
 
   <div id="killFeed"></div>
   <div id="centerTip"></div>
@@ -128,12 +142,16 @@
   <div id="goldPanel">💰 <span id="gold">500</span></div>
   <button id="shopBtn">商店(P)</button>
 
+  <div id="skillLegend"></div>
+  <div id="skillTip"></div>
+
   <div id="bottomBar">
+    <div class="atkBtn" id="atkBtn"><span class="aicon">✊</span><span class="aname">普攻</span><span class="akey">左键/空格</span></div>
     <div class="skill" id="sk0"><span class="key">被动</span><span class="icon" id="sk0i"></span><span class="lv" id="sk0lv"></span></div>
-    <div class="skill upgrade" id="sk1"><span class="key">Q</span><span class="icon" id="sk1i"></span><div class="cdMask" style="display:none" id="sk1cd"></div><span class="lv" id="sk1lv">1</span></div>
-    <div class="skill upgrade" id="sk2"><span class="key">W</span><span class="icon" id="sk2i"></span><div class="cdMask" style="display:none" id="sk2cd"></div><span class="lv" id="sk2lv"></span></div>
-    <div class="skill upgrade" id="sk3"><span class="key">E</span><span class="icon" id="sk3i"></span><div class="cdMask" style="display:none" id="sk3cd"></div><span class="lv" id="sk3lv"></span></div>
-    <div class="skill ult" id="sk4"><span class="key">R</span><span class="icon" id="sk4i"></span><div class="cdMask" style="display:none" id="sk4cd"></div><span class="lv" id="sk4lv"></span></div>
+    <div class="skill upgrade" id="sk1"><span class="key">Q</span><span class="icon" id="sk1i"></span><div class="cdMask" style="display:none" id="sk1cd"></div><span class="lv" id="sk1lv">1</span><span class="plus" id="sk1plus">＋</span></div>
+    <div class="skill upgrade" id="sk2"><span class="key">W</span><span class="icon" id="sk2i"></span><div class="cdMask" style="display:none" id="sk2cd"></div><span class="lv" id="sk2lv"></span><span class="plus" id="sk2plus">＋</span></div>
+    <div class="skill upgrade" id="sk3"><span class="key">E</span><span class="icon" id="sk3i"></span><div class="cdMask" style="display:none" id="sk3cd"></div><span class="lv" id="sk3lv"></span><span class="plus" id="sk3plus">＋</span></div>
+    <div class="skill ult" id="sk4"><span class="key">R</span><span class="icon" id="sk4i"></span><div class="cdMask" style="display:none" id="sk4cd"></div><span class="lv" id="sk4lv"></span><span class="plus" id="sk4plus">＋</span></div>
   </div>
 
   <div id="shopPanel">
@@ -1840,6 +1858,7 @@ function setupInput(){
     else if (k==='w') tryCastPlayer(2);
     else if (k==='e') tryCastPlayer(3);
     else if (k==='r') tryCastPlayer(4);
+    else if (k===' '||k==='spacebar'||k==='space'){ doBasicAttack(); e.preventDefault(); }
     else if (k==='b'){ if (game.player.alive && game.player.combatTimer<=0){ game.player.recallT=6; showTip('回城中...'); } }
     else if (k==='p'){ toggleShop(); }
     else if (k>='1'&&k<='4'){ const idx=parseInt(k); if(game.player) game.player.upgradeSkill(idx); }
@@ -1848,10 +1867,74 @@ function setupInput(){
     const k = e.key.toLowerCase ? e.key.toLowerCase() : e.key;
     if (k.startsWith('arrow')) keys[k]=false;
   });
-  // 技能栏点击 = 升级
+  // 技能栏：左键=释放，右键=升级，悬停=说明；右上角＋=升级
   for (let i=1;i<=4;i++){
-    document.getElementById('sk'+i).addEventListener('click', ()=>{ if(game.player) game.player.upgradeSkill(i); });
+    const el = document.getElementById('sk'+i);
+    el.addEventListener('click', ev=>{ ev.stopPropagation(); tryCastPlayer(i); });
+    el.addEventListener('contextmenu', ev=>{ ev.preventDefault(); if(game.player) game.player.upgradeSkill(i); });
+    el.addEventListener('mouseenter', ev=> showSkillTip(i, ev));
+    el.addEventListener('mousemove', ev=> moveSkillTip(ev));
+    el.addEventListener('mouseleave', hideSkillTip);
+    const plus = document.getElementById('sk'+i+'plus');
+    if (plus) plus.addEventListener('click', ev=>{ ev.stopPropagation(); if(game.player) game.player.upgradeSkill(i); });
   }
+  const p0 = document.getElementById('sk0');
+  p0.addEventListener('mouseenter', ev=> showSkillTip(0, ev));
+  p0.addEventListener('mousemove', ev=> moveSkillTip(ev));
+  p0.addEventListener('mouseleave', hideSkillTip);
+  // 普攻按钮
+  const atk = document.getElementById('atkBtn');
+  if (atk){ atk.addEventListener('click', ev=>{ ev.stopPropagation(); doBasicAttack(); }); }
+}
+
+// 普攻：攻击范围内最近敌人，否则追击走近的敌人
+function doBasicAttack(){
+  const p = game.player; if (!p || !p.alive) return;
+  let t = nearestEnemy(p, p.atkRange);
+  if (!t) t = nearestEnemy(p, p.atkRange + 500);
+  if (t){ p.attackTarget = t; p.moveTarget = null; p.navPath = null; }
+  else showTip('附近没有可攻击的目标，靠近敌人再试');
+}
+
+// 技能悬浮说明
+function showSkillTip(idx, ev){
+  const p = game.player; if (!p) return;
+  const sk = p.skills[idx]; if (!sk) return;
+  const tip = document.getElementById('skillTip');
+  const passive = idx === 0;
+  const locked = sk.id.endsWith('_r') && sk.cd === 1;
+  let html = `<div class="tt-name">${sk.icon||''} ${sk.name}${passive?'（被动）':''}</div>`;
+  html += `<div>${sk.desc||''}</div>`;
+  if (!passive && !locked){
+    html += `<div class="tt-row">冷却 ${sk.cd||0}s${sk.cost?('　法力 '+sk.cost):''}　等级 ${sk.level||0}/3</div>`;
+    html += `<div class="tt-row">左键点此释放 · 右键/＋升级</div>`;
+  } else if (locked){
+    html += `<div class="tt-row">该技能本英雄不可用</div>`;
+  }
+  tip.innerHTML = html; tip.style.display = 'block';
+  if (ev) moveSkillTip(ev);
+}
+function moveSkillTip(ev){
+  const tip = document.getElementById('skillTip');
+  tip.style.left = Math.min(window.innerWidth - 270, ev.clientX + 16) + 'px';
+  tip.style.top = (ev.clientY - 12) + 'px';
+  tip.style.transform = 'translateY(-100%)';
+}
+function hideSkillTip(){ const t = document.getElementById('skillTip'); if (t) t.style.display = 'none'; }
+
+// 顶部技能图例：Q/W/E/R 对应技能名
+function updateSkillLegend(){
+  const p = game.player; if (!p) return;
+  const keys = ['Q','W','E','R'];
+  const parts = [];
+  for (let i=1;i<=4;i++){
+    const sk = p.skills[i];
+    if (!sk) continue;
+    if (sk.id.endsWith('_r') && sk.cd === 1) continue;
+    parts.push(`<b>${keys[i-1]}</b> ${sk.name}`);
+  }
+  const el = document.getElementById('skillLegend');
+  if (el) el.innerHTML = '技能：' + parts.join('　·　') + '　|　普攻：左键点敌人/空格';
 }
 
 function tryCastPlayer(idx){
@@ -1991,25 +2074,27 @@ function updateSkillUI(){
     const lvEl = document.getElementById('sk'+i+'lv');
     const cdEl = document.getElementById('sk'+i+'cd');
     const el = document.getElementById('sk'+i);
-    if (i===0){ if(lvEl) lvEl.textContent=''; if(cdEl) cdEl.style.display='none'; continue; }
-    if (!sk || (sk.id.endsWith('_r') && sk.cd===1)){
+    const plus = document.getElementById('sk'+i+'plus');
+    if (i===0){ if(lvEl) lvEl.textContent=''; if(cdEl) cdEl.style.display='none'; if(plus) plus.style.display='none'; continue; }
+    const locked = !sk || (sk.id.endsWith('_r') && sk.cd===1);
+    if (locked){
       el.classList.add('cant'); if(cdEl){cdEl.style.display='block'; cdEl.textContent='🔒';}
-      if(lvEl) lvEl.textContent=''; el.classList.remove('ready','upgrade');
+      if(lvEl) lvEl.textContent=''; el.classList.remove('ready','upgrade'); if(plus) plus.style.display='none';
       continue;
     }
     el.classList.remove('cant');
     if (lvEl) lvEl.textContent = sk.level>0 ? sk.level : '';
     if (sk.cdLeft>0){
       if(cdEl){cdEl.style.display='flex'; cdEl.textContent=sk.cdLeft.toFixed(1);}
-      el.classList.remove('ready','upgrade');
+      el.classList.remove('ready');
     } else {
       if(cdEl) cdEl.style.display='none';
       el.classList.add('ready');
-      // 可升级
-      if (p.skillPoints>0 && sk.level<3 && (i===1 || (i===4?p.lv>=4:p.lv>=i*2-1)) && !(i===4 && p.lv<4)){
-        el.classList.add('upgrade');
-      } else el.classList.remove('upgrade');
     }
+    // 可升级：有技能点且未满级（大招需 4 级）
+    const canUp = p.skillPoints>0 && sk.level<3 && !(i===4 && p.lv<4);
+    if (canUp){ el.classList.add('upgrade'); if(plus) plus.style.display='flex'; }
+    else { el.classList.remove('upgrade'); if(plus) plus.style.display='none'; }
   }
 }
 
@@ -2075,11 +2160,13 @@ function initGame(playerHeroId){
   game.monsters.push(new Monster(MAP.tyrant));
   // 相机定位玩家
   cam.x = game.player.x; cam.y = game.player.y;
+  mouse.worldX = game.player.x; mouse.worldY = game.player.y - 240; // 技能默认朝向前方
   document.getElementById('pickScreen').style.display='none';
   document.getElementById('endScreen').style.display='none';
   game.running = true;
   buildMapCache();
   updateSkillUI();
+  updateSkillLegend();
   showTip('游戏开始！摧毁敌方水晶获胜');
 }
 
